@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author yann
+ *
+ */
+module glassComputerVision {
+}
