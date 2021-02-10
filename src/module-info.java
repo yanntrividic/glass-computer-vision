@@ -1,9 +1,4 @@
-/**
- * 
- */
-/**
- * @author yann
- *
- */
-module glassComputerVision {
+module imageTD {
+	requires java.desktop;
+	requires opencv;
 }
