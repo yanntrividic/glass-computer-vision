@@ -11,7 +11,11 @@ public class Main {
 	public static void main(String [] args) throws IOException {
 		nu.pattern.OpenCV.loadLocally(); // loads opencv on the machine. Cleaned by garbage collector on shutdown.
 
-		String imgPath = System.getProperty("user.dir")+File.separator+"src"+File.separator+"resources"+File.separator+"img"+File.separator ;
+		String imgPath = System.getProperty("user.dir")
+				+File.separator+"src"
+				+File.separator+"resources"
+				+File.separator+"img"
+				+File.separator ;
 		
 		Mat test_img = Imgcodecs.imread(imgPath+"0.jpg") ; // loads image
 		
