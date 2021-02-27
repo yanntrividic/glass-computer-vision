@@ -3,6 +3,11 @@ package cv;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 
+/**
+ * Static class with utilitary methods to work on images.
+ * @author Yann Trividic
+ * @version 1.0
+ */
 public class Utils {
 	
 	/**

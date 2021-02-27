@@ -20,7 +20,7 @@ public class PreProcessing {
 	public static Mat equalizeGrayMat(Mat gray) {
 		if(gray.type() != CvType.CV_8UC1) throw new IllegalArgumentException("The image must be CV_8UC1") ;
 		Mat equalized = new Mat();
-		// TODO: continue this method with Imgproc.equalizeHist()
+		Imgproc.equalizeHist(gray, equalized);
 		return equalized ;
 	}
 }
