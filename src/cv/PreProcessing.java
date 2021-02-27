@@ -4,6 +4,11 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+/**
+ * Static class with method to preprocess images.
+ * @author Yann Trividic
+ * @version 1.0
+ */
 public class PreProcessing {
 	
 	/**
@@ -17,6 +22,11 @@ public class PreProcessing {
 		return gs ;
 	}
 	
+	/**
+	 * Creates an equalized Mat object out of a GrayScale Mat object
+	 * @param gray 
+	 * @return
+	 */
 	public static Mat equalizeGrayMat(Mat gray) {
 		if(gray.type() != CvType.CV_8UC1) throw new IllegalArgumentException("The image must be CV_8UC1") ;
 		Mat equalized = new Mat();
