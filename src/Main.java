@@ -18,7 +18,7 @@ public class Main {
 
 		String imgPath = Reader.getImgDir() ;
 		
-		Mat test_img = Imgcodecs.imread(imgPath+"0.jpg") ; // loads image
+		Mat test_img = Imgcodecs.imread(imgPath+"bla.jpg") ; // loads image
 		test_img = PreProcessing.rgbToGrayScale(test_img) ;
 		test_img = PreProcessing.equalizeGrayMat(test_img) ;
 		

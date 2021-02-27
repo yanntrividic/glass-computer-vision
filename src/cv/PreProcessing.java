@@ -1,5 +1,6 @@
 package cv;
 
+import org.opencv.core.CvException;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -18,7 +19,11 @@ public class PreProcessing {
 	 */
 	public static Mat rgbToGrayScale(Mat rgb) {
 		Mat gs = new Mat();
-		Imgproc.cvtColor(rgb, gs, Imgproc.COLOR_RGB2GRAY); // to grayscale
+		try {
+			Imgproc.cvtColor(rgb, gs, Imgproc.COLOR_RGB2GRAY); // to grayscale
+		} catch(CvException e) {
+			System.err.println("The image path is not valid.") ;
+		}
 		return gs ;
 	}
 	

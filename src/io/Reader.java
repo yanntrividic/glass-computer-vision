@@ -10,4 +10,12 @@ public class Reader {
 				+File.separator+"img"
 				+File.separator ;
 	}
+	
+	/**
+	 * Extracts JSON data 
+	 * @param path Path towards the JSON file
+	 */
+	public static void extractLabelsFromJSON(String path) {
+		// TODO Qu'est-ce qu'on extrait ? Comment représentet-on les données ? Fait-on une classe à part ?
+	}
 }
