@@ -2,7 +2,6 @@ package cv;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
 /**
@@ -15,10 +14,9 @@ public class Segmentation {
 		if(gray.type() != CvType.CV_8UC1) throw new IllegalArgumentException("The image must be CV_8UC1") ;
 		Mat binary = new Mat() ;
 		Imgproc.threshold(gray, binary, threshold, 255, Imgproc.THRESH_BINARY); //binarization
-		if(show) {
-			HighGui.imshow("threshold="+threshold, binary); // displays test.png
-			HighGui.waitKey(); // waits before executing the rest	
-		}
+		
+		if(show) Utils.displayImage(binary, "threshold="+threshold);
+		
 		return binary; 
 	}
 	
