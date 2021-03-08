@@ -2,6 +2,7 @@ package cv;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.highgui.HighGui;
 
 /**
  * Static class with utilitary methods to work on images.
@@ -30,5 +31,13 @@ public class Utils {
 		return vp ;		
 	}
 	
-	
+	/**
+	 * Displays an image using HighGui
+	 * @param mat Mat object to visualize
+	 * @param title title of the window
+	 */
+	public static void displayImage(Mat mat, String title) {
+		HighGui.imshow(title, mat);
+		HighGui.waitKey();		
+	}
 }

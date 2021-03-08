@@ -38,4 +38,6 @@ public class PreProcessing {
 		Imgproc.equalizeHist(gray, equalized);
 		return equalized ;
 	}
+	
+	//TODO: implement background equalization (see https://stackoverflow.com/a/57103789)
 }
