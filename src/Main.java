@@ -30,6 +30,7 @@ public class Main {
 			//test_img = Segmentation.simpleBinarization(test_img, 200, false) ;
 			// = PostProcessing.opening(test_img, 2) ;
 			
+			
 			Extractor.findSpecularReflexion(test_img) ;
 			View.displayImage(test_img, ""+i);
 		}
