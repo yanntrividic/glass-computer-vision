@@ -39,5 +39,11 @@ public class PreProcessing {
 		return equalized ;
 	}
 	
+	public static Mat medianFilter(Mat src) {
+		Mat dst = new Mat() ;
+		Imgproc.medianBlur(src, dst, 15);
+		return dst ;
+	}
+	
 	//TODO: implement background equalization (see https://stackoverflow.com/a/57103789)
 }

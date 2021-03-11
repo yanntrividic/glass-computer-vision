@@ -1,14 +1,12 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import cv.Extractor;
-import cv.PostProcessing;
 import cv.PreProcessing;
-import cv.Segmentation;
-import cv.Utils;
-import io.Reader;
+import io.*;
 
 /**
  * Main class of the program
@@ -21,14 +19,19 @@ public class Main {
 		nu.pattern.OpenCV.loadLocally(); // loads opencv on the machine. Cleaned by garbage collector on shutdown.
 
 		String imgPath = Reader.getImgDir() ;
+		ArrayList<String> imgs = Reader.getAllImgInFolder(imgPath) ;
 		
-		Mat test_img = Imgcodecs.imread(imgPath+"0.jpg") ; // loads image
-		test_img = PreProcessing.rgbToGrayScale(test_img) ;
-		test_img = PreProcessing.equalizeGrayMat(test_img) ;
-		test_img = Extractor.sobelFilter(test_img) ;
-		test_img = Segmentation.simpleBinarization(test_img, 200, false) ;
-		test_img = PostProcessing.opening(test_img, 2) ;
-		
-		Utils.displayImage(test_img, "0.png");
+		for(int i = 0 ; i < 10 ; i++) {
+			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
+			test_img = PreProcessing.rgbToGrayScale(test_img) ;
+			test_img = PreProcessing.medianFilter(test_img) ;
+			//test_img = PreProcessing.equalizeGrayMat(test_img) ;
+			//test_img = Extractor.sobelFilter(test_img) ;
+			//test_img = Segmentation.simpleBinarization(test_img, 200, false) ;
+			// = PostProcessing.opening(test_img, 2) ;
+			
+			Extractor.findSpecularReflexion(test_img) ;
+			View.displayImage(test_img, ""+i);
+		}
 	}
 }

@@ -31,4 +31,10 @@ public class Extractor {
 		return dst ;
 		
 	}
+	
+	public static Mat findSpecularReflexion(Mat src) {
+		int [] minMax = Utils.getMinMaxGrayScaleImg(src) ;
+		System.out.println("min="+minMax[0]+", max="+minMax[1]) ;
+		return new Mat(); 
+	}
 }

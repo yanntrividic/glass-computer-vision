@@ -3,6 +3,7 @@ package cv;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+import io.View ;
 
 /**
  * Static class with method to perform segmentation on images.
@@ -15,7 +16,7 @@ public class Segmentation {
 		Mat binary = new Mat() ;
 		Imgproc.threshold(gray, binary, threshold, 255, Imgproc.THRESH_BINARY); //binarization
 		
-		if(show) Utils.displayImage(binary, "threshold="+threshold);
+		if(show) View.displayImage(binary, "threshold="+threshold);
 		
 		return binary; 
 	}

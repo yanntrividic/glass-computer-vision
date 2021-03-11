@@ -2,7 +2,6 @@ package cv;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
-import org.opencv.highgui.HighGui;
 
 /**
  * Static class with utilitary methods to work on images.
@@ -31,13 +30,23 @@ public class Utils {
 		return vp ;		
 	}
 	
-	/**
-	 * Displays an image using HighGui
-	 * @param mat Mat object to visualize
-	 * @param title title of the window
-	 */
-	public static void displayImage(Mat mat, String title) {
-		HighGui.imshow(title, mat);
-		HighGui.waitKey();		
+	public static byte[] getMatAsByteArray(Mat m) {
+		byte[] temp = new byte[(int) m.total()]; // declaration of a byte array the size of the Mat
+		m.get(0, 0, temp) ; // the content of the image is put inside the temp variable
+		return temp ;
+	}	
+	
+	// FIXME: I don't understand why the output is always {0, 255}. Maybe it has to do with the byte type ?
+	public static int[] getMinMaxGrayScaleImg(Mat mat) {
+		byte[] img = getMatAsByteArray(mat) ;
+		for(int i = 0 ; i < img.length ; i++) System.out.print(img[i]+128+", ") ;
+		
+		int min = Integer.MAX_VALUE ;
+		int max = Integer.MIN_VALUE ;
+		for(int i = 0 ; i < img.length ; i++) {
+			if((int) img[i]+128 < min) min = img[i]+128 ;
+			if((int) img[i]+128 > max) max = img[i]+128 ;
+		}
+		return new int [] {min, max} ;
 	}
 }
