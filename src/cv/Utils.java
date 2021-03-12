@@ -1,7 +1,10 @@
 package cv;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 /**
  * Static class with utilitary methods to work on images.
@@ -50,7 +53,7 @@ public class Utils {
 		return new int [] {min, max} ;
 	}
 	
-	// TODO: This method is the same as above, it's just a lot more heavy to process, and it works
+	// TODO: This method is the same as above, it's just a lot heavier to process, but it works
 	public static int[] getMinMaxGrayScaleImgVeryExpensive(Mat mat) {		
 		double min = Integer.MAX_VALUE ;
 		double max = Integer.MIN_VALUE ;
@@ -63,5 +66,26 @@ public class Utils {
 			}
 		}
 		return new int [] {(int) min, (int) max} ;
+	}
+	
+	/**
+	 * Applies a Mast mask on a source image
+	 * @param src Mat on which apply the mask
+	 * @param transparencySrc double Transparency of the src image
+	 * @param mask Mat which corresponds to the masl
+	 * @param transparencyMask double Transparency of the mask image
+	 * @param gamma double gamma factor
+	 * @return a new Mat object with the applied mask on it
+	 */
+	public static Mat applyMask(Mat src, double transparencySrc, Mat mask, double transparencyMask, double gamma) {
+		Mat dst = new Mat() ;
+		Mat resizedMask = new Mat() ;
+
+		// The mask is resized to fit the size of the src image
+		Imgproc.resize(mask, resizedMask, new Size(src.width(), src.height()));
+		
+		// TODO: Tweak those parameters to see what gives the best results
+		Core.addWeighted(src, transparencySrc, resizedMask, transparencyMask, gamma, dst);
+		return dst;
 	}
 }

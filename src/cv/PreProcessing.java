@@ -3,7 +3,9 @@ package cv;
 import org.opencv.core.CvException;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
 
 /**
  * Static class with method to preprocess images.
@@ -39,11 +41,17 @@ public class PreProcessing {
 		return equalized ;
 	}
 	
-	public static Mat medianFilter(Mat src) {
+	public static Mat medianFilter(Mat src, int kernelSize) {
 		Mat dst = new Mat() ;
-		Imgproc.medianBlur(src, dst, 15);
+		Imgproc.medianBlur(src, dst, kernelSize);
 		return dst ;
 	}
 	
+	public static Mat meanFilter(Mat src, int kernelSize) {
+		Mat dst = new Mat() ;
+		Imgproc.blur(src, dst, new Size(kernelSize, kernelSize));
+		return dst ;
+	}
+		
 	//TODO: implement background equalization (see https://stackoverflow.com/a/57103789)
 }

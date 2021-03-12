@@ -9,11 +9,13 @@ public class Reader {
 	public static final String fp = File.separator ;
 	
 	public static String getImgDir() {
+		return getResourcesDir()+"img"+fp ;
+	}
+	
+	public static String getResourcesDir() {
 		return System.getProperty("user.dir")
 				+fp+"src"
-				+fp+"resources"
-				+fp+"img"
-				+fp ;
+				+fp+"resources"+fp ;		
 	}
 	
 	/**

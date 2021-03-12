@@ -6,6 +6,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import cv.Extractor;
 import cv.PreProcessing;
+import cv.Utils;
 import io.*;
 
 /**
@@ -16,22 +17,33 @@ import io.*;
 
 public class Main {
 	public static void main(String [] args) throws IOException {
-		nu.pattern.OpenCV.loadLocally(); // loads opencv on the machine. Cleaned by garbage collector on shutdown.
+		nu.pattern.OpenCV.loadLocally(); //loads opencv for this run
 
 		String imgPath = Reader.getImgDir() ;
 		ArrayList<String> imgs = Reader.getAllImgInFolder(imgPath) ;
+
+		//Mat gauss = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.png") ;
+		//gauss = PreProcessing.meanFilter(gauss, 80) ;
+		//Core.normalize(gauss, gauss, 0, 255, Core.NORM_MINMAX);
 		
-		for(int i = 0 ; i < 10 ; i++) {
+		//gauss = View.displayImage(gauss, "gaussian");
+		//Writer.matToJPG(gauss, Reader.getResourcesDir()+"gaussian_distribution");
+
+		Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
+		mask = PreProcessing.rgbToGrayScale(mask) ;
+		//Core.normalize(mask, mask, 0, 255, Core.NORM_MINMAX);
+		
+		for(int i = 0 ; i < 50 ; i++) {
 			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
 			test_img = PreProcessing.rgbToGrayScale(test_img) ;
-			test_img = PreProcessing.medianFilter(test_img) ;
+			test_img = Utils.applyMask(test_img, 1.0, mask, 0.3, 0) ;
+			test_img = PreProcessing.medianFilter(test_img, 5) ;
 			//test_img = PreProcessing.equalizeGrayMat(test_img) ;
 			//test_img = Extractor.sobelFilter(test_img) ;
 			//test_img = Segmentation.simpleBinarization(test_img, 200, false) ;
-			// = PostProcessing.opening(test_img, 2) ;
-			
-			
-			Extractor.findSpecularReflexion(test_img) ;
+			//test_img = PostProcessing.opening(test_img, 2) ;
+
+			test_img = Extractor.findSpecularReflexion(test_img, 240, 20) ;
 			View.displayImage(test_img, ""+i);
 		}
 	}

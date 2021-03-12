@@ -32,9 +32,38 @@ public class Extractor {
 		
 	}
 	
-	public static Mat findSpecularReflexion(Mat src) {
-		int [] minMax = Utils.getMinMaxGrayScaleImgVeryExpensive(src) ;
-		System.out.println("min="+minMax[0]+", max="+minMax[1]) ;
-		return new Mat(); 
+	public static Mat findSpecularReflexion(Mat src, int specularThreshold, int binarizationThreshold) {
+		//TODO: For this part, we will have to base our algorithm on a few assumptions.
+		// Maybe we could assume that the object is usually more in the center on the sides ? (floodfill ?)
+		// And that the bigger the binerized area is, the less there are chances for it to be a specular reflexion ?
+		// The less "clusters" we have, the less we can infer on the position of the glass
+		
+		
+		Mat norm = new Mat();	
+		Mat bin = new Mat() ;
+		Mat sum = new Mat() ;
+		Mat contour = new Mat() ;
+		//int [] minMax = Utils.getMinMaxGrayScaleImgVeryExpensive(dst) ;
+		//System.out.println("min="+minMax[0]+", max="+minMax[1]) ;
+		
+		//First, we normalize the image to be sure we have white pixels for the binarization
+		Core.normalize(src, norm, 0, 255, Core.NORM_MINMAX);
+		//The result is stored into a matrix
+		bin = Segmentation.simpleBinarization(norm, specularThreshold, false) ;
+		
+		//Then we darken it a lot in order to highlight the specular reflexions
+		//(it could be any other operation)
+		Core.normalize(src, norm, 0, 50, Core.NORM_MINMAX);
+
+		//We extract the contour of the image
+		Core.normalize(sobelFilter(src), contour, 0, 255, Core.NORM_MINMAX);
+		//And remove the lowest values
+		contour = Segmentation.simpleBinarization(contour, binarizationThreshold, false) ;
+		
+		//Then we multiply the first binarization and the contours
+		Core.multiply(bin, contour, bin);
+		//And finally we add it to the low contrast image
+		Core.add(norm, bin, sum) ;
+		return sum; 
 	}
 }
