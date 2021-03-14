@@ -33,7 +33,7 @@ public class Main {
 		mask = PreProcessing.rgbToGrayScale(mask) ;
 		//Core.normalize(mask, mask, 0, 255, Core.NORM_MINMAX);
 		
-		for(int i = 0 ; i < 50 ; i++) {
+		for(int i = 30 ; i < 70 ; i++) {
 			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
 			test_img = PreProcessing.rgbToGrayScale(test_img) ;
 			test_img = Utils.applyMask(test_img, 1.0, mask, 0.3, 0) ;

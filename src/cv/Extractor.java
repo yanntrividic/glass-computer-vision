@@ -64,6 +64,15 @@ public class Extractor {
 		Core.multiply(bin, contour, bin);
 		//And finally we add it to the low contrast image
 		Core.add(norm, bin, sum) ;
+		
+		int[] offset = { sum.height()/10, 
+				sum.width()/10,
+				sum.height()/10,
+				sum.width()/10 } ;
+		
+		//offset = new int[] {0,0,0,0} ;
+		
+		Utils.drawRectFromBoudaries(sum, Utils.getMaskBoundaries(bin), offset) ;
 		return sum; 
 	}
 }

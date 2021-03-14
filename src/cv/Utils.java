@@ -3,6 +3,7 @@ package cv;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -87,5 +88,38 @@ public class Utils {
 		// TODO: Tweak those parameters to see what gives the best results
 		Core.addWeighted(src, transparencySrc, resizedMask, transparencyMask, gamma, dst);
 		return dst;
+	}
+	
+	//TODO: There's plenty of room to optimize this
+	public static int[] getMaskBoundaries(Mat mask) {
+		int top = Integer.MAX_VALUE ;
+		int bot = Integer.MIN_VALUE ;
+		int left = Integer.MAX_VALUE ;
+		int right = Integer.MIN_VALUE ;
+		
+		for(int x = 0 ; x < mask.width() ; x++) {
+			for(int y = 0 ; y < mask.height() ; y++) {
+				if(mask.get(y, x)[0] != 0) {
+					if(top > y) top = y ;
+					if(bot < y) bot = y ;
+					if(left > x) left = x ;
+					if(right < x) right = x ;
+				}
+			}
+		}
+		//System.out.println(top +" "+right+" "+bot+" "+left) ;
+		return new int[] {top, right, bot, left} ;
+	}
+	
+	public static Mat drawRectFromBoudaries(Mat src, int[] boundaries, int[] offset) {
+		int top = (boundaries[0] - offset[0] < 0)?0:(boundaries[0] - offset[0]) ;
+		int right = (boundaries[1] + offset[1] > src.width()-1)?(src.width()-1):(boundaries[1] + offset[1]) ;
+		int bot = (boundaries[2] + offset[2] > src.height()-1)?(src.height()-1):(boundaries[2] + offset[2]) ;
+		int left = (boundaries[3] - offset[3] < 0)?0:(boundaries[3] - offset[3]) ;
+				
+		Point topLeft = new Point(left, top) ;
+		Point botRight = new Point(right, bot) ;
+		Imgproc.rectangle(src, topLeft, botRight, new Scalar(255,255,255), 2);
+		return src ;
 	}
 }
