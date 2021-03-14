@@ -62,16 +62,23 @@ public class Extractor {
 		
 		//Then we multiply the first binarization and the contours
 		Core.multiply(bin, contour, bin);
+		
+		//We remove the smallest "objects" 
+		Mat opened = PostProcessing.opening(bin, 3) ;
+		//we keep it only if the result is not totally black
+		if (Core.countNonZero(opened) != 0) bin = opened ;
+		
 		//And finally we add it to the low contrast image
 		Core.add(norm, bin, sum) ;
 		
-		int[] offset = { sum.height()/10, 
-				sum.width()/10,
+		int[] offset = { sum.height()/5, 
+				sum.width()/7,
 				sum.height()/10,
-				sum.width()/10 } ;
+				sum.width()/7 } ;
 		
 		//offset = new int[] {0,0,0,0} ;
 		
+		//a rectangle is drawn around the found blobs
 		Utils.drawRectFromBoudaries(sum, Utils.getMaskBoundaries(bin), offset) ;
 		return sum; 
 	}

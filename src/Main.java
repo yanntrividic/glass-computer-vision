@@ -36,7 +36,7 @@ public class Main {
 		for(int i = 30 ; i < 70 ; i++) {
 			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
 			test_img = PreProcessing.rgbToGrayScale(test_img) ;
-			test_img = Utils.applyMask(test_img, 1.0, mask, 0.3, 0) ;
+			test_img = Utils.applyMask(test_img, 0.9, mask, 0.4, 0) ;
 			test_img = PreProcessing.medianFilter(test_img, 5) ;
 			//test_img = PreProcessing.equalizeGrayMat(test_img) ;
 			//test_img = Extractor.sobelFilter(test_img) ;
