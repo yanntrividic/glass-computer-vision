@@ -1,6 +1,7 @@
 package cv;
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -48,10 +49,20 @@ public class Utils {
 		int min = Integer.MAX_VALUE ;
 		int max = Integer.MIN_VALUE ;
 		for(int i = 0 ; i < img.length ; i++) {
-			if((int) img[i]+128 < min) min = img[i]+128 ;
-			if((int) img[i]+128 > max) max = img[i]+128 ;
+			int castedValue = 0x80 + (int) img[i]; // to [0..255] range
+			if((int) castedValue < min) min = castedValue ;
+			if((int) castedValue > max) max = castedValue ;
 		}
 		return new int [] {min, max} ;
+	}
+	
+	//testwithMinMaxLoc
+	public static int[] getMinMaxGrayScaleImgInexpensive(Mat mat) {
+		System.out.println(mat.width());
+		//Mat mask = Mat.ones(mat.size(), CvType.CV_8U); 
+		double max = Core.minMaxLoc(mat).maxVal;
+		double min = Core.minMaxLoc(mat).minVal ;
+		return new int [] {(int) min, (int) max} ;
 	}
 	
 	// TODO: This method is the same as above, it's just a lot heavier to process, but it works

@@ -33,18 +33,25 @@ public class Main {
 		mask = PreProcessing.rgbToGrayScale(mask) ;
 		//Core.normalize(mask, mask, 0, 255, Core.NORM_MINMAX);
 		
-		for(int i = 30 ; i < 70 ; i++) {
+		for(int i = 0 ; i < imgs.size() ; i++) {
 			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
+			
+			//int[] minMax = Utils.getMinMaxGrayScaleImg(test_img) ;
+			//int[] minMax = Utils.getMinMaxGrayScaleImgVeryExpensive(test_img) ;
+			//int[] minMax = Utils.getMinMaxGrayScaleImgInexpensive(test_img) ;
+			//System.out.println("min="+minMax[0]+", max="+minMax[1]);
+			
 			test_img = PreProcessing.rgbToGrayScale(test_img) ;
 			test_img = Utils.applyMask(test_img, 0.9, mask, 0.4, 0) ;
 			test_img = PreProcessing.medianFilter(test_img, 5) ;
+			
 			//test_img = PreProcessing.equalizeGrayMat(test_img) ;
 			//test_img = Extractor.sobelFilter(test_img) ;
 			//test_img = Segmentation.simpleBinarization(test_img, 200, false) ;
 			//test_img = PostProcessing.opening(test_img, 2) ;
 
 			test_img = Extractor.findSpecularReflexion(test_img, 240, 20) ;
-			View.displayImage(test_img, ""+i);
+			View.displayImage(test_img, ""+imgs.get(i));
 		}
 	}
 }
