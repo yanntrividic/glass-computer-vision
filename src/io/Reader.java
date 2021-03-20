@@ -1,8 +1,19 @@
 package io;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 public class Reader {
 	
@@ -24,6 +35,64 @@ public class Reader {
 	 */
 	public static void extractLabelsFromJSON(String path) {
 		// TODO Qu'est-ce qu'on extrait ? Comment représentet-on les données ? Fait-on une classe à part ?
+		// TODO: manque le lien avec le main, on return une Mat ?
+		System.out.println("Here : " + path );
+		try {
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(new FileReader(path));
+			JSONObject JSONobj = (JSONObject) obj;
+			
+			int[] taille = {
+					Integer.parseInt(JSONobj.get("imageHeight").toString()),
+					Integer.parseInt(JSONobj.get("imageWidth").toString())
+					};
+			
+			//ça change quoi le type de la matrice ?
+			Mat polygones = new Mat(taille, 16);
+			
+			JSONArray shapes = (JSONArray) JSONobj.get("shapes");
+			
+			for(Object o : shapes) {
+				JSONObject jsonObject = (JSONObject) o;
+				JSONArray points = (JSONArray) jsonObject.get("points");
+				
+				for(int i = 0; i < points.size() - 1; i++) {
+					String dep = points.get(i).toString();
+					String arr = points.get(i+1).toString();
+					//System.out.println("From : " + dep + "To : " + arr);
+					Imgproc.line(polygones, convertToPoint(dep) , convertToPoint(arr), new Scalar (0,0, 255));
+				}
+				
+				Imgproc.line(polygones, convertToPoint(points.get(0).toString()), 
+						convertToPoint(points.get(points.size() - 1).toString()), new Scalar(0,0,255));
+				
+				System.out.println("Juste avant le display");
+				
+				//Not working
+				View.displayImage(polygones, "Labels");
+				
+			}
+			
+		} catch(IOException e) {
+			e.getMessage();
+		} catch (ParseException e) {
+			e.getMessage();
+		}
+		
+	}
+	
+	private static Point convertToPoint(String s) {
+		Point p = new Point();
+		
+		String[] str = s.substring(1, s.length()-1).split(",");
+		
+		double[] point = {
+				Double.parseDouble(str[0]), Double.parseDouble(str[1])
+		};
+		
+		p.set(point);
+		
+		return p;
 	}
 	
 	public static ArrayList<String> getAllImgInFolder(String path) {

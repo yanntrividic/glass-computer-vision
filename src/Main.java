@@ -33,7 +33,7 @@ public class Main {
 		mask = PreProcessing.rgbToGrayScale(mask) ;
 		//Core.normalize(mask, mask, 0, 255, Core.NORM_MINMAX);
 		
-		for(int i = 0 ; i < imgs.size() ; i++) {
+		for(int i = 0 ; i < 3 ; i++) {
 			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
 			test_img = PreProcessing.rgbToGrayScale(test_img) ;
 			
@@ -52,6 +52,9 @@ public class Main {
 
 			test_img = Extractor.findSpecularReflexion(test_img, 240, 20) ;
 			View.displayImage(test_img, ""+imgs.get(i));
+			
+			//le View.displayImage dans la méthode n'affiche pas les labels 
+			Reader.extractLabelsFromJSON(imgPath + imgs.get(i));
 		}
 	}
 }
