@@ -53,7 +53,9 @@ public class Main {
 			test_img = Extractor.findSpecularReflexion(test_img, 240, 20) ;
 			View.displayImage(test_img, ""+imgs.get(i));
 			
-			//le View.displayImage dans la méthode n'affiche pas les labels 
+			// FIXME: le View.displayImage dans la méthode n'affiche pas les labels 
+			// pour l'instant ta méthode a une signature void, du coup on ne peut pas utiliser displayImage
+			// depuis ce fichier pour afficher ton masque j'imagine
 			Reader.extractLabelsFromJSON(imgPath + imgs.get(i));
 		}
 	}

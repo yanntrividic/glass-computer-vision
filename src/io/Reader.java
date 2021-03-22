@@ -10,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -34,8 +35,7 @@ public class Reader {
 	 * @param path Path towards the JSON file
 	 */
 	public static void extractLabelsFromJSON(String path) {
-		// TODO Qu'est-ce qu'on extrait ? Comment représentet-on les données ? Fait-on une classe à part ?
-		// TODO: manque le lien avec le main, on return une Mat ?
+		// FIXME: je pense que la signature de la méthode devrait être Mat plutôt que void
 		System.out.println("Here : " + path );
 		try {
 			JSONParser parser = new JSONParser();
@@ -48,6 +48,9 @@ public class Reader {
 					};
 			
 			//ça change quoi le type de la matrice ?
+			// FIXME: c'est avec le type que tu spécifies si ton image est RGB, GrayScale, HSV ou autre, tu peux aussi
+			// préciser le nombre de bits utilisés pour chaque canal. Par exemple, CvType.CV_8UC1 est le type 
+			// correspondant à 8 bits sur 1 canal (de 0 à 255 sur un seul canal, du GrayScale donc.)
 			Mat polygones = new Mat(taille, 16);
 			
 			JSONArray shapes = (JSONArray) JSONobj.get("shapes");
@@ -70,15 +73,17 @@ public class Reader {
 				
 				//Not working
 				View.displayImage(polygones, "Labels");
-				
 			}
-			
 		} catch(IOException e) {
+			// FIXME: ton problème est ici. Ton code lève toujours la même exception, du coup n'atteint jamais 
+			// la ligne 75. Et vu que t'as aucun traitement d'exception (là il fait que appeler le message
+			// d'erreur, pas l'afficher ni rien d'autre), bin on dirait qu'il se passe rien.
+			// J'imagine qu'il y a une erreur lors de la lecture du fichier (si ça marche sur ton autre fichier
+			// c'est sûrement une question de chemin erroné)
 			e.getMessage();
 		} catch (ParseException e) {
 			e.getMessage();
 		}
-		
 	}
 	
 	private static Point convertToPoint(String s) {
