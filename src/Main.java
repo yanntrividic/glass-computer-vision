@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import cv.Extractor;
@@ -33,25 +34,22 @@ public class Main {
 		mask = PreProcessing.rgbToGrayScale(mask) ;
 		//Core.normalize(mask, mask, 0, 255, Core.NORM_MINMAX);
 		
-		for(int i = 0 ; i < 3 ; i++) {
+		for(int i = 0 ; i < imgs.size() ; i++) {
 			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
-			test_img = PreProcessing.rgbToGrayScale(test_img) ;
+			Mat grayScale = PreProcessing.rgbToGrayScale(test_img) ;
+			grayScale = PreProcessing.medianFilter(grayScale, 5) ;
 			
-			int[] minMax = Utils.getMinMaxGrayScaleImg(test_img) ;
-			//int[] minMax = Utils.getMinMaxGrayScaleImgVeryExpensive(test_img) ;
-			//int[] minMax = Utils.getMinMaxGrayScaleImgInexpensive(test_img) ;
-			System.out.println("min="+minMax[0]+", max="+minMax[1]);
-			
-			test_img = Utils.applyMask(test_img, 0.9, mask, 0.4, 0) ;
-			test_img = PreProcessing.medianFilter(test_img, 5) ;
+			test_img = Utils.applyMask(grayScale, 0.9, mask, 0.4, 0) ;
 			
 			//test_img = PreProcessing.equalizeGrayMat(test_img) ;
 			//test_img = Extractor.sobelFilter(test_img) ;
 			//test_img = Segmentation.simpleBinarization(test_img, 200, false) ;
 			//test_img = PostProcessing.opening(test_img, 2) ;
 
-			test_img = Extractor.findSpecularReflexion(test_img, 240, 20) ;
-			View.displayImage(test_img, ""+imgs.get(i));
+			Point [] points = Extractor.findSpecularReflexion(test_img, 0.007, 0.002) ;
+			
+			Mat croppedImg = Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1]) ;
+			View.displayImage(croppedImg, ""+imgs.get(i));
 			
 			// FIXME: le View.displayImage dans la méthode n'affiche pas les labels 
 			// pour l'instant ta méthode a une signature void, du coup on ne peut pas utiliser displayImage

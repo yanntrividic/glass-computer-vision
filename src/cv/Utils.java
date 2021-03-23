@@ -3,6 +3,7 @@ package cv;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -101,7 +102,9 @@ public class Utils {
 	}
 	
 	//TODO: There's plenty of room to optimize this
-	public static int[] getMaskBoundaries(Mat mask) {
+	public static int[] getMaskBoundaries(Mat mask) throws Exception {
+		if(Core.countNonZero(mask) == 0) throw new Exception("The mask is all black") ;
+		
 		int top = Integer.MAX_VALUE ;
 		int bot = Integer.MIN_VALUE ;
 		int left = Integer.MAX_VALUE ;
@@ -120,16 +123,30 @@ public class Utils {
 		//System.out.println(top +" "+right+" "+bot+" "+left) ;
 		return new int[] {top, right, bot, left} ;
 	}
-	
-	public static Mat drawRectFromBoudaries(Mat src, int[] boundaries, int[] offset) {
+
+	public static Point[] getTwoCornersPlusBoundaries(Mat src, int[] boundaries, int[] offset) {
 		int top = (boundaries[0] - offset[0] < 0)?0:(boundaries[0] - offset[0]) ;
 		int right = (boundaries[1] + offset[1] > src.width()-1)?(src.width()-1):(boundaries[1] + offset[1]) ;
 		int bot = (boundaries[2] + offset[2] > src.height()-1)?(src.height()-1):(boundaries[2] + offset[2]) ;
 		int left = (boundaries[3] - offset[3] < 0)?0:(boundaries[3] - offset[3]) ;
-				
+		
 		Point topLeft = new Point(left, top) ;
 		Point botRight = new Point(right, bot) ;
-		Imgproc.rectangle(src, topLeft, botRight, new Scalar(255,255,255), 2);
+		
+		return new Point [] {topLeft, botRight};
+	}
+	
+	public static Mat drawRectFromBoudaries(Mat src, int[] boundaries, int[] offset) {
+		Point [] points = getTwoCornersPlusBoundaries(src, boundaries, offset) ;
+		
+		Imgproc.rectangle(src, points[0], points[1], new Scalar(255,255,255), 2);
 		return src ;
+	}
+	
+	public static Mat getCroppedImageFromTopLeftBotRight(Mat src, Point topLeft, Point botRight) {
+		Rect rectCrop = new Rect(topLeft, botRight) ;
+		//System.out.println(topLeft.x + "\n" + topLeft.y + "\n" + botRight.x + "\n" +botRight.y + "\n") ;
+		//System.out.println(src.width() + "\n" + src.height()) ;
+		return new Mat(src, rectCrop) ;
 	}
 }
