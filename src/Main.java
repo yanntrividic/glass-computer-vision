@@ -48,7 +48,7 @@ public class Main {
 
 			Point [] points = Extractor.findSpecularReflexion(test_img, 0.007, 0.002) ;
 			
-			Mat croppedImg = Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1]) ;
+			Mat croppedImg = Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], 0.8) ;
 			View.displayImage(croppedImg, ""+imgs.get(i));
 			
 			// FIXME: le View.displayImage dans la méthode n'affiche pas les labels 

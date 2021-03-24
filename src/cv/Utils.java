@@ -143,10 +143,17 @@ public class Utils {
 		return src ;
 	}
 	
-	public static Mat getCroppedImageFromTopLeftBotRight(Mat src, Point topLeft, Point botRight) {
+	public static Mat getCroppedImageFromTopLeftBotRight(Mat src, Point topLeft, Point botRight, double minimumSurface) {
 		Rect rectCrop = new Rect(topLeft, botRight) ;
 		//System.out.println(topLeft.x + "\n" + topLeft.y + "\n" + botRight.x + "\n" +botRight.y + "\n") ;
 		//System.out.println(src.width() + "\n" + src.height()) ;
-		return new Mat(src, rectCrop) ;
+		double filledPercetage = (botRight.x-topLeft.x)*(botRight.y-topLeft.y)/(src.width()*src.height()) ;
+		System.out.println(filledPercetage+"% filled.") ;
+		if(filledPercetage < minimumSurface) {
+			return new Mat(src, rectCrop) ;
+		}
+		System.out.println("The rectangle found occupies more than "+(minimumSurface*100)+"% of the image.\n"+
+			"It hasn't been cropped.");
+		return src;
 	}
 }
