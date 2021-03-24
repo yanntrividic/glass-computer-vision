@@ -30,17 +30,23 @@ public class Reader {
 				+fp+"resources"+fp ;		
 	}
 	
+	public static String getLabelsDir() {
+		return getResourcesDir() + "labels" + fp;
+	}
+	
 	/**
 	 * Extracts JSON data 
 	 * @param path Path towards the JSON file
 	 */
-	public static void extractLabelsFromJSON(String path) {
+	public static Mat extractLabelsFromJSON(String path) {
 		// FIXME: je pense que la signature de la méthode devrait être Mat plutôt que void
-		System.out.println("Here : " + path );
+		//System.out.println("Here : " + path );
 		try {
 			JSONParser parser = new JSONParser();
+			//FIXME : problème à la ligne d'en dessous, chemin vers img et pas json...
 			Object obj = parser.parse(new FileReader(path));
 			JSONObject JSONobj = (JSONObject) obj;
+			
 			
 			int[] taille = {
 					Integer.parseInt(JSONobj.get("imageHeight").toString()),
@@ -69,21 +75,14 @@ public class Reader {
 				Imgproc.line(polygones, convertToPoint(points.get(0).toString()), 
 						convertToPoint(points.get(points.size() - 1).toString()), new Scalar(0,0,255));
 				
-				System.out.println("Juste avant le display");
-				
-				//Not working
-				View.displayImage(polygones, "Labels");
 			}
+			return polygones;
 		} catch(IOException e) {
-			// FIXME: ton problème est ici. Ton code lève toujours la même exception, du coup n'atteint jamais 
-			// la ligne 75. Et vu que t'as aucun traitement d'exception (là il fait que appeler le message
-			// d'erreur, pas l'afficher ni rien d'autre), bin on dirait qu'il se passe rien.
-			// J'imagine qu'il y a une erreur lors de la lecture du fichier (si ça marche sur ton autre fichier
-			// c'est sûrement une question de chemin erroné)
-			e.getMessage();
+			System.out.println(e.getMessage());
 		} catch (ParseException e) {
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
+		return null;
 	}
 	
 	private static Point convertToPoint(String s) {
