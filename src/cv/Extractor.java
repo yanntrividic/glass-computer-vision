@@ -7,7 +7,7 @@ import org.opencv.core.Point;
 //import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
-import io.View;
+import ui.View;
 
 /**
  * Static class with methods to extract characteristics from images.

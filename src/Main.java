@@ -9,6 +9,7 @@ import cv.Extractor;
 import cv.PreProcessing;
 import cv.Utils;
 import io.*;
+import ui.View;
 
 /**
  * Main class of the program

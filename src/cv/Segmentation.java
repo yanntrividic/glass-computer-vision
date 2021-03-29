@@ -3,7 +3,8 @@ package cv;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-import io.View ;
+
+import ui.View;
 
 /**
  * Static class with method to perform segmentation on images.

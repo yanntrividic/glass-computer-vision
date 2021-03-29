@@ -16,6 +16,8 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import ui.View;
+
 public class Reader {
 	
 	public static final String fp = File.separator ;
