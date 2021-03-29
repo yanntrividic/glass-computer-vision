@@ -55,7 +55,12 @@ public class Main {
 			// FIXME: le View.displayImage dans la méthode n'affiche pas les labels 
 			// pour l'instant ta méthode a une signature void, du coup on ne peut pas utiliser displayImage
 			// depuis ce fichier pour afficher ton masque j'imagine
-			Reader.extractLabelsFromJSON(imgPath + imgs.get(i));
+			
+			
+			//Images pas prise dans le même ordre car je prends i.json et pas "get(i).json"
+			//FIXME : Affichage des labels se supperposent quand on va "vite"
+			String jsonPath = Reader.getLabelsDir() + i + ".json";
+			View.displayImage(Reader.extractLabelsFromJSON(jsonPath), "Labels");
 		}
 	}
 }
