@@ -21,9 +21,12 @@ public class Main {
 	public static void main(String [] args) throws IOException {
 		nu.pattern.OpenCV.loadLocally(); //loads opencv for this run
 
-		String imgPath = Reader.getImgDir() ;
+		String imgPath = Reader.getImgDir("validation") ;
 		ArrayList<String> imgs = Reader.getAllImgInFolder(imgPath) ;
+		ArrayList<String> labels = Reader.getAllLabelsInFolder(imgPath) ;
 
+		if(imgs.size() != labels.size()) System.err.println("We couldn't find the same amount of images and labels.") ;
+		
 		//Mat gauss = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.png") ;
 		//gauss = PreProcessing.meanFilter(gauss, 80) ;
 		//Core.normalize(gauss, gauss, 0, 255, Core.NORM_MINMAX);
@@ -59,7 +62,7 @@ public class Main {
 			
 			//Images pas prise dans le même ordre car je prends i.json et pas "get(i).json"
 			//FIXME : Affichage des labels se supperposent quand on va "vite"
-			String jsonPath = Reader.getLabelsDir() + i + ".json";
+			String jsonPath = Reader.getLabelsDir("test") ;
 			View.displayImage(Reader.extractLabelsFromJSON(jsonPath), "Labels");
 		}
 	}

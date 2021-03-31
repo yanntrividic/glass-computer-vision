@@ -22,8 +22,8 @@ public class Reader {
 	
 	public static final String fp = File.separator ;
 	
-	public static String getImgDir() {
-		return getResourcesDir()+"img"+fp ;
+	public static String getImgDir(String type) {
+		return getResourcesDir()+"img"+fp+type+fp ;
 	}
 	
 	public static String getResourcesDir() {
@@ -32,8 +32,8 @@ public class Reader {
 				+fp+"resources"+fp ;		
 	}
 	
-	public static String getLabelsDir() {
-		return getResourcesDir() + "labels" + fp;
+	public static String getLabelsDir(String type) {
+		return getResourcesDir() + "labels" + fp + type + fp;
 	}
 	
 	/**
@@ -105,6 +105,10 @@ public class Reader {
 		return getFileNamesWithExtension(path, new String[]{"png", "jpg", "jpeg"}) ;
 	}
 	
+	public static ArrayList<String> getAllLabelsInFolder(String path) {
+		return getFileNamesWithExtension(path, new String[]{"json"}) ;
+	}
+	
 //  unused for now	
 //	private static ArrayList<String> getFileNamesWithExtension(String path, String extension) {
 //		return getFileNamesWithExtension(path, new String[] {extension}) ;
@@ -124,12 +128,12 @@ public class Reader {
 		ArrayList<String> files = new ArrayList<String>() ; // for each file, we check if the extension matches
 		for(int i = 0 ; i < filesList.length ; i++)	{
 			if(!new File(path+fp+filesList[i]).isDirectory()) {
-				for(String ext : extensions) if(filesList[i].endsWith("."+ext)) files.add(filesList[i]) ; 
+				for(String ext : extensions) if(filesList[i].toLowerCase().endsWith("."+ext)) files.add(filesList[i]) ; 
 			}
 		}
 		
 		System.out.println("We found "+files.size()+((extensions.length == 1)?" "
-							+ extensions[0].toUpperCase():"")+" files in "+path+"\n") ;
+							+ extensions[0].toUpperCase():"")+" files in "+path) ;
 		
 		Collections.sort(files) ; // alphabetical order
  		return files ;

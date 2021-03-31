@@ -46,7 +46,7 @@ public class Window extends JFrame {
 		this.setLocationRelativeTo( null );
 
 		this.imgIndex = 0 ;
-		this.imgPath = Reader.getImgDir() ;
+		this.imgPath = Reader.getImgDir("train") ;
 		this.imgs = Reader.getAllImgInFolder(imgPath) ;
 
 
