@@ -31,6 +31,7 @@ public class Window extends JFrame {
 
 	private PanelImage panelImage;
 	private PanelButtons panelButtons;
+	//private PanelParameter panelParameters; 
 	private JPanel contentPane;
 
 	public Window() {
@@ -56,6 +57,10 @@ public class Window extends JFrame {
 		
 		this.panelButtons = new PanelButtons(this.panelImage, imgs) ;
 		this.contentPane.add(this.panelButtons,"South") ;
+		
+		//this.panelParameters = new PanelParameter() ;
+		//this.contentPane.add(this.panelParameters,"East") ;
+		
 	}
 
 	public static void main(String[] args) throws Exception {
