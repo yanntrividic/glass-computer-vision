@@ -21,7 +21,7 @@ public class Main {
 	public static void main(String [] args) throws IOException {
 		nu.pattern.OpenCV.loadLocally(); //loads opencv for this run
 
-		String imgPath = Reader.getImgDir("validation") ;
+		String imgPath = Reader.getImgDir("train") ;
 		ArrayList<String> imgs = Reader.getAllImgInFolder(imgPath) ;
 		ArrayList<String> labels = Reader.getAllLabelsInFolder(imgPath) ;
 
@@ -62,8 +62,7 @@ public class Main {
 			
 			//Images pas prise dans le même ordre car je prends i.json et pas "get(i).json"
 			//FIXME : Affichage des labels se supperposent quand on va "vite"
-			String jsonPath = Reader.getLabelsDir("test") ;
-			View.displayImage(Reader.extractLabelsFromJSON(jsonPath), "Labels");
+			View.displayImage(Reader.extractLabelsFromJSON(imgPath+ labels.get(i)), "Labels");
 		}
 	}
 }
