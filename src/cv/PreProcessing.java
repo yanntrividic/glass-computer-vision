@@ -52,6 +52,13 @@ public class PreProcessing {
 		Imgproc.blur(src, dst, new Size(kernelSize, kernelSize));
 		return dst ;
 	}
-		
+	
+	public static Mat resizeSpecifiedWidth(Mat mat, int wantedWidth) {
+		int displayHeight = (int) ((double) mat.height() /mat.width()  * wantedWidth) ;
+		Mat resized = new Mat() ;
+		Imgproc.resize(mat, resized, new Size(wantedWidth, displayHeight));
+		return resized ;
+	}
+	
 	//TODO: implement background equalization (see https://stackoverflow.com/a/57103789)
 }

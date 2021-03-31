@@ -4,10 +4,11 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.imgcodecs.Imgcodecs;
 //import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
-import ui.View;
+import io.Reader;
 
 /**
  * Static class with methods to extract characteristics from images.
@@ -106,11 +107,29 @@ public class Extractor {
 		try {
 			int [] coor = Utils.getMaskBoundaries(simpleBin) ;
 			Utils.drawRectFromBoudaries(sum, Utils.getMaskBoundaries(simpleBin), offset) ;
-			View.displayImage(sum, "Image found before cropping") ;
+			//ui.Utils.displayImage(sum, "Image found before cropping") ;
 			return Utils.getTwoCornersPlusBoundaries(sum, coor, offset) ;
 		} catch(Exception e) {
 			System.out.println("No glass found.") ;
 			return new Point [] {new Point(0, 0), new Point(src.width()-1, src.height()-1)} ;
 		}
 	}
+	
+	public static Mat testUI(Mat mat) {
+
+		Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
+		mask = PreProcessing.rgbToGrayScale(mask) ;
+		
+		Mat testImg = PreProcessing.resizeSpecifiedWidth(mat, 500) ;
+		Mat grayScale = PreProcessing.rgbToGrayScale(testImg) ;
+		grayScale = PreProcessing.medianFilter(grayScale, 5) ;
+		
+		testImg = cv.Utils.applyMask(grayScale, 0.9, mask, 0.4, 0) ;
+
+		Point [] points = Extractor.findSpecularReflexion(testImg, 0.007, 0.002) ;
+		
+		Mat croppedImg = cv.Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], 0.8) ;
+		return croppedImg ;
+	}
+	
 }

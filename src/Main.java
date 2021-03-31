@@ -7,9 +7,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import cv.Extractor;
 import cv.PreProcessing;
-import cv.Utils;
 import io.*;
-import ui.View;
 
 /**
  * Main class of the program
@@ -39,30 +37,23 @@ public class Main {
 		//Core.normalize(mask, mask, 0, 255, Core.NORM_MINMAX);
 		
 		for(int i = 0 ; i < imgs.size() ; i++) {
-			Mat test_img = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
-			Mat grayScale = PreProcessing.rgbToGrayScale(test_img) ;
+			Mat testImg = Imgcodecs.imread(imgPath+imgs.get(i)) ; // loads image
+			testImg = PreProcessing.resizeSpecifiedWidth(testImg, 500) ;
+			Mat grayScale = PreProcessing.rgbToGrayScale(testImg) ;
 			grayScale = PreProcessing.medianFilter(grayScale, 5) ;
 			
-			test_img = Utils.applyMask(grayScale, 0.9, mask, 0.4, 0) ;
+			testImg = cv.Utils.applyMask(grayScale, 0.9, mask, 0.4, 0) ;
 			
 			//test_img = PreProcessing.equalizeGrayMat(test_img) ;
 			//test_img = Extractor.sobelFilter(test_img) ;
 			//test_img = Segmentation.simpleBinarization(test_img, 200, false) ;
 			//test_img = PostProcessing.opening(test_img, 2) ;
 
-			Point [] points = Extractor.findSpecularReflexion(test_img, 0.007, 0.002) ;
+			Point [] points = Extractor.findSpecularReflexion(testImg, 0.007, 0.002) ;
 			
-			Mat croppedImg = Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], 0.8) ;
-			View.displayImage(croppedImg, ""+imgs.get(i));
-			
-			// FIXME: le View.displayImage dans la méthode n'affiche pas les labels 
-			// pour l'instant ta méthode a une signature void, du coup on ne peut pas utiliser displayImage
-			// depuis ce fichier pour afficher ton masque j'imagine
-			
-			
-			//Images pas prise dans le même ordre car je prends i.json et pas "get(i).json"
-			//FIXME : Affichage des labels se supperposent quand on va "vite"
-			View.displayImage(Reader.extractLabelsFromJSON(imgPath+ labels.get(i)), "Labels");
+			Mat croppedImg = cv.Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], 0.8) ;
+			ui.Utils.displayImage(croppedImg, ""+imgs.get(i));
+			ui.Utils.displayImage(Reader.extractLabelsFromJSON(imgPath+ labels.get(i)), "Labels");
 		}
 	}
 }

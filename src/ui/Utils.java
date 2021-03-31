@@ -6,6 +6,7 @@ import java.awt.image.WritableRaster;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
 public class Utils {
@@ -49,5 +50,29 @@ public class Utils {
 		}
 		
 		return new int [] { wantedWidth, wantedHeight } ;
+	}
+	
+	private static final int defaultWidth = 720 ;
+	
+	/**
+	 * Displays an image using HighGui
+	 * @param mat Mat object to visualize
+	 * @param title title of the window
+	 */
+	public static Mat displayImage(Mat mat, String title) {
+		return displayImage(mat, title, defaultWidth) ;
+	}
+	
+	/**
+	 * Displays an image using HighGui
+	 * @param mat Mat object to visualize
+	 * @param title title of the window
+	 */
+	public static Mat displayImage(Mat mat, String title, int displayWidth) {
+		Mat resized = cv.PreProcessing.resizeSpecifiedWidth(mat, displayWidth) ;
+		
+		HighGui.imshow(title, resized);
+		HighGui.waitKey();
+		return resized ;
 	}
 }
