@@ -57,7 +57,7 @@ public class Reader {
 			// FIXME: c'est avec le type que tu spécifies si ton image est RGB, GrayScale, HSV ou autre, tu peux aussi
 			// préciser le nombre de bits utilisés pour chaque canal. Par exemple, CvType.CV_8UC1 est le type 
 			// correspondant à 8 bits sur 1 canal (de 0 à 255 sur un seul canal, du GrayScale donc.)
-			Mat polygones = new Mat(taille, 16);
+			Mat polygones = new Mat(taille, 16, new Scalar(0, 0, 0));
 			
 			JSONArray shapes = (JSONArray) JSONobj.get("shapes");
 			
