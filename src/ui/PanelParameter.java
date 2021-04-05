@@ -9,16 +9,23 @@ import javax.swing.JPanel;
  * @author yann
  *
  */
+
+
 public class PanelParameter extends JPanel {
-	/**
-	 * 
-	 */
+
+	public static final int DEFAULT_MEDIAN_FILTER = 3 ;
+	public static final int DEFAULT_ALPHA_SRC = 90 ;
+	public static final int DEFAULT_ALPHA_MASK = 60 ;
+	public static final int DEFAULT_INTENSITY_THRESHOLD = 15 ;
+	public static final int DEFAULT_CONTOUR_THRESHOLD = 9 ;
+	public static final int DEFAULT_MINIMUM_SURFACE = 80 ;
+	
 	private static final long serialVersionUID = 1L;
+	
 	private Slider medianFilterKSizeSlider ;
 	private Slider alphaSrcSlider ;
 	private Slider alphaMaskSlider ;
-	private Slider gammaSlider ;
-	
+
 	private Slider intensityThresholdSlider ;
 	private Slider contourThresholdSlider ;
 	private Slider minimumSurfaceSlider ;
@@ -29,33 +36,29 @@ public class PanelParameter extends JPanel {
 		this.parent = parent ;
 		setLayout(new FlowLayout()) ;
 		
-		this.medianFilterKSizeSlider = new Slider(parent, 0, 20, 3, 2, 10, "medianFilterKSizeSlider") ;
-		add(medianFilterKSizeSlider.getSlider()) ;
+		this.medianFilterKSizeSlider = new Slider(parent, 0, 10, DEFAULT_MEDIAN_FILTER, 1, 5, "medianFilterKSize") ;
 		add(medianFilterKSizeSlider.getLabel()) ;
+		add(medianFilterKSizeSlider.getSlider()) ;
 		
-		this.alphaSrcSlider = new Slider(parent, 0, 100, 90, 10, 50, "alphaSrcSlider") ;
-		add(alphaSrcSlider.getSlider()) ;
+		this.alphaSrcSlider = new Slider(parent, 0, 100, DEFAULT_ALPHA_SRC, 10, 50, "alphaSrc") ;
 		add(alphaSrcSlider.getLabel()) ;	
+		add(alphaSrcSlider.getSlider()) ;
 		
-		this.alphaMaskSlider = new Slider(parent, 0, 100, 30, 10, 50, "alphaMaskSlider") ;
-		add(alphaMaskSlider.getSlider()) ;
+		this.alphaMaskSlider = new Slider(parent, 0, 100, DEFAULT_ALPHA_MASK, 10, 50, "alphaMask") ;
 		add(alphaMaskSlider.getLabel()) ;	
-		
-		this.gammaSlider = new Slider(parent, 0, 100, 0, 10, 50, "gammaSlider") ;
-		add(gammaSlider.getSlider()) ;
-		add(gammaSlider.getLabel()) ;	
-		
-		this.intensityThresholdSlider = new Slider(parent, 0, 100, 15, 10, 50, "intensityThreshold") ;
-		add(intensityThresholdSlider.getSlider()) ;
+		add(alphaMaskSlider.getSlider()) ;
+				
+		this.intensityThresholdSlider = new Slider(parent, 0, 100, DEFAULT_INTENSITY_THRESHOLD, 10, 50, "intensityThreshold") ;
 		add(intensityThresholdSlider.getLabel()) ;	
+		add(intensityThresholdSlider.getSlider()) ;
 
-		this.contourThresholdSlider = new Slider(parent, 0, 100, 9, 10, 50, "contourThreshold") ;
-		add(contourThresholdSlider.getSlider()) ;
+		this.contourThresholdSlider = new Slider(parent, 0, 100, DEFAULT_CONTOUR_THRESHOLD, 10, 50, "contourThreshold") ;
 		add(contourThresholdSlider.getLabel()) ;	
+		add(contourThresholdSlider.getSlider()) ;
 		
-		this.minimumSurfaceSlider = new Slider(parent, 0, 100, 80, 10, 50, "minimumSurface") ;
-		add(minimumSurfaceSlider.getSlider()) ;
+		this.minimumSurfaceSlider = new Slider(parent, 0, 100, DEFAULT_MINIMUM_SURFACE, 10, 50, "minimumSurface") ;
 		add(minimumSurfaceSlider.getLabel()) ;	
+		add(minimumSurfaceSlider.getSlider()) ;
 	}
 	
 	public int getMedianFilterKSize() {
@@ -73,22 +76,17 @@ public class PanelParameter extends JPanel {
 		return percentToDecimal(val) ;
 	}
 	
-	public double getGamma() {
-		int val = this.gammaSlider.getSlider().getValue() ;
-		return percentToDecimal(val) ;
-	}
-	
-	public double getIntensity() { // FIXME: doesn't seem to work
+	public double getIntensity() {
 		int val = this.intensityThresholdSlider.getSlider().getValue() ;
 		return perThousandToDecimal(val) ;
 	}
 
-	public double getContour() { // FIXME: doesn't seem to work
+	public double getContour() {
 		int val = this.contourThresholdSlider.getSlider().getValue() ;
 		return perThousandToDecimal(val) ;
 	}
 	
-	public double getMinimumSurface() { // FIXME: doesn't seem to work
+	public double getMinimumSurface() {
 		int val = this.minimumSurfaceSlider.getSlider().getValue() ;
 		return percentToDecimal(val) ;
 	}

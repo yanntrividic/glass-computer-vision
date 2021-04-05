@@ -48,12 +48,12 @@ class Slider extends JFrame implements ChangeListener {
 
 		// Ajouter le panneau au frame
 		// Définir le texte de l'étiquette
-		this.label.setText(this.paramName +"=" + this.slider.getValue()); 
+		this.label.setText(this.paramName +" = " + this.slider.getValue()); 
 	} 
 
 	// Si la valeur du slider est modifiée
 	public void stateChanged(ChangeEvent e) { 
-		this.label.setText(this.paramName +"=" + this.slider.getValue()); 
+		this.label.setText(this.paramName +" = " + this.slider.getValue()); 
 		this.win.computeImg();
 	}
 

@@ -115,16 +115,15 @@ public class Extractor {
 		}
 	}
 	
-	public static Mat computeImage(Mat mat, int medianFilterKSize, double alphaSrc, double alphaMask, double gamma,
+	public static Mat computeImage(Mat mat, int medianFilterKSize, double alphaSrc, double alphaMask,
 			double intensityThreshold, double contourThreshold, double minimumSurface) {
 
-		System.out.println("medianFilterKSize="+medianFilterKSize+"\n"+
-				"alphaSrc="+alphaSrc+"\n"+
-				"alphaMask="+alphaMask+"\n"+
-				"gamma="+gamma+"\n"+
-				"intensityThreshold="+intensityThreshold+"\n"+
-				"contourThreshold="+contourThreshold+"\n"+
-				"minimumSurface="+minimumSurface+"\n") ;
+//		System.out.println("medianFilterKSize="+medianFilterKSize+"\n"+
+//				"alphaSrc="+alphaSrc+"\n"+
+//				"alphaMask="+alphaMask+"\n"+
+//				"intensityThreshold="+intensityThreshold+"\n"+
+//				"contourThreshold="+contourThreshold+"\n"+
+//				"minimumSurface="+minimumSurface+"\n") ;
 		
 		Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
 		mask = PreProcessing.rgbToGrayScale(mask) ;
@@ -133,7 +132,7 @@ public class Extractor {
 		Mat grayScale = PreProcessing.rgbToGrayScale(testImg) ;
 		grayScale = PreProcessing.medianFilter(grayScale, medianFilterKSize) ;
 		
-		testImg = cv.Utils.applyMask(grayScale, alphaSrc, mask, alphaMask, gamma) ;
+		testImg = cv.Utils.applyMask(grayScale, alphaSrc, mask, alphaMask, 0.0) ;
 
 		Point [] points = Extractor.findSpecularReflexion(testImg, intensityThreshold, contourThreshold) ;
 		

@@ -63,7 +63,6 @@ public class PanelImage extends JPanel {
 					this.panelParameter.getMedianFilterKSize(),
 					this.panelParameter.getAlphaSrc(),
 					this.panelParameter.getAlphaMask(),
-					this.panelParameter.getGamma(),
 					this.panelParameter.getIntensity(),
 					this.panelParameter.getContour(),
 					this.panelParameter.getMinimumSurface()) ;

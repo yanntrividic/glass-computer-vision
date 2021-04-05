@@ -56,7 +56,7 @@ public class Window extends JFrame {
 		
 		this.panelParameters = new PanelParameter(this) ;
 		this.contentPane.add(this.panelParameters,"East") ;
-		this.panelParameters.setPreferredSize(new Dimension(300, 600));
+		this.panelParameters.setPreferredSize(new Dimension(250, 600));
 		
 		this.panelImage = new PanelImage(this, this.panelParameters) ;
 		this.contentPane.add(this.panelImage,"Center") ;
