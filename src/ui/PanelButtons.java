@@ -18,6 +18,8 @@ public class PanelButtons extends JPanel {
 	JButton btnPrev ;
 	JButton btnNext ;
 	JButton btnCompute ;
+	JButton btnComputeNext ;
+	JButton btnComputePrev ;
 	
 	PanelImage panelImage ;
 	
@@ -30,17 +32,30 @@ public class PanelButtons extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) { panelImage.updateAfterButton(false); }});
 		add(btnPrev);
+	
+		this.btnComputePrev = new JButton("<- Compute previous image");
+		btnComputePrev.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { panelImage.updateAfterButton(false); panelImage.update(true); }});
+		add(btnComputePrev);
+		
+		this.btnCompute = new JButton("Compute");
+		btnCompute.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { panelImage.update(true); }});
+		add(btnCompute);
 
+		this.btnComputeNext = new JButton( "Compute next image ->" );
+		btnComputeNext.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { panelImage.updateAfterButton(true); panelImage.update(true); }});
+		add(btnComputeNext);
+		
 		this.btnNext = new JButton( "Next image ->" );
 		btnNext.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) { panelImage.updateAfterButton(true); }});
 		add(btnNext);
 
-		this.btnCompute = new JButton("Compute");
-		btnCompute.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) { panelImage.update(true); }});
-		add(btnCompute);
 	}
 }

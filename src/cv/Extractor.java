@@ -115,16 +115,17 @@ public class Extractor {
 		}
 	}
 	
-	public static Mat testUI(Mat mat) {
+	public static Mat computeImage(Mat mat, int medianFilterKSize, double alphaSrc, double alphaMask, double gamma,
+			double intensityThreshold, double contourThreshold, double minimumSurface) {
 
 		Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
 		mask = PreProcessing.rgbToGrayScale(mask) ;
 		
 		Mat testImg = PreProcessing.resizeSpecifiedWidth(mat, 500) ;
 		Mat grayScale = PreProcessing.rgbToGrayScale(testImg) ;
-		grayScale = PreProcessing.medianFilter(grayScale, 5) ;
+		grayScale = PreProcessing.medianFilter(grayScale, medianFilterKSize) ;
 		
-		testImg = cv.Utils.applyMask(grayScale, 0.9, mask, 0.4, 0) ;
+		testImg = cv.Utils.applyMask(grayScale, alphaSrc, mask, alphaMask, gamma) ;
 
 		Point [] points = Extractor.findSpecularReflexion(testImg, 0.007, 0.002) ;
 		

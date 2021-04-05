@@ -20,6 +20,7 @@ public class PanelImage extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private Mat currentImg ;
+	private Mat computedImg ;
 	
 	private JLabel textLabel ;
 	private JLabel imageLabel ;
@@ -27,14 +28,17 @@ public class PanelImage extends JPanel {
 	private String imgFolder ;
 	private ArrayList<String> imgFiles ;
 	private int currentIndex ;
+	private PanelParameter panelParameter; 
 	
-	public PanelImage(String imgFolder) {
+	public PanelImage(String imgFolder, PanelParameter panelParameter) {
+		this.panelParameter = panelParameter ;
 		this.imgFolder = imgFolder ;
 		this.imgFiles = Reader.getAllImgInFolder(this.imgFolder) ;
 		this.currentIndex = 0 ;
 		
 		setLayout(new BorderLayout());
 		this.currentImg = Imgcodecs.imread(imgFolder+imgFiles.get(currentIndex)) ;
+		this.computedImg = null ;
 		
 		this.textLabel = new JLabel() ;
 		this.textLabel.setText(imgFiles.get(currentIndex)) ;
@@ -55,11 +59,19 @@ public class PanelImage extends JPanel {
 		
 		if(!compute) {
 			this.currentImg = Imgcodecs.imread(this.imgFolder+this.imgFiles.get(this.currentIndex)) ;
+			this.computedImg = null ;
 		} else {
-			this.currentImg = cv.Extractor.testUI(this.currentImg) ;
+			this.computedImg = cv.Extractor.computeImage(this.currentImg, 
+					this.panelParameter.getMedianFilterKSize(),
+					this.panelParameter.getAlphaSrc(),
+					this.panelParameter.getAlphaMask(),
+					this.panelParameter.getGamma(),
+					this.panelParameter.getIntensity(),
+					this.panelParameter.getContour(),
+					this.panelParameter.getMinimumSurface()) ;
 		}
 
-		this.imageLabel = getLabelFromMat(this.currentImg) ;
+		this.imageLabel = getLabelFromMat(this.computedImg == null?this.currentImg:this.computedImg) ;
 		add(this.imageLabel, "South") ;
 		revalidate();
 	}

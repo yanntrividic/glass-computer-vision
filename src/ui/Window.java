@@ -1,5 +1,6 @@
 package ui;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -31,7 +32,7 @@ public class Window extends JFrame {
 
 	private PanelImage panelImage;
 	private PanelButtons panelButtons;
-	//private PanelParameter panelParameters; 
+	private PanelParameter panelParameters; 
 	private JPanel contentPane;
 
 	public Window() {
@@ -52,14 +53,16 @@ public class Window extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		System.out.println(imgs.get(0));
 		
-		this.panelImage = new PanelImage(imgPath) ;
-		this.contentPane.add(this.panelImage,"North") ;
+		this.panelParameters = new PanelParameter() ;
+		this.contentPane.add(this.panelParameters,"East") ;
+		this.panelParameters.setPreferredSize(new Dimension(300, 600));
+		
+		this.panelImage = new PanelImage(imgPath, this.panelParameters) ;
+		this.contentPane.add(this.panelImage,"Center") ;
 		
 		this.panelButtons = new PanelButtons(this.panelImage, imgs) ;
 		this.contentPane.add(this.panelButtons,"South") ;
 		
-		//this.panelParameters = new PanelParameter() ;
-		//this.contentPane.add(this.panelParameters,"East") ;
 		
 	}
 
@@ -74,7 +77,4 @@ public class Window extends JFrame {
 		myWindow.setVisible( true );
 	}
 
-	
-	
-	
 }
