@@ -148,12 +148,12 @@ public class Utils {
 		//System.out.println(topLeft.x + "\n" + topLeft.y + "\n" + botRight.x + "\n" +botRight.y + "\n") ;
 		//System.out.println(src.width() + "\n" + src.height()) ;
 		double filledPercetage = (botRight.x-topLeft.x)*(botRight.y-topLeft.y)/(src.width()*src.height()) ;
-		System.out.println(filledPercetage+"% filled.") ;
+		//System.out.println(filledPercetage+"% filled.") ;
 		if(filledPercetage < minimumSurface) {
 			return new Mat(src, rectCrop) ;
 		}
-		System.out.println("The rectangle found occupies more than "+(minimumSurface*100)+"% of the image.\n"+
-			"It hasn't been cropped.");
+		//System.out.println("The rectangle found occupies more than "+(minimumSurface*100)+"% of the image.\n"+
+		//	"It hasn't been cropped.");
 		return src;
 	}
 }

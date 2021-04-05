@@ -25,28 +25,26 @@ public class PanelImage extends JPanel {
 	private JLabel textLabel ;
 	private JLabel imageLabel ;
 	
-	private String imgFolder ;
-	private ArrayList<String> imgFiles ;
 	private int currentIndex ;
+	
+	private Window parent ;
 	private PanelParameter panelParameter; 
 	
-	public PanelImage(String imgFolder, PanelParameter panelParameter) {
+	public PanelImage(Window parent, PanelParameter panelParameter) {
+		this.parent = parent ;
 		this.panelParameter = panelParameter ;
-		this.imgFolder = imgFolder ;
-		this.imgFiles = Reader.getAllImgInFolder(this.imgFolder) ;
 		this.currentIndex = 0 ;
 		
 		setLayout(new BorderLayout());
-		this.currentImg = Imgcodecs.imread(imgFolder+imgFiles.get(currentIndex)) ;
+		this.currentImg = Imgcodecs.imread(parent.getImgPath()+parent.getImgs().get(currentIndex)) ;
 		this.computedImg = null ;
 		
 		this.textLabel = new JLabel() ;
-		this.textLabel.setText(imgFiles.get(currentIndex)) ;
+		this.textLabel.setText(parent.getImgs().get(currentIndex)) ;
 		add(this.textLabel,"North") ;
 		
 		this.imageLabel = getLabelFromMat(currentImg) ;
 		add(imageLabel,"South") ;
-		System.out.println(this.textLabel.getText());
 	}
 	
 	public void update(boolean compute) {
@@ -54,11 +52,11 @@ public class PanelImage extends JPanel {
 		remove(this.imageLabel) ;
 		
 		this.textLabel = new JLabel() ;
-		this.textLabel.setText((compute?"Computed ":"")+imgFiles.get(currentIndex)) ;
+		this.textLabel.setText((compute?"Computed ":"")+parent.getImgs().get(currentIndex)) ;
 		add(this.textLabel, "North") ;
 		
 		if(!compute) {
-			this.currentImg = Imgcodecs.imread(this.imgFolder+this.imgFiles.get(this.currentIndex)) ;
+			this.currentImg = Imgcodecs.imread(parent.getImgPath()+parent.getImgs().get(this.currentIndex)) ;
 			this.computedImg = null ;
 		} else {
 			this.computedImg = cv.Extractor.computeImage(this.currentImg, 
@@ -77,7 +75,7 @@ public class PanelImage extends JPanel {
 	}
 	
 	public void updateAfterButton(boolean next) {
-		if(next && this.currentIndex < this.imgFiles.size()) this.currentIndex++ ;
+		if(next && this.currentIndex < parent.getImgs().size()-1) this.currentIndex++ ;
 		if(!next && this.currentIndex > 0) this.currentIndex-- ;
 		update(false);
 	}
@@ -92,21 +90,5 @@ public class PanelImage extends JPanel {
 
 	public void setCurrentImg(Mat currentImg) {
 		this.currentImg = currentImg;
-	}
-
-	public String getImgFolder() {
-		return imgFolder;
-	}
-
-	public void setImgFolder(String imgFolder) {
-		this.imgFolder = imgFolder;
-	}
-
-	public ArrayList<String> getImgFiles() {
-		return imgFiles;
-	}
-
-	public void setImgFiles(ArrayList<String> imgFiles) {
-		this.imgFiles = imgFiles;
 	}
 }

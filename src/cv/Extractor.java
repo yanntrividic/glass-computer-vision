@@ -118,6 +118,14 @@ public class Extractor {
 	public static Mat computeImage(Mat mat, int medianFilterKSize, double alphaSrc, double alphaMask, double gamma,
 			double intensityThreshold, double contourThreshold, double minimumSurface) {
 
+		System.out.println("medianFilterKSize="+medianFilterKSize+"\n"+
+				"alphaSrc="+alphaSrc+"\n"+
+				"alphaMask="+alphaMask+"\n"+
+				"gamma="+gamma+"\n"+
+				"intensityThreshold="+intensityThreshold+"\n"+
+				"contourThreshold="+contourThreshold+"\n"+
+				"minimumSurface="+minimumSurface+"\n") ;
+		
 		Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
 		mask = PreProcessing.rgbToGrayScale(mask) ;
 		
@@ -127,9 +135,9 @@ public class Extractor {
 		
 		testImg = cv.Utils.applyMask(grayScale, alphaSrc, mask, alphaMask, gamma) ;
 
-		Point [] points = Extractor.findSpecularReflexion(testImg, 0.007, 0.002) ;
+		Point [] points = Extractor.findSpecularReflexion(testImg, intensityThreshold, contourThreshold) ;
 		
-		Mat croppedImg = cv.Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], 0.8) ;
+		Mat croppedImg = cv.Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], minimumSurface) ;
 		return croppedImg ;
 	}
 	

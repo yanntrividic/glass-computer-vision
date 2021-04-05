@@ -10,6 +10,7 @@ class Slider extends JFrame implements ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private JSlider slider; 
 	private JLabel label;
+	private Window win ;
 	
 	private int beginValue ;
 	private int endValue ;
@@ -19,8 +20,9 @@ class Slider extends JFrame implements ChangeListener {
 	
 	private String paramName ;
 
-	public Slider(int beginValue, int endValue, int initValue, int ticksSpacing, int majorTicksSpacing, String paramName) {
+	public Slider(Window win, int beginValue, int endValue, int initValue, int ticksSpacing, int majorTicksSpacing, String paramName) {
 		// Créer une étiquette
+		this.win = win ;
 		this.label = new JLabel(); 
 
 		this.beginValue = beginValue ;
@@ -52,6 +54,7 @@ class Slider extends JFrame implements ChangeListener {
 	// Si la valeur du slider est modifiée
 	public void stateChanged(ChangeEvent e) { 
 		this.label.setText(this.paramName +"=" + this.slider.getValue()); 
+		this.win.computeImg();
 	}
 
 	public JSlider getSlider() {

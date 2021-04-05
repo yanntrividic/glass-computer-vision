@@ -22,35 +22,38 @@ public class PanelParameter extends JPanel {
 	private Slider intensityThresholdSlider ;
 	private Slider contourThresholdSlider ;
 	private Slider minimumSurfaceSlider ;
-
-	public PanelParameter() {
+	
+	private Window parent ;
+	
+	public PanelParameter(Window parent) {
+		this.parent = parent ;
 		setLayout(new FlowLayout()) ;
 		
-		this.medianFilterKSizeSlider = new Slider(0, 20, 3, 2, 10, "medianFilterKSizeSlider") ;
+		this.medianFilterKSizeSlider = new Slider(parent, 0, 20, 3, 2, 10, "medianFilterKSizeSlider") ;
 		add(medianFilterKSizeSlider.getSlider()) ;
 		add(medianFilterKSizeSlider.getLabel()) ;
 		
-		this.alphaSrcSlider = new Slider(0, 100, 90, 10, 50, "alphaSrcSlider") ;
+		this.alphaSrcSlider = new Slider(parent, 0, 100, 90, 10, 50, "alphaSrcSlider") ;
 		add(alphaSrcSlider.getSlider()) ;
 		add(alphaSrcSlider.getLabel()) ;	
 		
-		this.alphaMaskSlider = new Slider(0, 100, 30, 10, 50, "alphaMaskSlider") ;
+		this.alphaMaskSlider = new Slider(parent, 0, 100, 30, 10, 50, "alphaMaskSlider") ;
 		add(alphaMaskSlider.getSlider()) ;
 		add(alphaMaskSlider.getLabel()) ;	
 		
-		this.gammaSlider = new Slider(0, 100, 0, 10, 50, "gammaSlider") ;
+		this.gammaSlider = new Slider(parent, 0, 100, 0, 10, 50, "gammaSlider") ;
 		add(gammaSlider.getSlider()) ;
 		add(gammaSlider.getLabel()) ;	
 		
-		this.intensityThresholdSlider = new Slider(0, 100, 7, 10, 50, "intensityThreshold") ;
+		this.intensityThresholdSlider = new Slider(parent, 0, 100, 15, 10, 50, "intensityThreshold") ;
 		add(intensityThresholdSlider.getSlider()) ;
 		add(intensityThresholdSlider.getLabel()) ;	
 
-		this.contourThresholdSlider = new Slider(0, 100, 2, 10, 50, "contourThreshold") ;
+		this.contourThresholdSlider = new Slider(parent, 0, 100, 9, 10, 50, "contourThreshold") ;
 		add(contourThresholdSlider.getSlider()) ;
 		add(contourThresholdSlider.getLabel()) ;	
 		
-		this.minimumSurfaceSlider = new Slider(0, 100, 80, 10, 50, "minimumSurface") ;
+		this.minimumSurfaceSlider = new Slider(parent, 0, 100, 80, 10, 50, "minimumSurface") ;
 		add(minimumSurfaceSlider.getSlider()) ;
 		add(minimumSurfaceSlider.getLabel()) ;	
 	}

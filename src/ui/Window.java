@@ -45,36 +45,43 @@ public class Window extends JFrame {
 		this.imgPath = Reader.getImgDir("train") ;
 		this.imgs = Reader.getAllImgInFolder(imgPath) ;
 
+		ArrayList<String> labels = Reader.getAllLabelsInFolder(imgPath) ;
 		//Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
 		//mask = PreProcessing.rgbToGrayScale(mask) ;
 
+		if(imgs.size() != labels.size()) System.err.println("We couldn't find the same amount of images and labels.") ;
 
 		this.contentPane = (JPanel) this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
-		System.out.println(imgs.get(0));
 		
-		this.panelParameters = new PanelParameter() ;
+		this.panelParameters = new PanelParameter(this) ;
 		this.contentPane.add(this.panelParameters,"East") ;
 		this.panelParameters.setPreferredSize(new Dimension(300, 600));
 		
-		this.panelImage = new PanelImage(imgPath, this.panelParameters) ;
+		this.panelImage = new PanelImage(this, this.panelParameters) ;
 		this.contentPane.add(this.panelImage,"Center") ;
 		
-		this.panelButtons = new PanelButtons(this.panelImage, imgs) ;
+		this.panelButtons = new PanelButtons(this) ;
 		this.contentPane.add(this.panelButtons,"South") ;
-		
-		
 	}
 
-	public static void main(String[] args) throws Exception {
-		nu.pattern.OpenCV.loadLocally(); //loads opencv for this run
-		// Apply a look'n feel
-
-		UIManager.setLookAndFeel( new NimbusLookAndFeel() );
-
-		// Start my window
-		Window myWindow = new Window();
-		myWindow.setVisible( true );
+	public String getImgPath() {
+		return imgPath;
+	}
+	
+	public void computeImg() {
+		this.panelImage.update(true) ;
+	}
+	
+	public void updateAfterButton(boolean next) {
+		this.panelImage.updateAfterButton(next);
+	}
+	
+	public void showOriginalImg() {
+		this.panelImage.update(false);
 	}
 
+	public ArrayList<String> getImgs() {
+		return imgs;
+	}
 }
