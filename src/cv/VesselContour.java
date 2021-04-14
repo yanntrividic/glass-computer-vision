@@ -76,23 +76,6 @@ public class VesselContour {
         return grad;
     }
 
-    private static Mat mergeEdges(Mat cannyEdge, Mat sobelEdge, int threshold) {
-        Mat edge = new Mat(cannyEdge.height(), cannyEdge.width(), CvType.CV_8U);
-
-        for (int i = 0; i < edge.height(); i++) {
-            for (int j = 0; j < edge.width(); j++) {
-                double[] cannyData = cannyEdge.get(i, j);
-                double[] sobelData = sobelEdge.get(i, j);
-
-                double[] data = { cannyData[0] + sobelData[0] };
-
-                edge.put(i, j, data);
-            }
-        }
-
-        return edge;
-    }
-
     private static int[][] getBoundaries(Mat image) {
         int height = image.rows();
         int width = image.cols();
@@ -131,37 +114,17 @@ public class VesselContour {
     }
 
     private static Mat binarizeImage(Mat source) {
-        Mat destination = Mat.zeros(source.size(), source.type());
+        Mat destination = new Mat();
 
-        for (int i = 0; i < source.rows(); i++) {
-            for (int j = 0; j < source.cols(); j++) {
-                byte[] data = new byte[1];
-                source.get(i, j, data);
-
-                if (data[0] != 0) {
-                    byte[] newData = { (byte) 255 };
-                    destination.put(i, j, newData);
-                }
-            }
-        }
+        Imgproc.threshold(source, destination, 1, 255, Imgproc.THRESH_BINARY);
 
         return destination;
     }
 
     private static Mat invertImage(Mat source) {
-        Mat destination = Mat.zeros(source.size(), source.type());
+        Mat destination = new Mat();
 
-        for (int i = 0; i < source.rows(); i++) {
-            for (int j = 0; j < source.cols(); j++) {
-                byte[] data = new byte[1];
-                source.get(i, j, data);
-
-                if (data[0] == 0) {
-                    byte[] newData = { (byte) 255 };
-                    destination.put(i, j, newData);
-                }
-            }
-        }
+        Core.bitwise_not(source, destination);
 
         return destination;
     }
@@ -208,6 +171,8 @@ public class VesselContour {
         Mat labels = new Mat(), stats = new Mat(), centroids = new Mat();
         Imgproc.connectedComponentsWithStats(source, labels, stats, centroids, 4);
 
+        // binarisation sur les labels (low, high)
+
         return getLabelImage(labels, getBiggestLabelIndex(stats));
     }
 
@@ -244,18 +209,23 @@ public class VesselContour {
         Mat sobelEdge = new Mat();
         Imgproc.GaussianBlur(source, sobelEdge, new Size(7, 7), 1.1);
         sobelEdge = sobelEdge(sobelEdge, CvType.CV_16S, 3, 1, 1);
-        Imgproc.threshold(sobelEdge, sobelEdge, threshold / 4, 255, Imgproc.THRESH_BINARY);
+        Imgproc.threshold(sobelEdge, sobelEdge, threshold / 2, 255, Imgproc.THRESH_BINARY); // todo: slider
 
         // Merge Canny and Sobel edges
         Mat destination = new Mat();
-        destination = mergeEdges(cannyEdge, sobelEdge, 0);
+
+        Core.add(cannyEdge, sobelEdge, destination);
+
         destination = binarizeImage(destination);
         destination = closeImage(destination, 3); // todo: kernel size
+
+        Imgproc.rectangle(destination, new Point(0, 0), new Point(destination.width() - 1, destination.height() - 1),
+                new Scalar(0), 5);
 
         return destination;
     }
 
-    private static Mat substractBackground(Mat source) {
+    private static Mat substractBackground(Mat source, int kernel) {
         Mat destination = binarizeImage(source);
 
         for (int i = 0; i < 2; i++) {
@@ -263,8 +233,8 @@ public class VesselContour {
             destination = invertImage(destination);
         }
 
-        destination = openImage(destination, 5);
-        destination = closeImage(destination, 5);
+        destination = openImage(destination, kernel);
+        destination = closeImage(destination, kernel);
 
         return destination;
     }
@@ -310,31 +280,31 @@ public class VesselContour {
         return getMaximumIndexFromIntegerArray(histogram);
     }
 
-    private static Mat findVesselContour(String filename, int symmetryMode, int size, int threshold,
+    private static Mat findVesselContour(String filename, int symmetryMode, int size, int threshold, int kernel,
             int segmentationMode) {
         Mat image = Imgcodecs.imread(filename);
 
         Mat grayscale = new Mat();
         Imgproc.cvtColor(image, grayscale, Imgproc.COLOR_RGB2GRAY);
 
-        Mat vessel = findVesselContour(grayscale, threshold) ;
+        Mat vessel = findVesselContour(grayscale, threshold, kernel);
         return resizeImage(vessel, size);
     }
-    
-    
-    public static Mat findVesselContour(Mat mat, int threshold) {
+
+    public static Mat findVesselContour(Mat mat, int threshold, int kernel) {
         // https://fr.mathworks.com/help/images/ref/adapthisteq.html
         CLAHE clahe = Imgproc.createCLAHE(0.01, new Size(8, 8));
         clahe.apply(mat, mat);
 
         Mat vessel = cannySobelEdge(mat, threshold);
-        vessel = substractBackground(vessel);
+        vessel = substractBackground(vessel, kernel);
         vessel = removeParalleleRegions(vessel);
 
         Mat centers = findCenters(vessel);
         int center = findMostFrequentCenter(centers);
 
-        Imgproc.line(vessel, new Point(center, 0), new Point(center, vessel.height()), new Scalar(127));
+        // Imgproc.line(vessel, new Point(center, 0), new Point(center,
+        // vessel.height()), new Scalar(127));
 
         return vessel;
     }
@@ -342,7 +312,7 @@ public class VesselContour {
     public static void main(String[] args) {
         nu.pattern.OpenCV.loadLocally();
 
-        // int kernelSize = 7; // openImage/closeImage kernel size
+        // openImage/closeImage kernel size
 
         // int size = 500;
         // int threshold = (int) (255 * 0.7);
@@ -350,8 +320,9 @@ public class VesselContour {
         // threshold, 0);
 
         int size = 256;
+        int kernel = 15;
         int threshold = (int) (255 * 0.22 * 2);
-        Mat image = findVesselContour("src/resources/0.jpg", 0, size, threshold, 0);
+        Mat image = findVesselContour("src/resources/0.jpg", 0, size, threshold, kernel, 0);
 
         HighGui.imshow(null, image);
         HighGui.waitKey();

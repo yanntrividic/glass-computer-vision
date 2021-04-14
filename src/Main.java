@@ -15,20 +15,21 @@ import ui.Window;
 
 /**
  * Main class of the program
+ * 
  * @author Yann Trividic
  * @version 1.0
  */
 
 public class Main {
-	
+
 	public static void main(String[] args) throws Exception {
-		nu.pattern.OpenCV.loadLocally(); //loads opencv for this run
+		nu.pattern.OpenCV.loadLocally(); // loads opencv for this run
 		// Apply a look'n feel
 
-		UIManager.setLookAndFeel( new NimbusLookAndFeel() );
+		// UIManager.setLookAndFeel( new NimbusLookAndFeel() );
 
 		// Start my window
 		Window myWindow = new Window();
-		myWindow.setVisible( true );
+		myWindow.setVisible(true);
 	}
 }
