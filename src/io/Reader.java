@@ -39,11 +39,9 @@ public class Reader {
 	 * @param path Path towards the JSON file
 	 */
 	public static Mat extractLabelsFromJSON(String path) {
-		// FIXME: je pense que la signature de la méthode devrait être Mat plutôt que void
 		//System.out.println("Here : " + path );
 		try {
 			JSONParser parser = new JSONParser();
-			//FIXME : problème à la ligne d'en dessous, chemin vers img et pas json...
 			Object obj = parser.parse(new FileReader(path));
 			JSONObject JSONobj = (JSONObject) obj;
 			
@@ -85,7 +83,7 @@ public class Reader {
 		return null;
 	}
 	
-	private static Point convertToPoint(String s) {
+	public static Point convertToPoint(String s) {
 		Point p = new Point();
 		
 		String[] str = s.substring(1, s.length()-1).split(",");
