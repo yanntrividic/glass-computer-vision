@@ -30,7 +30,8 @@ public class GestionC4 {
 	    //Reading the source image in to a Mat object
 	      //Mat src = Imgcodecs.imread("D:\\images\\blank.jpg");
 	      //Drawing an Ellipse
-	      RotatedRect box = new RotatedRect(new Point(300, 200), new Size(260, 180), 180);
+	      //RotatedRect box = new RotatedRect(new Point(300, 200), new Size(260, 180), 180);
+	      RotatedRect box = new RotatedRect();
 	      Scalar color = new Scalar(64, 64, 64);
 	      int thickness = 10;
 	      Imgproc.ellipse (src, box, color, thickness);

@@ -19,6 +19,7 @@ public class PanelParameter extends JPanel {
 	public static final int DEFAULT_INTENSITY_THRESHOLD = 15 ;
 	public static final int DEFAULT_CONTOUR_THRESHOLD = 9 ;
 	public static final int DEFAULT_MINIMUM_SURFACE = 80 ;
+	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 100 ;
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -29,6 +30,8 @@ public class PanelParameter extends JPanel {
 	private Slider intensityThresholdSlider ;
 	private Slider contourThresholdSlider ;
 	private Slider minimumSurfaceSlider ;
+	
+	private Slider thresholdVesselContour ;
 	
 	private Window parent ;
 	
@@ -59,6 +62,10 @@ public class PanelParameter extends JPanel {
 		this.minimumSurfaceSlider = new Slider(parent, 0, 100, DEFAULT_MINIMUM_SURFACE, 10, 50, "minimumSurface") ;
 		add(minimumSurfaceSlider.getLabel()) ;	
 		add(minimumSurfaceSlider.getSlider()) ;
+		
+		this.thresholdVesselContour = new Slider(parent, 0, 255, DEFAULT_THRESHOLD_VESSEL_CONTOUR, 10, 50, "thresholdVesselContour") ;
+		add(thresholdVesselContour.getLabel()) ;	
+		add(thresholdVesselContour.getSlider()) ;
 	}
 	
 	public int getMedianFilterKSize() {
@@ -97,5 +104,9 @@ public class PanelParameter extends JPanel {
 	
 	private double perThousandToDecimal(int percentage) {
 		return (double) (percentage)/1000 ;
+	}
+	
+	public int getThresholdVesselContour() {
+		return this.contourThresholdSlider.getSlider().getValue() ;
 	}
 }

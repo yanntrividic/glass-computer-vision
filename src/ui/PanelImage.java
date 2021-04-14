@@ -65,7 +65,8 @@ public class PanelImage extends JPanel {
 					this.panelParameter.getAlphaMask(),
 					this.panelParameter.getIntensity(),
 					this.panelParameter.getContour(),
-					this.panelParameter.getMinimumSurface()) ;
+					this.panelParameter.getMinimumSurface(),
+					this.panelParameter.getThresholdVesselContour()) ;
 		}
 
 		this.imageLabel = getLabelFromMat(this.computedImg == null?this.currentImg:this.computedImg) ;

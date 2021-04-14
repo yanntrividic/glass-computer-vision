@@ -314,16 +314,20 @@ public class VesselContour {
             int segmentationMode) {
         Mat image = Imgcodecs.imread(filename);
 
-        Mat resized = resizeImage(image, size);
-
         Mat grayscale = new Mat();
-        Imgproc.cvtColor(resized, grayscale, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.cvtColor(image, grayscale, Imgproc.COLOR_RGB2GRAY);
 
+        Mat vessel = findVesselContour(grayscale, threshold) ;
+        return resizeImage(vessel, size);
+    }
+    
+    
+    public static Mat findVesselContour(Mat mat, int threshold) {
         // https://fr.mathworks.com/help/images/ref/adapthisteq.html
         CLAHE clahe = Imgproc.createCLAHE(0.01, new Size(8, 8));
-        clahe.apply(grayscale, grayscale);
+        clahe.apply(mat, mat);
 
-        Mat vessel = cannySobelEdge(grayscale, threshold);
+        Mat vessel = cannySobelEdge(mat, threshold);
         vessel = substractBackground(vessel);
         vessel = removeParalleleRegions(vessel);
 
