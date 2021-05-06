@@ -34,6 +34,9 @@ public class Window extends JFrame {
 	private PanelButtons panelButtons;
 	private PanelParameter panelParameters; 
 	private JPanel contentPane;
+	
+	public final static int CROPPING_STAGE = 1;
+	public final static int MASKING_STAGE = 2;
 
 	public Window() {
 		super("Glass CV" );

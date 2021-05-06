@@ -19,11 +19,13 @@ class Slider extends JFrame implements ChangeListener {
 	private int majorTicksSpacing ;
 	
 	private String paramName ;
+	private int paramType ;
 
-	public Slider(Window win, int beginValue, int endValue, int initValue, int ticksSpacing, int majorTicksSpacing, String paramName) {
+	public Slider(Window win, int beginValue, int endValue, int initValue, int ticksSpacing, int majorTicksSpacing, String paramName, int paramType) {
 		// Créer une étiquette
 		this.win = win ;
 		this.label = new JLabel(); 
+		this.paramType = paramType;
 
 		this.beginValue = beginValue ;
 		this.endValue = endValue ;
@@ -54,7 +56,7 @@ class Slider extends JFrame implements ChangeListener {
 	// Si la valeur du slider est modifiée
 	public void stateChanged(ChangeEvent e) { 
 		this.label.setText(this.paramName +" = " + this.slider.getValue()); 
-		this.win.computeImg();
+		this.win.computeImg(this.paramType);
 	}
 
 	public JSlider getSlider() {

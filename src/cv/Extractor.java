@@ -9,6 +9,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import io.Reader;
+import ui.Window;
 
 /**
  * Static class with methods to extract characteristics from images.
@@ -147,17 +148,17 @@ public class Extractor {
 		Point[] points = Extractor.findSpecularReflexion(testImg, intensityThreshold, contourThreshold);
 
 		Mat croppedImg = cv.Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], minimumSurface);
-		if(stage == 0) { 
+		if(stage == Window.CROPPING_STAGE) { 
 			return croppedImg; // when we only want to see the cropped image
 		}
 		
 		// todo: code here
 		Mat vessel = VesselContour.findVesselContour(croppedImg, thresholdVesselContour, kernelVesselContour);
-		if (stage == 1) {
+		if (stage == Window.MASKING_STAGE) {
 			return vessel; //when we want to visualize the mask
 		}
 		
-		GestionC4.getEllipse(croppedImg, mask);
+		GestionC4.getEllipse(croppedImg, vessel);
 				
 		return vessel;
 	}

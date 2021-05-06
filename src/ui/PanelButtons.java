@@ -50,13 +50,13 @@ public class PanelButtons extends JPanel {
 		this.btnCrop = new JButton("Crop image");
 		btnCrop.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) { parent.computeImg(0); }});
+			public void actionPerformed(ActionEvent e) { parent.computeImg(Window.CROPPING_STAGE); }});
 		add(btnCrop);
 		
 		this.btnMask = new JButton("Compute mask");
 		btnMask.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) { parent.computeImg(1); }});
+			public void actionPerformed(ActionEvent e) { parent.computeImg(Window.MASKING_STAGE); }});
 		add(btnMask);
 		
 		this.btnCompute = new JButton("Compute image");
