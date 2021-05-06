@@ -24,9 +24,6 @@ public class GestionC4 {
 	 */
 	public static ArrayList<Point> getEllipse(Mat img,Mat mask){
 		//merge the mask and the image
-		System.out.println(img.size());
-		System.out.println(mask.size());
-		
 		Core.multiply(img, mask, img);
 		
 		//ArrayList<Point> ellipse=new ArrayList<Point>();
