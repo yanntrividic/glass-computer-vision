@@ -1,10 +1,10 @@
 package cv;
 
-
 import java.awt.Color;
 //import java.awt.Point;
 import java.util.ArrayList;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
@@ -16,50 +16,64 @@ import org.opencv.imgproc.Imgproc;
 
 public class GestionC4 {
 	
-	
-	public static ArrayList<Point> getEllipse(Mat img,String path){
-		ArrayList<Point> ellipse=new ArrayList<Point>();
-		Point startPos=getFirstPixel(img);
-		System.out.println("pos dep"+startPos);
+	/**
+	 * The function that finds the ellipse with the best score. This function calls the methods drawEllipse, getFirstPixel,getLeftPixel,getRightPixel
+	 * @param img a picture with a glass on it
+	 * @param mask the mask to isolate the glass from the rest of the image
+	 * @param path the path where the photo is located
+	 * @return
+	 */
+	public static ArrayList<Point> getEllipse(Mat img,Mat mask,String path){
+		//merge the mask and the image
+		Core.multiply(img, mask, img);
 		
+		//resize the image if necessary 
+		img=resize(img);
+		
+		
+		//ArrayList<Point> ellipse=new ArrayList<Point>();
+		
+		//the starting position for the course
+		Point startPos=getFirstPixel(img);
+				
 		//startPos.x=startPos.x+(img.height()*10)/100;  //à verifier
 		Point endPos=new Point();
 		
+		//the end position, it corresponds to 2/3 of the image, this value is arbitrary and must be changed
 		endPos.y=(img.height()/3)*2; //à revoir
 		System.out.println("fin"+endPos);
 		
-		double bestScore;
+		//the list of points of the ellipse with the best score 
 		ArrayList<Point> bestEllipse=new ArrayList<Point>();
-		bestEllipse=drawEllipse(startPos,getRightPixel(img,(int)startPos.x,(int)startPos.y),path,10);
-		for(int i=(int)startPos.y+5;i<endPos.y;i+=5) {//changer valeur ++
-			System.out.println("i="+i);
+		//we create a first ellipse to be able to compare
+		bestEllipse=drawEllipse(startPos,getRightPixel(img,(int)startPos.x,(int)startPos.y),img,10);
+		
+		////run through the image, increasing the height by 5pixels as you go
+		for(int i=(int)startPos.y+5;i<endPos.y;i+=5) {   //y parameter
+			//get the left and right pixels at height i
 			Point left=getLeftPixel(img,i);
-			Point right=getRightPixel(img,(int)left.x,(int)left.y);//
-			//droite=getRightPixel(img,(int)gauche.x,(int) gauche.y)
-			System.out.println("gauche "+left+"droite "+right);
-			for(int z=10;z<80;z+=5) {
-				System.out.println("z="+z);
-				ArrayList<Point> tempEllipse=drawEllipse(left,right,path,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
+			Point right=getRightPixel(img,(int)left.x,(int)left.y);
 			
-				Color col=new Color(255,255,255);
-				//ArrayList<Point> tempEllipse=getEllipseDraw(img,col);
-				Mat temp=img;
-				//Imgproc.cvtColor(temp, img, Imgproc.COLOR_RGB2GRAY);
+			////we create all possible ellipses at this height, z corresponds to its height, it starts at 10 and increases from 10 to 80
+			for(int z=10;z<80;z+=5) { //z parameter
+				System.out.println("z="+z);
+				ArrayList<Point> tempEllipse=drawEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
+				//the current score is compared with the score of the ellipse 
 				if(getEllipseScore(img, tempEllipse)>getEllipseScore(img, bestEllipse)) {
 					bestEllipse=tempEllipse;
 				}
 			}
 			
 		}
-		System.out.println("gg"+bestEllipse);
+		//show the best Ellipse
 		testDrawn(bestEllipse,img);
 		
-		return ellipse;
+		return bestEllipse;
 	}
 	/**
-	 * 
-	 * @param path
-	 * @return
+	 * allows you to load an image
+	 * @param path the path of the image 
+	 * @return the loaded image
 	 */
 	public static Mat loadPicture(String path) {
 		nu.pattern.OpenCV.loadLocally();
@@ -78,8 +92,6 @@ public class GestionC4 {
 		for(int i=0;(i<img.width())&&(p.x==0);i++) {
 			System.out.println("test");
 			for(int j=0;j<img.height()&&p.x==0;j++) {
-				//System.out.println("j"+j+" i"+i);
-				//System.out.println("ff"+img.get(j, i)[0]);
 				if(img.get(j, i)[0]!=0) {
 					p=new Point(i,j);
 				}
@@ -131,32 +143,43 @@ public class GestionC4 {
 		return p;
 	}
 	*/
-	public static ArrayList<Point> drawEllipse(Point left,Point right,String path,int height) {
+	/**
+	 * 
+	 * @param left The left point, the starting point of the ellipse
+	 * @param right The right point, the end point of the ellipse
+	 * @param src  The image where the ellipse must be made
+	 * @param height the height of the ellipse in the glass
+	 * @return a list of points corresponds to the plotted ellipse
+	 */
+	public static ArrayList<Point> drawEllipse(Point left,Point right,Mat src,int height) {
 		
 	      //Reading the source image in to a Mat object
-	      Mat src = loadPicture(path);
+	      
 	    //Reading the source image in to a Mat object
 	      //Mat src = Imgcodecs.imread(path);
 	      //Drawing an Ellipse
-	      src=resize(src);
-	      Size sz=new Size(right.x-left.x,height);  //par défaut 50
+	      //src=resize(src);
+		  Mat temp = new Mat();
+		  temp= src.clone();//The image is cloned each time so that the ellipses are not made directly on the image, as they would then overlap
+		 
+	      Size sz=new Size(right.x-left.x,height);  //the size of the future box
 	      System.out.println("taille"+sz);
-	      Point center=new Point((left.x+right.x)/2,left.y);
+	      Point center=new Point((left.x+right.x)/2,left.y);//the centre of the ellipse 
 	      System.out.println("centre"+center);
-	      RotatedRect box = new RotatedRect(center,sz,0);//le dernier parametre correspond à l'angle d'inclinaison
-	      Scalar color = new Scalar(255, 255, 255);
+	      RotatedRect box = new RotatedRect(center,sz,0);//the last parameter is the tilt angle, and MAY BE A PARAMETER 
+	      Scalar color = new Scalar(255, 255, 255); //the colour of the curve, here it is white MAY BE A PARAMETER 
 	      int thickness = 1;
-	      Imgproc.ellipse (src, box, color, thickness);
+	      Imgproc.ellipse (temp, box, color, thickness);  //the ellipse is drawn
 	      System.out.println("ellipse réalisé");
 	      //Imgproc.ellipse(src, new Point(150,150), new Size(260, 180), 25.0, 25.0, 25.0, color); test autres arguments
-	      //Saving and displaying the image
-	      Imgcodecs.imwrite("E:\\image\\arrowed_line.jpg", src);
-	     HighGui.imshow("Drawing an ellipse"+right, src);
-	      HighGui.waitKey(10);//changer la valeur de 10
 	      
-	   return getEllipseDraw(src,Color.white);
+	      HighGui.imshow("Drawing an ellipse"+right, temp);//displays the ellipsis, can be deleted
+	      HighGui.waitKey(10);//the value 10 allows ellipses to be displayed in a consistent manner
+	      
+	   return getEllipseDraw(temp,Color.white);
 	      
 	   }
+	
 	public static void testDrawn(ArrayList<Point>list,Mat img)
 	{
 		double[] col= {212.0, 43.0, 48.0};
@@ -167,6 +190,12 @@ public class GestionC4 {
 		System.out.println("attention les yeux");
 		show(img,"testDrawn");
 	}
+	
+	/**
+	 * For testing purposes only
+	 * @param matrix
+	 * @param legend
+	 */
 	public static void show(Mat matrix,String legend) {
 		System.out.println("welcome to hell");
 		HighGui.imshow(legend, matrix);
@@ -177,16 +206,14 @@ public class GestionC4 {
 	
 	
 
-	public static void getTheEllipse(Mat img) {
-		
-	}
+	
 	/**
 	  allows to obtain the ellipse drawn previously
 	 * @param img picture where the ellipse is
 	 * @param col the color of the ellipse
 	 * @return the list of points that make up the ellipse
 	 */
-	public static ArrayList<Point> getEllipseDraw(Mat img,Color col) {
+	public static ArrayList<Point> getEllipseDraw(Mat img,Color col) {//maybe a greyscale problem
 		ArrayList<Point> ellipse=new ArrayList<Point>();
 		for(int i=0;i<img.height();i++) {
 			for(int j=0;j<img.width();j++) {
@@ -200,7 +227,12 @@ public class GestionC4 {
 		}
 		return ellipse;
 	}
-	
+	/**
+	 * Calculates the score of an ellipse using Sagi Eppel's method, "Point by point evaluation of the curve environment"
+	 * @param img the image where the ellipse should be
+	 * @param ellipse the ellipse as a list of points
+	 * @return the ellipse's score
+	 */
 	public static double getEllipseScore(Mat img, ArrayList<Point> ellipse) {
 		//U ->points above the ellipse
 		//D ->points below the ellipse
@@ -210,6 +242,7 @@ public class GestionC4 {
 		double sommD=0;
 		//mal placé
 		Mat temp=new Mat();
+		//grayscale before calculating the score
 		Imgproc.cvtColor(img, temp, Imgproc.COLOR_RGB2GRAY);
 		
 		for(int i=0;i<ellipse.size();i++) {
@@ -231,27 +264,29 @@ public class GestionC4 {
 		return((meanU-meanD)/max);
 		
 	}
-	
+	/**
+	 * allows you to resize the image to avoid too many operations
+	 * @param img the image to resize
+	 * @return the image in the new format(if necessary)
+	 */
 	public static Mat resize(Mat img) {//permet aussi d'eviter les trop longs de chargement
 		Mat res=new Mat();
 		Size sz=new Size();
 		if(img.height()>=2000) {
 			sz=new Size(img.width()/5,img.height()/5);
+			Imgproc.resize( img, res, sz);
 		}
 		else if(img.height()>=1600) {
 			sz=new Size(img.width()/3,img.height()/3);
+			Imgproc.resize( img, res, sz);
 		}
 		else if(img.height()>=1000) {
 			sz=new Size(img.width()/1.5,img.height()/1.5);
+			Imgproc.resize( img, res, sz);
 		}
-		/*
-		else if(img.height()>=500) {
-			sz=new Size(img.width()/2,img.height()/2);
-		}*/
-		Imgproc.resize( img, res, sz);
 		return res;
 	}
-
+//not use
 	public static void main(String[]args) {
 		//drawEllipse();
 		//drawEllipse(new Point(0,0),new Point(0,0));
@@ -261,12 +296,10 @@ public class GestionC4 {
 		Mat img=loadPicture("E:\\image\\imageTest\\40.jpg");
 		System.out.println("type"+img.type());
 		//Imgproc.resize( img, img, sz );
-		Mat img2=resize(img);
-		Mat img3=new Mat();
+		
 		//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
-		show(img2,"resize");
 		String path="E:\\image\\imageTest\\40.jpg";
-		getEllipse(img2,path);
+		getEllipse(img,img,path);
 		Point startPos=getFirstPixel(img);
 		//System.out.println("point de dep"+ startPos);
 		Point droite=getRightPixel(img,(int)startPos.x,(int) startPos.y);
