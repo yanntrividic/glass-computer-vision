@@ -20,27 +20,25 @@ public class GestionC4 {
 	 * The function that finds the ellipse with the best score. This function calls the methods drawEllipse, getFirstPixel,getLeftPixel,getRightPixel
 	 * @param img a picture with a glass on it
 	 * @param mask the mask to isolate the glass from the rest of the image
-	 * @param path the path where the photo is located
 	 * @return
 	 */
-	public static ArrayList<Point> getEllipse(Mat img,Mat mask,String path){
+	public static ArrayList<Point> getEllipse(Mat img,Mat mask){
 		//merge the mask and the image
+		System.out.println(img.size());
+		System.out.println(mask.size());
+		
 		Core.multiply(img, mask, img);
-		
-		//resize the image if necessary 
-		img=resize(img);
-		
 		
 		//ArrayList<Point> ellipse=new ArrayList<Point>();
 		
 		//the starting position for the course
 		Point startPos=getFirstPixel(img);
 				
-		//startPos.x=startPos.x+(img.height()*10)/100;  //à verifier
+		//startPos.x=startPos.x+(img.height()*10)/100;  //ï¿½ verifier
 		Point endPos=new Point();
 		
 		//the end position, it corresponds to 2/3 of the image, this value is arbitrary and must be changed
-		endPos.y=(img.height()/3)*2; //à revoir
+		endPos.y=(img.height()/3)*2; //ï¿½ revoir
 		System.out.println("fin"+endPos);
 		
 		//the list of points of the ellipse with the best score 
@@ -170,7 +168,7 @@ public class GestionC4 {
 	      Scalar color = new Scalar(255, 255, 255); //the colour of the curve, here it is white MAY BE A PARAMETER 
 	      int thickness = 1;
 	      Imgproc.ellipse (temp, box, color, thickness);  //the ellipse is drawn
-	      System.out.println("ellipse réalisé");
+	      System.out.println("ellipse rï¿½alisï¿½");
 	      //Imgproc.ellipse(src, new Point(150,150), new Size(260, 180), 25.0, 25.0, 25.0, color); test autres arguments
 	      
 	      HighGui.imshow("Drawing an ellipse"+right, temp);//displays the ellipsis, can be deleted
@@ -240,7 +238,7 @@ public class GestionC4 {
 		double maxD=0;
 		double sommU=0; 
 		double sommD=0;
-		//mal placé
+		//mal placï¿½
 		Mat temp=new Mat();
 		//grayscale before calculating the score
 		Imgproc.cvtColor(img, temp, Imgproc.COLOR_RGB2GRAY);
@@ -297,9 +295,10 @@ public class GestionC4 {
 		System.out.println("type"+img.type());
 		//Imgproc.resize( img, img, sz );
 		
+		
 		//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
 		String path="E:\\image\\imageTest\\40.jpg";
-		getEllipse(img,img,path);
+		getEllipse(img, img);
 		Point startPos=getFirstPixel(img);
 		//System.out.println("point de dep"+ startPos);
 		Point droite=getRightPixel(img,(int)startPos.x,(int) startPos.y);

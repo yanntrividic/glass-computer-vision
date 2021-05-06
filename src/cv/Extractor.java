@@ -124,7 +124,7 @@ public class Extractor {
 		}
 	}
 
-	public static Mat computeImage(Mat mat, int medianFilterKSize, double alphaSrc, double alphaMask,
+	public static Mat computeImage(int stage, Mat mat, int medianFilterKSize, double alphaSrc, double alphaMask,
 			double intensityThreshold, double contourThreshold, double minimumSurface, int thresholdVesselContour,
 			int kernelVesselContour) {
 
@@ -147,10 +147,18 @@ public class Extractor {
 		Point[] points = Extractor.findSpecularReflexion(testImg, intensityThreshold, contourThreshold);
 
 		Mat croppedImg = cv.Utils.getCroppedImageFromTopLeftBotRight(grayScale, points[0], points[1], minimumSurface);
-
+		if(stage == 0) { 
+			return croppedImg; // when we only want to see the cropped image
+		}
+		
 		// todo: code here
 		Mat vessel = VesselContour.findVesselContour(croppedImg, thresholdVesselContour, kernelVesselContour);
-
+		if (stage == 1) {
+			return vessel; //when we want to visualize the mask
+		}
+		
+		GestionC4.getEllipse(croppedImg, mask);
+				
 		return vessel;
 	}
 

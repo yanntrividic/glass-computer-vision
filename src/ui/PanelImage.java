@@ -48,6 +48,10 @@ public class PanelImage extends JPanel {
 	}
 
 	public void update(boolean compute) {
+		update(compute, -1) ;
+	}
+	
+	public void update(boolean compute, int stage) {
 		remove(this.textLabel);
 		remove(this.imageLabel);
 
@@ -59,7 +63,7 @@ public class PanelImage extends JPanel {
 			this.currentImg = Imgcodecs.imread(parent.getImgPath() + parent.getImgs().get(this.currentIndex));
 			this.computedImg = null;
 		} else {
-			this.computedImg = cv.Extractor.computeImage(this.currentImg, this.panelParameter.getMedianFilterKSize(),
+			this.computedImg = cv.Extractor.computeImage(stage, this.currentImg, this.panelParameter.getMedianFilterKSize(),
 					this.panelParameter.getAlphaSrc(), this.panelParameter.getAlphaMask(),
 					this.panelParameter.getIntensity(), this.panelParameter.getContour(),
 					this.panelParameter.getMinimumSurface(), this.panelParameter.getThresholdVesselContour(),

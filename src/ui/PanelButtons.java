@@ -17,6 +17,8 @@ public class PanelButtons extends JPanel {
 	JButton btnPrev ;
 	JButton btnNext ;
 	JButton btnSeeOriginal ;
+	JButton btnCrop ;
+	JButton btnMask ;
 	JButton btnCompute ;
 	JButton btnComputeNext ;
 	JButton btnComputePrev ;
@@ -45,11 +47,23 @@ public class PanelButtons extends JPanel {
 			public void actionPerformed(ActionEvent e) { parent.showOriginalImg(); }});
 		add(btnSeeOriginal);		
 		
-		this.btnCompute = new JButton("Compute");
+		this.btnCrop = new JButton("Crop image");
+		btnCrop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { parent.computeImg(0); }});
+		add(btnCrop);
+		
+		this.btnMask = new JButton("Compute mask");
+		btnMask.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { parent.computeImg(1); }});
+		add(btnMask);
+		
+		this.btnCompute = new JButton("Compute image");
 		btnCompute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) { parent.computeImg(); }});
-		add(btnCompute);
+		add(btnCompute);		
 
 		this.btnComputeNext = new JButton( "Compute next image ->" );
 		btnComputeNext.addActionListener(new ActionListener() {

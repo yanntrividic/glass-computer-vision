@@ -73,6 +73,10 @@ public class Window extends JFrame {
 		this.panelImage.update(true) ;
 	}
 	
+	public void computeImg(int stage) {
+		this.panelImage.update(true, stage) ;
+	}
+	
 	public void updateAfterButton(boolean next) {
 		this.panelImage.updateAfterButton(next);
 	}
