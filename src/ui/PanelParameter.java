@@ -20,15 +20,15 @@ public class PanelParameter extends JPanel {
 	public static final int DEFAULT_INTENSITY_THRESHOLD = 15;
 	public static final int DEFAULT_CONTOUR_THRESHOLD = 9;
 	public static final int DEFAULT_MINIMUM_SURFACE = 80;
-	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 100;
-	public static final int DEFAULT_KERNEL_VESSEL_CONTOUR = 7;
+	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 15;
+	public static final int DEFAULT_KERNEL_VESSEL_CONTOUR = 5;
 
 	public static final String CROPPING_LABEL_STR = "CROPPING PARAMETERS";
 	public static final String MASKING_LABEL_STR = "MASKING PARAMETERS";
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	private JLabel croppingParamsLabel ;
+
+	private JLabel croppingParamsLabel;
 	private Slider medianFilterKSizeSlider;
 	private Slider alphaSrcSlider;
 	private Slider alphaMaskSlider;
@@ -37,8 +37,7 @@ public class PanelParameter extends JPanel {
 	private Slider contourThresholdSlider;
 	private Slider minimumSurfaceSlider;
 
-
-	private JLabel maskingParamsLabel ;
+	private JLabel maskingParamsLabel;
 	private Slider thresholdVesselContour;
 	private Slider kernelVesselContour;
 
@@ -50,9 +49,10 @@ public class PanelParameter extends JPanel {
 
 		this.croppingParamsLabel = new JLabel();
 		this.croppingParamsLabel.setText(CROPPING_LABEL_STR);
-		add(this.croppingParamsLabel) ;
-		
-		this.medianFilterKSizeSlider = new Slider(parent, 0, 10, DEFAULT_MEDIAN_FILTER, 1, 5, "medianFilterKSize", Window.CROPPING_STAGE);
+		add(this.croppingParamsLabel);
+
+		this.medianFilterKSizeSlider = new Slider(parent, 0, 10, DEFAULT_MEDIAN_FILTER, 1, 5, "medianFilterKSize",
+				Window.CROPPING_STAGE);
 		add(medianFilterKSizeSlider.getLabel());
 		add(medianFilterKSizeSlider.getSlider());
 
@@ -60,7 +60,8 @@ public class PanelParameter extends JPanel {
 		add(alphaSrcSlider.getLabel());
 		add(alphaSrcSlider.getSlider());
 
-		this.alphaMaskSlider = new Slider(parent, 0, 100, DEFAULT_ALPHA_MASK, 10, 50, "alphaMask", Window.CROPPING_STAGE);
+		this.alphaMaskSlider = new Slider(parent, 0, 100, DEFAULT_ALPHA_MASK, 10, 50, "alphaMask",
+				Window.CROPPING_STAGE);
 		add(alphaMaskSlider.getLabel());
 		add(alphaMaskSlider.getSlider());
 
@@ -69,25 +70,27 @@ public class PanelParameter extends JPanel {
 		add(intensityThresholdSlider.getLabel());
 		add(intensityThresholdSlider.getSlider());
 
-		this.contourThresholdSlider = new Slider(parent, 0, 100, DEFAULT_CONTOUR_THRESHOLD, 10, 50, "contourThreshold", Window.CROPPING_STAGE);
+		this.contourThresholdSlider = new Slider(parent, 0, 100, DEFAULT_CONTOUR_THRESHOLD, 10, 50, "contourThreshold",
+				Window.CROPPING_STAGE);
 		add(contourThresholdSlider.getLabel());
 		add(contourThresholdSlider.getSlider());
 
-		this.minimumSurfaceSlider = new Slider(parent, 0, 100, DEFAULT_MINIMUM_SURFACE, 10, 50, "minimumSurface", Window.CROPPING_STAGE);
+		this.minimumSurfaceSlider = new Slider(parent, 0, 100, DEFAULT_MINIMUM_SURFACE, 10, 50, "minimumSurface",
+				Window.CROPPING_STAGE);
 		add(minimumSurfaceSlider.getLabel());
 		add(minimumSurfaceSlider.getSlider());
 
 		this.maskingParamsLabel = new JLabel();
 		this.maskingParamsLabel.setText(MASKING_LABEL_STR);
-		add(this.maskingParamsLabel) ;
-		
-		this.thresholdVesselContour = new Slider(parent, 0, 255, DEFAULT_THRESHOLD_VESSEL_CONTOUR, 10, 50,
+		add(this.maskingParamsLabel);
+
+		this.thresholdVesselContour = new Slider(parent, 0, 100, DEFAULT_THRESHOLD_VESSEL_CONTOUR, 10, 50,
 				"thresholdVesselContour", Window.MASKING_STAGE);
 		add(thresholdVesselContour.getLabel());
 		add(thresholdVesselContour.getSlider());
 
-		this.kernelVesselContour = new Slider(parent, 0, 64, DEFAULT_KERNEL_VESSEL_CONTOUR, 2, 8,
-				"kernelVesselContour", Window.MASKING_STAGE);
+		this.kernelVesselContour = new Slider(parent, 0, 16, DEFAULT_KERNEL_VESSEL_CONTOUR, 2, 8, "kernelVesselContour",
+				Window.MASKING_STAGE);
 		add(kernelVesselContour.getLabel());
 		add(kernelVesselContour.getSlider());
 	}

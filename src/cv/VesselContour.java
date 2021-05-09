@@ -1,5 +1,8 @@
 package cv;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -11,53 +14,114 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.CLAHE;
 import org.opencv.imgproc.Imgproc;
 
+/**
+ * Uses to create mask image of the vessel.
+ * 
+ * @author Cyril Dubos
+ */
 public class VesselContour {
-    /* Utilities */
+    /* STANDARD UTILITIES */
 
-    private static Mat resizeImage(Mat image, int size) {
-        Mat resizedImage = new Mat();
+    /**
+     * Resizes an image.
+     * 
+     * @param source the image to be resized
+     * @param size   the future size of the longest side
+     * @return the resized image
+     */
+    private static Mat resizeImage(Mat source, int size) {
+        Mat destination = new Mat();
 
-        int width = image.width();
-        int height = image.height();
+        int width = source.width();
+        int height = source.height();
 
         if (width < height) {
-            Imgproc.resize(image, resizedImage, new Size(width * size / height, size));
+            Imgproc.resize(source, destination, new Size(width * size / height, size));
         } else {
-            Imgproc.resize(image, resizedImage, new Size(size, height * size / width));
+            Imgproc.resize(source, destination, new Size(size, height * size / width));
         }
 
-        return resizedImage;
+        return destination;
     }
 
-    private static Mat scaleImage(Mat image, double scale) {
-        Mat resizedImage = new Mat();
+    /**
+     * Scales an image.
+     * 
+     * @param source the image to be scaled
+     * @param scale  the scale factor (no change if equal to 1.0)
+     * @return the scaled image
+     */
+    private static Mat scaleImage(Mat source, double scale) {
+        Mat destination = new Mat();
 
-        int width = (int) (image.width() * scale);
-        int height = (int) (image.height() * scale);
+        int width = (int) (source.width() * scale);
+        int height = (int) (source.height() * scale);
 
-        Imgproc.resize(image, resizedImage, new Size(width, height));
+        Imgproc.resize(source, destination, new Size(width, height));
 
-        return resizedImage;
+        return destination;
     }
 
-    private static Mat closeImage(Mat image, int size) {
-        Mat closedImage = new Mat();
+    /**
+     * Closes an image with a square structuring element.
+     * 
+     * @param source the image to be closed
+     * @param size   the size of the structuring element
+     * @return the closed image
+     */
+    private static Mat closeImage(Mat source, int size) {
+        Mat destination = new Mat();
 
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(size, size));
 
-        Imgproc.morphologyEx(image, closedImage, Imgproc.MORPH_CLOSE, kernel);
+        Imgproc.morphologyEx(source, destination, Imgproc.MORPH_CLOSE, kernel);
 
-        return closedImage;
+        return destination;
     }
 
-    private static Mat openImage(Mat image, int size) {
-        Mat openedImage = new Mat();
+    /**
+     * Opens an image with a square structuring element.
+     * 
+     * @param source the image to be opened
+     * @param size   the size of the structuring element
+     * @return the opened image
+     */
+    private static Mat openImage(Mat source, int size) {
+        Mat destination = new Mat();
 
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(size, size));
 
-        Imgproc.morphologyEx(image, openedImage, Imgproc.MORPH_OPEN, kernel);
+        Imgproc.morphologyEx(source, destination, Imgproc.MORPH_OPEN, kernel);
 
-        return openedImage;
+        return destination;
+    }
+
+    /**
+     * Binarizes an image. All grey pixels (> 0) are converted to white (255).
+     * 
+     * @param source the image to be binarize
+     * @return the binarized image
+     */
+    private static Mat binarizeImage(Mat source) {
+        Mat destination = new Mat();
+
+        Imgproc.threshold(source, destination, 1, 255, Imgproc.THRESH_BINARY);
+
+        return destination;
+    }
+
+    /**
+     * Inverts an image.
+     * 
+     * @param source the image to be inverted
+     * @return the inverted image
+     */
+    private static Mat invertImage(Mat source) {
+        Mat destination = new Mat();
+
+        Core.bitwise_not(source, destination);
+
+        return destination;
     }
 
     // https://docs.opencv.org/3.4/d2/d2c/tutorial_sobel_derivatives.html
@@ -76,59 +140,14 @@ public class VesselContour {
         return grad;
     }
 
-    private static int[][] getBoundaries(Mat image) {
-        int height = image.rows();
-        int width = image.cols();
-
-        int[][] boundaries = new int[height][2];
-
-        for (int i = 0; i < height; i++) {
-            boolean inBlob = false;
-            int start = -1, finish = -1;
-
-            boundaries[i][0] = -1;
-            boundaries[i][1] = -2;
-
-            for (int j = 0; j < width; j++) {
-                byte[] data = new byte[1];
-                image.get(i, j, data);
-
-                int value = data[0];
-
-                if (inBlob == false && value == 0) {
-                    inBlob = true;
-                    start = j;
-                } else if (inBlob == true && value == -1) {
-                    inBlob = false;
-                    finish = j;
-
-                    if (boundaries[i][1] - boundaries[i][0] <= (finish - start)) {
-                        boundaries[i][1] = finish;
-                        boundaries[i][0] = start;
-                    }
-                }
-            }
-        }
-
-        return boundaries;
-    }
-
-    private static Mat binarizeImage(Mat source) {
-        Mat destination = new Mat();
-
-        Imgproc.threshold(source, destination, 1, 255, Imgproc.THRESH_BINARY);
-
-        return destination;
-    }
-
-    private static Mat invertImage(Mat source) {
-        Mat destination = new Mat();
-
-        Core.bitwise_not(source, destination);
-
-        return destination;
-    }
-
+    /**
+     * Transforms a labels matrix to a binary image. It will "draw" the given
+     * labeled component, in white (255) on a black background (0).
+     * 
+     * @param labels the labels matrix
+     * @param index  the index of the label that will be "draw"
+     * @return the label image
+     */
     private static Mat getLabelImage(Mat labels, int index) {
         Mat destination = Mat.zeros(labels.size(), CvType.CV_8U);
 
@@ -147,6 +166,12 @@ public class VesselContour {
         return destination;
     }
 
+    /**
+     * Gets the index of the biggest label of a stats matrix.
+     * 
+     * @param stats the stats matrix
+     * @return the index
+     */
     private static int getBiggestLabelIndex(Mat stats) {
         int[] statsData = new int[5];
 
@@ -167,38 +192,122 @@ public class VesselContour {
         return maxIndex;
     }
 
+    /**
+     * Gets the image of the biggest label in an image.
+     * 
+     * @param source the source image
+     * @return the image with only the biggest label
+     */
     private static Mat getBiggestLabelImage(Mat source) {
         Mat labels = new Mat(), stats = new Mat(), centroids = new Mat();
         Imgproc.connectedComponentsWithStats(source, labels, stats, centroids, 4);
 
-        // binarisation sur les labels (low, high)
+        // todo: binarisation sur les labels (low, high)
 
         return getLabelImage(labels, getBiggestLabelIndex(stats));
     }
 
-    private static int[] getAveragesOfBoundaries(int[][] boundaries) {
-        int[] averages = new int[boundaries.length];
+    /* UTILITIES */
 
-        for (int i = 0; i < averages.length; i++) {
-            averages[i] = Math.round((boundaries[i][0] + boundaries[i][1]) / 2);
+    /**
+     * Gets boundaries of the component.
+     * 
+     * @param image the image
+     * @return the boundaries 2D-list (the two values of each lines corresponds to
+     *         the start and the finish boundaries: -1 and -2 if there are no
+     *         boundaries)
+     */
+    private static ArrayList<ArrayList<Integer>> getBoundaries(Mat image) {
+        int height = image.rows();
+        int width = image.cols();
+
+        ArrayList<ArrayList<Integer>> boundaries = new ArrayList<ArrayList<Integer>>();
+
+        for (int i = 0; i < height; i++) {
+            ArrayList<Integer> boundary = new ArrayList<Integer>();
+            boundary.add(-1);
+            boundary.add(-2);
+
+            boundaries.add(boundary);
+
+            boolean inBlob = false;
+            int start = -1, finish = -1;
+
+            for (int j = 0; j < width; j++) {
+                byte[] data = new byte[1];
+                image.get(i, j, data);
+
+                int value = data[0];
+
+                if (inBlob == false && value == -1) {
+                    inBlob = true;
+                    start = j;
+                } else if (inBlob == true && value == 0) {
+                    inBlob = false;
+                    finish = j;
+
+                    if (boundaries.get(i).get(1) - boundaries.get(i).get(0) <= (finish - start)) {
+                        boundary = new ArrayList<Integer>();
+                        boundary.add(start);
+                        boundary.add(finish);
+
+                        boundaries.set(i, boundary);
+                    }
+                }
+            }
         }
 
-        return averages;
+        return boundaries;
     }
 
-    private static int getMaximumIndexFromIntegerArray(int[] array) {
-        int index = 0;
+    /**
+     * Gets centers of boundaries.
+     * 
+     * @param boundaries the boundaries 2D-list
+     * @return the centers list
+     */
+    private static ArrayList<Integer> getCenters(ArrayList<ArrayList<Integer>> boundaries) {
+        ArrayList<Integer> centers = new ArrayList<Integer>();
 
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] > array[index])
-                index = i;
+        for (ArrayList<Integer> boundary : boundaries)
+            centers.add(Math.round((boundary.get(0) + boundary.get(1)) / 2));
+
+        return centers;
+    }
+
+    /**
+     * Gets the most frequent center of boundaries.
+     * 
+     * @param center the centers list
+     * @return the center
+     */
+    private static int getCenter(ArrayList<Integer> centers) {
+        int center = centers.get(0);
+        int frequency = Collections.frequency(centers, center);
+
+        for (int c : centers) {
+            int f = Collections.frequency(centers, c);
+
+            if (center < 0 || (c > 0 && f > frequency)) {
+                center = c;
+                frequency = f;
+            }
         }
 
-        return index;
+        return center;
     }
+
+    /* SECONDARY METHODS */
 
     /* Find vessel contour methods */
 
+    /**
+     * Returns the Canny-Sobel edge of an image.
+     * 
+     * @param source    the source image
+     * @param threshold the threshold value used for Canny and Sobel edges
+     * @return the binary image of Canny-Sobel edge
+     */
     private static Mat cannySobelEdge(Mat source, int threshold) {
         // Canny edge
         Mat cannyEdge = new Mat();
@@ -225,7 +334,14 @@ public class VesselContour {
         return destination;
     }
 
-    private static Mat substractBackground(Mat source, int kernel) {
+    /**
+     * Substracts the background of a binary image.
+     * 
+     * @param source the source image
+     * @param size   the size of the structuring element (used to close the image)
+     * @return the binary image with black background
+     */
+    private static Mat substractBackground(Mat source, int size) {
         Mat destination = binarizeImage(source);
 
         for (int i = 0; i < 2; i++) {
@@ -233,61 +349,66 @@ public class VesselContour {
             destination = invertImage(destination);
         }
 
-        destination = openImage(destination, kernel);
-        destination = closeImage(destination, kernel);
+        destination = openImage(destination, size);
+        destination = closeImage(destination, size);
 
-        return destination;
+        return getBiggestLabelImage(destination);
     }
 
+    /**
+     * Removes parallele regions of a binary image (only the largest element of a
+     * line is kept).
+     * 
+     * @param source the binary image
+     * @return the image with only one white element for each row
+     */
     private static Mat removeParalleleRegions(Mat source) {
-        int[][] boundaries = getBoundaries(invertImage(source));
         Mat destination = Mat.zeros(source.size(), source.type());
 
-        for (int i = 0; i < boundaries.length; i++)
-            Imgproc.line(destination, new Point(boundaries[i][0], i), new Point(boundaries[i][1], i), new Scalar(255));
+        ArrayList<ArrayList<Integer>> boundaries = getBoundaries(source);
 
-        return destination;
+        for (int i = 0; i < boundaries.size(); i++)
+            Imgproc.line(destination, new Point(boundaries.get(i).get(0), i), new Point(boundaries.get(i).get(1), i),
+                    new Scalar(255));
+
+        return getBiggestLabelImage(destination);
     }
 
-    private static Mat findCenters(Mat source) {
-        int[][] boundaries = getBoundaries(invertImage(source));
-        int[] averages = getAveragesOfBoundaries(boundaries);
+    private static Mat symetrizeVessel(Mat source) {
         Mat destination = Mat.zeros(source.size(), source.type());
 
-        for (int i = 0; i < averages.length; i++) {
-            byte[] data = { (byte) 255 };
-
-            if (averages[i] >= 0)
-                destination.put(i, averages[i], data);
-        }
-
-        return destination;
-    }
-
-    private static int findMostFrequentCenter(Mat source) {
-        int[][] boundaries = getBoundaries(invertImage(source));
-        int[] averages = getAveragesOfBoundaries(boundaries);
-        int maximumAverage = averages[getMaximumIndexFromIntegerArray(averages)];
-        int[] histogram = new int[maximumAverage + 1];
+        ArrayList<ArrayList<Integer>> boundaries = getBoundaries(source);
+        ArrayList<Integer> centers = getCenters(boundaries);
+        int center = getCenter(centers);
 
         for (int i = 0; i < source.height(); i++) {
-            int average = averages[i];
+            int start = boundaries.get(i).get(0);
+            int finish = boundaries.get(i).get(1);
 
-            if (average > 0)
-                histogram[average] += 1;
+            if (start >= 0 && finish >= 0) {
+                int left = center - start;
+                int right = finish - center;
+
+                if (left > right)
+                    Imgproc.line(destination, new Point(start, i), new Point(center + left, i), new Scalar(255));
+                else
+                    Imgproc.line(destination, new Point(center - right, i), new Point(finish, i), new Scalar(255));
+            }
         }
 
-        return getMaximumIndexFromIntegerArray(histogram);
+        return destination;
     }
 
-    private static Mat findVesselContour(String filename, int symmetryMode, int size, int threshold, int kernel,
-            int segmentationMode) {
+    /* PRIMARY METHOD */
+
+    private static Mat findVesselContour(String filename, int size, int threshold, int kernel) {
         Mat image = Imgcodecs.imread(filename);
 
         Mat grayscale = new Mat();
         Imgproc.cvtColor(image, grayscale, Imgproc.COLOR_RGB2GRAY);
 
         Mat vessel = findVesselContour(grayscale, threshold, kernel);
+
         return resizeImage(vessel, size);
     }
 
@@ -299,20 +420,13 @@ public class VesselContour {
         Mat vessel = cannySobelEdge(mat, threshold);
         vessel = substractBackground(vessel, kernel);
         vessel = removeParalleleRegions(vessel);
-
-        Mat centers = findCenters(vessel);
-        int center = findMostFrequentCenter(centers);
-
-        // Imgproc.line(vessel, new Point(center, 0), new Point(center,
-        // vessel.height()), new Scalar(127));
+        vessel = symetrizeVessel(vessel);
 
         return vessel;
     }
 
     public static void main(String[] args) {
         nu.pattern.OpenCV.loadLocally();
-
-        // openImage/closeImage kernel size
 
         // int size = 500;
         // int threshold = (int) (255 * 0.7);
@@ -322,7 +436,7 @@ public class VesselContour {
         int size = 256;
         int kernel = 15;
         int threshold = (int) (255 * 0.22 * 2);
-        Mat image = findVesselContour("src/resources/0.jpg", 0, size, threshold, kernel, 0);
+        Mat image = findVesselContour("src/resources/0.jpg", size, threshold, kernel);
 
         HighGui.imshow(null, image);
         HighGui.waitKey();
