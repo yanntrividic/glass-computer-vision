@@ -189,7 +189,7 @@ public class GestionC4 {
 	      //HighGui.imshow("Drawing an ellipse"+right, temp);//displays the ellipsis, can be deleted
 	     // HighGui.waitKey(10);//the value 10 allows ellipses to be displayed in a consistent manner
 	      
-	   return getEllipseDraw(temp,Color.white);
+	   return getEllipseDraw(temp,Color.white,(int)right.y);
 	      
 	   }
 	
@@ -225,9 +225,9 @@ public class GestionC4 {
 	 * @param col the color of the ellipse
 	 * @return the list of points that make up the ellipse
 	 */
-	public static ArrayList<Point> getEllipseDraw(Mat img,Color col) {//maybe a greyscale problem
+	public static ArrayList<Point> getEllipseDraw(Mat img,Color col,int height) {//maybe a greyscale problem
 		ArrayList<Point> ellipse=new ArrayList<Point>();
-		for(int i=0;i<img.height();i++) {
+		for(int i=height-80;i<img.height();i++) {
 			for(int j=0;j<img.width();j++) {
 				double[]temp=img.get(i, j);
 				//for(int k=0;k<temp.length;k++) {
