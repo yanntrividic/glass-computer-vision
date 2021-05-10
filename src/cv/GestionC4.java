@@ -27,9 +27,9 @@ public class GestionC4 {
 		//Core.multiply(img, mask, img);
 		//show(img,"avant");
 		//show(mask,"apres");
-		img=cv.PreProcessing.resizeSpecifiedWidth(img,450);
-		mask=cv.PreProcessing.resizeSpecifiedWidth(mask,450);
-		Mat imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,450);
+		img=cv.PreProcessing.resizeSpecifiedWidth(img,400);
+		mask=cv.PreProcessing.resizeSpecifiedWidth(mask,400);
+		Mat imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,400);
 		img=fusionImgMask(img,mask);
 		//show(img,"apres fusion");
 		//show(img,"ca marche");
@@ -48,13 +48,13 @@ public class GestionC4 {
 		
 		//the starting position for the course
 		Point startPos=getFirstPixel(img);
-		System.out.println("x: "+startPos.x+" y "+startPos.y);	
+			
 		//startPos.x=startPos.x+(img.height()*10)/100;  //ï¿½ verifier
 		Point endPos=new Point();
 		
 		//the end position, it corresponds to 2/3 of the image, this value is arbitrary and must be changed
 		endPos.y=(img.height()/100)*80; //ï¿½ revoir
-		System.out.println("fin"+endPos);
+		
 		
 		//the list of points of the ellipse with the best score 
 		ArrayList<Point> bestEllipse=new ArrayList<Point>();
@@ -69,7 +69,7 @@ public class GestionC4 {
 			
 			////we create all possible ellipses at this height, z corresponds to its height, it starts at 10 and increases from 10 to 80
 			for(int z=10;z<80;z+=5) { //z parameter
-				System.out.println("z="+z);
+				
 				ArrayList<Point> tempEllipse=drawEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
 				//the current score is compared with the score of the ellipse 
 				if(getEllipseScore(imgComp, tempEllipse)>getEllipseScore(imgComp, bestEllipse)) {
@@ -101,9 +101,9 @@ public class GestionC4 {
 	 */
 	public static Point getFirstPixel(Mat img) {
 		Point p=new Point(0,0);
-		System.out.println("imax"+img.width()+" jmax"+img.height());
+		
 		for(int i=(img.width()/100)*10;(i<img.width())&&(p.x==0);i++) {                  //on commence pas à 0, mais à 10 % de la taille
-			for(int j=(img.height()/100)*5;j<img.height()&&p.x==0;j++) {                  //5%
+			for(int j=(img.height()/100)*30;j<img.height()&&p.x==0;j++) {                  //30%
 				if(img.get(j, i)[0]!=0) {
 					p=new Point(i,j);
 				}
@@ -136,7 +136,7 @@ public class GestionC4 {
 	public static Point getRightPixel(Mat img,int start,int heigth) {
 		Point p=new Point(0,0);
 		for(int i=start;i<img.width()&&p.x==0;i++) {
-			System.out.println(" nb "+i);
+			
 			if((img.get(heigth, i+1)[0]==0)||(i==(img.width()-2))) {
 				p=new Point(i,heigth);
 			}
@@ -176,18 +176,18 @@ public class GestionC4 {
 		  temp= src.clone();//The image is cloned each time so that the ellipses are not made directly on the image, as they would then overlap
 		 
 	      Size sz=new Size(right.x-left.x,height);  //the size of the future box
-	      System.out.println("taille"+sz);
+	     
 	      Point center=new Point((left.x+right.x)/2,left.y);//the centre of the ellipse 
-	      System.out.println("centre"+center);
+	      
 	      RotatedRect box = new RotatedRect(center,sz,0);//the last parameter is the tilt angle, and MAY BE A PARAMETER 
 	      Scalar color = new Scalar(255, 255, 255); //the colour of the curve, here it is white MAY BE A PARAMETER 
 	      int thickness = 1;
 	      Imgproc.ellipse (temp, box, color, thickness);  //the ellipse is drawn
-	      System.out.println("ellipse rï¿½alisï¿½");
+	
 	      //Imgproc.ellipse(src, new Point(150,150), new Size(260, 180), 25.0, 25.0, 25.0, color); test autres arguments
 	      
-	      HighGui.imshow("Drawing an ellipse"+right, temp);//displays the ellipsis, can be deleted
-	      HighGui.waitKey(10);//the value 10 allows ellipses to be displayed in a consistent manner
+	      //HighGui.imshow("Drawing an ellipse"+right, temp);//displays the ellipsis, can be deleted
+	     // HighGui.waitKey(10);//the value 10 allows ellipses to be displayed in a consistent manner
 	      
 	   return getEllipseDraw(temp,Color.white);
 	      
@@ -200,7 +200,7 @@ public class GestionC4 {
 			
 			img.put((int)list.get(i).x,(int)list.get(i).y,col);
 		}
-		System.out.println("attention les yeux");
+		
 		show(img,"testDrawn");
 	}
 	
@@ -319,7 +319,7 @@ public class GestionC4 {
 		//CONVERTIR L'IMAGE DES LE DEBUT
 		//System.exit(0);
 		Mat img=loadPicture("E:\\image\\image1.png");
-		System.out.println("type"+img.type());
+		
 		//Imgproc.resize( img, img, sz );
 		
 		Mat mask=loadPicture("E:\\image\\image2.png");
@@ -327,18 +327,18 @@ public class GestionC4 {
 		//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
 		
 		getEllipse(img, mask);
-		Point startPos=getFirstPixel(img);
+		
 		//System.out.println("point de dep"+ startPos);
-		Point droite=getRightPixel(img,(int)startPos.x,(int) startPos.y);
+		
 		//System.out.println("point de droite"+ droite);
 		//drawEllipse(startPos,droite,img);
 		
-		Point gauche=getLeftPixel(img,93);
-		System.out.println("gauche "+gauche);
-		droite=getRightPixel(img,(int)gauche.x,(int) gauche.y);
+		
+		
+	
 		//drawEllipse(gauche,droite,path);
 		
-		System.out.println("finish");
+	
 	}
 	
 
