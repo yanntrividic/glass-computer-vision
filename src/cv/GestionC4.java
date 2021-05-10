@@ -24,18 +24,36 @@ public class GestionC4 {
 	 */
 	public static ArrayList<Point> getEllipse(Mat img,Mat mask){
 		//merge the mask and the image
-		Core.multiply(img, mask, img);
+		//Core.multiply(img, mask, img);
+		//show(img,"avant");
+		//show(mask,"apres");
+		img=cv.PreProcessing.resizeSpecifiedWidth(img,450);
+		mask=cv.PreProcessing.resizeSpecifiedWidth(mask,450);
+		Mat imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,450);
+		img=fusionImgMask(img,mask);
+		//show(img,"apres fusion");
+		//show(img,"ca marche");
+		//cv.Segmentation.simpleBinarization(mask, 1, false);
 		
-		//ArrayList<Point> ellipse=new ArrayList<Point>();
+		
+		//merge the mask and the image
+		//img=cv.Segmentation.simpleBinarization(mask, 1, false);
+		//Core.multiply(img, mask, img);
+		//show(img,"test1");
+		
+		
+		//we resize the image to limit the number of operations
+		//img=cv.PreProcessing.resizeSpecifiedWidth(img,500); //PARAMETER
+		
 		
 		//the starting position for the course
 		Point startPos=getFirstPixel(img);
-				
+		System.out.println("x: "+startPos.x+" y "+startPos.y);	
 		//startPos.x=startPos.x+(img.height()*10)/100;  //ï¿½ verifier
 		Point endPos=new Point();
 		
 		//the end position, it corresponds to 2/3 of the image, this value is arbitrary and must be changed
-		endPos.y=(img.height()/3)*2; //ï¿½ revoir
+		endPos.y=(img.height()/100)*80; //ï¿½ revoir
 		System.out.println("fin"+endPos);
 		
 		//the list of points of the ellipse with the best score 
@@ -54,7 +72,7 @@ public class GestionC4 {
 				System.out.println("z="+z);
 				ArrayList<Point> tempEllipse=drawEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
 				//the current score is compared with the score of the ellipse 
-				if(getEllipseScore(img, tempEllipse)>getEllipseScore(img, bestEllipse)) {
+				if(getEllipseScore(imgComp, tempEllipse)>getEllipseScore(imgComp, bestEllipse)) {
 					bestEllipse=tempEllipse;
 				}
 			}
@@ -84,9 +102,8 @@ public class GestionC4 {
 	public static Point getFirstPixel(Mat img) {
 		Point p=new Point(0,0);
 		System.out.println("imax"+img.width()+" jmax"+img.height());
-		for(int i=0;(i<img.width())&&(p.x==0);i++) {
-			System.out.println("test");
-			for(int j=0;j<img.height()&&p.x==0;j++) {
+		for(int i=(img.width()/100)*10;(i<img.width())&&(p.x==0);i++) {                  //on commence pas à 0, mais à 10 % de la taille
+			for(int j=(img.height()/100)*5;j<img.height()&&p.x==0;j++) {                  //5%
 				if(img.get(j, i)[0]!=0) {
 					p=new Point(i,j);
 				}
@@ -119,7 +136,8 @@ public class GestionC4 {
 	public static Point getRightPixel(Mat img,int start,int heigth) {
 		Point p=new Point(0,0);
 		for(int i=start;i<img.width()&&p.x==0;i++) {
-			if(img.get(heigth, i+1)[0]==0) {
+			System.out.println(" nb "+i);
+			if((img.get(heigth, i+1)[0]==0)||(i==(img.width()-2))) {
 				p=new Point(i,heigth);
 			}
 		}
@@ -192,7 +210,6 @@ public class GestionC4 {
 	 * @param legend
 	 */
 	public static void show(Mat matrix,String legend) {
-		System.out.println("welcome to hell");
 		HighGui.imshow(legend, matrix);
 		HighGui.waitKey(0);
 		//System.exit(0);
@@ -215,7 +232,7 @@ public class GestionC4 {
 				double[]temp=img.get(i, j);
 				//for(int k=0;k<temp.length;k++) {
 				//System.out.println(temp[0]+" "+temp[1]+" "+temp[2]);
-					if(temp[0]==255&&temp[1]==255&&temp[2]==255) {
+					if(temp[0]==255) {//&&temp[1]==255&&temp[2]==255)
 						ellipse.add(new Point(i,j));
 				}
 			}
@@ -236,18 +253,18 @@ public class GestionC4 {
 		double sommU=0; 
 		double sommD=0;
 		//mal placï¿½
-		Mat temp=new Mat();
+		//Mat temp=new Mat();
 		//grayscale before calculating the score
-		Imgproc.cvtColor(img, temp, Imgproc.COLOR_RGB2GRAY);
+		//Imgproc.cvtColor(img, temp, Imgproc.COLOR_RGB2GRAY);
 		
 		for(int i=0;i<ellipse.size();i++) {
-			sommU+=temp.get((int)ellipse.get(i).x-1, (int)ellipse.get(i).y)[0];    //image en noir et blanc 
-			if(temp.get((int)ellipse.get(i).x-1, (int)ellipse.get(i).y)[0]>maxU)
-				maxU=temp.get((int)ellipse.get(i).x-1,(int) ellipse.get(i).y)[0];
+			sommU+=img.get((int)ellipse.get(i).x-1, (int)ellipse.get(i).y)[0];    //image en noir et blanc 
+			if(img.get((int)ellipse.get(i).x-1, (int)ellipse.get(i).y)[0]>maxU)
+				maxU=img.get((int)ellipse.get(i).x-1,(int) ellipse.get(i).y)[0];
 			//System.out.println("test"+img.get((int)ellipse.get(i).x+1,(int) ellipse.get(i).y)[0]);
-			sommD+=temp.get((int)ellipse.get(i).x+1,(int) ellipse.get(i).y)[0];
-			if(temp.get((int)ellipse.get(i).x-1,(int) ellipse.get(i).y)[0]>maxU)
-				maxD=temp.get((int)ellipse.get(i).x+1,(int)ellipse.get(i).y)[0];
+			sommD+=img.get((int)ellipse.get(i).x+1,(int) ellipse.get(i).y)[0];
+			if(img.get((int)ellipse.get(i).x-1,(int) ellipse.get(i).y)[0]>maxU)
+				maxD=img.get((int)ellipse.get(i).x+1,(int)ellipse.get(i).y)[0];
 		}
 		double meanU=sommU/ellipse.size();
 		double meanD=sommD/ellipse.size();
@@ -281,21 +298,35 @@ public class GestionC4 {
 		}
 		return res;
 	}
+	
+	public static Mat fusionImgMask(Mat img,Mat mask) {
+		for(int i=0;i<mask.height();i++) {
+			for(int j=0;j<mask.width();j++) {
+				if(mask.get(i, j)[0]==0) {   //because of grayscale
+					double[]temp= {0,0,0};
+					img.put(i, j, temp);
+				}
+			}
+		}
+		return img;
+	}
 //not use
+	
 	public static void main(String[]args) {
 		//drawEllipse();
 		//drawEllipse(new Point(0,0),new Point(0,0));
 		
 		//CONVERTIR L'IMAGE DES LE DEBUT
 		//System.exit(0);
-		Mat img=loadPicture("E:\\image\\imageTest\\40.jpg");
+		Mat img=loadPicture("E:\\image\\image1.png");
 		System.out.println("type"+img.type());
 		//Imgproc.resize( img, img, sz );
 		
+		Mat mask=loadPicture("E:\\image\\image2.png");
 		
 		//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
-		String path="E:\\image\\imageTest\\40.jpg";
-		getEllipse(img, img);
+		
+		getEllipse(img, mask);
 		Point startPos=getFirstPixel(img);
 		//System.out.println("point de dep"+ startPos);
 		Point droite=getRightPixel(img,(int)startPos.x,(int) startPos.y);

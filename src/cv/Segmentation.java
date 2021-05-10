@@ -20,5 +20,7 @@ public class Segmentation {
 		return binary; 
 	}
 	
+
+	
 	//TODO: implement Otsu's Method
 }
