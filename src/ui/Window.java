@@ -15,8 +15,8 @@ import io.Reader;
 
 /**
  * GUI of the application. The code is based on this tutorial: https://koor.fr/Java/TutorialSwing/first_application.wp
- * @author yann
- *
+ * @author Yann Trividic
+ * @version 1.0
  */
 public class Window extends JFrame {
 
@@ -38,6 +38,9 @@ public class Window extends JFrame {
 	public final static int CROPPING_STAGE = 1;
 	public final static int MASKING_STAGE = 2;
 
+	/**
+	 * Constructor of the Window class
+	 */
 	public Window() {
 		super("Glass CV" );
 		this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
@@ -68,27 +71,51 @@ public class Window extends JFrame {
 		this.contentPane.add(this.panelButtons,"South") ;
 	}
 
+	/**
+	 * Getter the for the imagePath related to the run
+	 * @return the image path of the run
+	 */
 	public String getImgPath() {
-		return imgPath;
+		return this.imgPath;
 	}
 	
+	/**
+	 * Updates the displayed image with the entire processing
+	 */
 	public void computeImg() {
 		this.panelImage.update(true) ;
 	}
 	
+	/**
+	 * Updates the displayed image with the image obtained after the specified stage
+	 * @param stage stage of the processing
+	 * @see panelImage.update(boolean, int)
+	 */
 	public void computeImg(int stage) {
 		this.panelImage.update(true, stage) ;
 	}
 	
+	/**
+	 * Updates the displayed image after the next or previous button is updated
+	 * @param next the button pressed
+	 * @see panelImage.update(boolean, int)
+	 */
 	public void updateAfterButton(boolean next) {
 		this.panelImage.updateAfterButton(next);
 	}
 	
+	/**
+	 * Shows the original image by updating the panelImage
+	 */
 	public void showOriginalImg() {
 		this.panelImage.update(false);
 	}
 
+	/**
+	 * Getter for the imgs object
+	 * @return an ArrayList of String that contains the path to all images
+	 */
 	public ArrayList<String> getImgs() {
-		return imgs;
+		return this.imgs;
 	}
 }

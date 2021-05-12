@@ -9,6 +9,7 @@ import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 public class EllipseFinder {
@@ -298,4 +299,51 @@ public class EllipseFinder {
 		}
 		return img;
 	}
+
+
+
+	// TODO: DELETE EVENTUALLY
+	
+	/**
+	
+	 * allows you to load an image
+	 * @param path the path of the image 
+	 * @return the loaded image
+	 */
+	public static Mat loadPicture(String path) {
+		nu.pattern.OpenCV.loadLocally();
+		Imgcodecs imageCodecs =new Imgcodecs();
+		Mat matrix=imageCodecs.imread(path);
+		return matrix;
+	}
+	
+	public static void main(String[]args) {
+		//drawEllipse();
+		//drawEllipse(new Point(0,0),new Point(0,0));
+	
+		//CONVERTIR L'IMAGE DES LE DEBUT
+		//System.exit(0);
+		Mat img=loadPicture("E:\\image\\image1.png");
+	
+		//Imgproc.resize( img, img, sz );
+	
+		Mat mask=loadPicture("E:\\image\\image2.png");
+	
+		//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
+	
+		getEllipse(img, mask);
+	
+		//System.out.println("point de dep"+ startPos);
+	
+		//System.out.println("point de droite"+ droite);
+		//drawEllipse(startPos,droite,img);
+	
+	
+	
+	
+		//drawEllipse(gauche,droite,path);
+	
+	}
+
+
 }

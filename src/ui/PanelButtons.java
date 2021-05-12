@@ -7,11 +7,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * Class to implement the bottom panel of the app
+ * @author Yann Trividic
+ * @version 1.0
+ */
 public class PanelButtons extends JPanel {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	JButton btnPrev ;
@@ -25,6 +27,10 @@ public class PanelButtons extends JPanel {
 	
 	Window parent ;
 	
+	/**
+	 * Constructor of the PanelButtons class
+	 * @param parent JFrame object of the main wnndow
+	 */
 	PanelButtons(Window parent) {
 		setLayout(new FlowLayout()) ;
 		this.parent = parent ;

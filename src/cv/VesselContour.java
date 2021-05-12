@@ -425,6 +425,9 @@ public class VesselContour {
         return vessel;
     }
 
+
+	// TODO: DELETE EVENTUALLY
+    
     public static void main(String[] args) {
         nu.pattern.OpenCV.loadLocally();
 

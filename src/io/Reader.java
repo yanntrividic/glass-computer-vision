@@ -15,21 +15,42 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-
+/**
+ * Class to handle file inputs
+ * @author Yann Trividic
+ * @version 1.0
+ */
 public class Reader {
 	
 	public static final String fp = File.separator ;
 	
+	/**
+	 * Returns one of the images' directory
+	 * @param type String object that can be "train", "test" or "validation
+	 * @return a String path
+	 * @author Yann Trividic
+	 */
 	public static String getImgDir(String type) {
 		return getResourcesDir()+"img"+fp+type+fp ;
 	}
 	
+	/**
+	 * Method that fecthes the resources directory as a path
+	 * @return the resources directory of the project as a String
+	 * @author Yann Trividic
+	 */
 	public static String getResourcesDir() {
 		return System.getProperty("user.dir")
 				+fp+"src"
 				+fp+"resources"+fp ;		
 	}
 	
+	/**
+	 * Returns one of the labels' directory
+	 * @param type String object that can be "train", "test" or "validation
+	 * @return a String path
+	 * @author Yann Trividic
+	 */
 	public static String getLabelsDir(String type) {
 		return getResourcesDir() + "labels" + fp + type + fp;
 	}
@@ -105,17 +126,13 @@ public class Reader {
 		return getFileNamesWithExtension(path, new String[]{"json"}) ;
 	}
 	
-//  unused for now	
-//	private static ArrayList<String> getFileNamesWithExtension(String path, String extension) {
-//		return getFileNamesWithExtension(path, new String[] {extension}) ;
-//	}
-	
 	/**
 	 * Gets the list of files of a particular set of extensions
 	 * @param path folder where the files are supposed to be
 	 * @param extensions array of extensions
 	 * @return an arraylist of strings that contains the names of the files found
 	 * @exception throws an exception if the folder does not exist
+	 * @author Yann Trividic
 	 */
 	private static ArrayList<String> getFileNamesWithExtension(String path, String [] extensions) {
 		File f = new File(path) ;

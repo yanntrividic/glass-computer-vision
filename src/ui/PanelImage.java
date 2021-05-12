@@ -1,7 +1,6 @@
 package ui;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -10,13 +9,13 @@ import javax.swing.JPanel;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import io.Reader;
-
+/**
+ * Class that implements the image panel (where the image is displayed in the GUI)
+ * @author Yann Trividic
+ * @version 1.0
+ */
 public class PanelImage extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private Mat currentImg;
@@ -30,6 +29,11 @@ public class PanelImage extends JPanel {
 	private Window parent;
 	private PanelParameter panelParameter;
 
+	/**
+	 * Constructor of the PanelImage object
+	 * @param parent JFrame of the main window
+	 * @param panelParameter series of sliders to get the parameters of the algorithm to process the glass
+	 */
 	public PanelImage(Window parent, PanelParameter panelParameter) {
 		this.parent = parent;
 		this.panelParameter = panelParameter;
@@ -47,10 +51,19 @@ public class PanelImage extends JPanel {
 		add(imageLabel, "South");
 	}
 
+	/**
+	 * Performs the full execution of the computeImage algorithm or displays the original image
+	 * @param compute boolean, if true : cmputes the image, else : displays the original image
+	 */
 	public void update(boolean compute) {
 		update(compute, -1) ;
 	}
 	
+	/**
+	 * Performs the full execution of the computeImage algorithm or displays the original image
+	 * @param compute boolean, if true : cmputes the image, else : displays the original image
+	 * @param stage integer, the stage at which the process will be stopped
+	 */
 	public void update(boolean compute, int stage) {
 		remove(this.textLabel);
 		remove(this.imageLabel);
@@ -75,6 +88,10 @@ public class PanelImage extends JPanel {
 		revalidate();
 	}
 
+	/**
+	 * Changes the image to the next one or the previous one
+	 * @param next if true : next image, else : previous image
+	 */
 	public void updateAfterButton(boolean next) {
 		if (next && this.currentIndex < parent.getImgs().size() - 1)
 			this.currentIndex++;
@@ -87,10 +104,18 @@ public class PanelImage extends JPanel {
 		return new JLabel(new ImageIcon(Utils.createAwtImage(img)));
 	}
 
+	/**
+	 * Getter for the current image
+	 * @return the current displayed image
+	 */
 	public Mat getCurrentImg() {
 		return currentImg;
 	}
 
+	/**
+	 * Setter for the current image
+	 * @param currentImg sets the current image
+	 */
 	public void setCurrentImg(Mat currentImg) {
 		this.currentImg = currentImg;
 	}

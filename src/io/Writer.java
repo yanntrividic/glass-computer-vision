@@ -6,6 +6,11 @@ import java.io.IOException;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
+/**
+ * Class to handle file outputs
+ * @author Yann Trividic
+ * @version 1.0
+ */
 public class Writer {
 	/**
 	 * Saves a Mat object into a JPG file

@@ -9,8 +9,20 @@ import org.opencv.core.Size;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
+/**
+ * Utilitary static class for the GUI
+ * @author Yann Trividic
+ * @version 1.0
+ */
 public class Utils {
 
+	private static final int defaultWidth = 720 ;
+	
+	/**
+	 * Converts a Mat object into a BufferedImage with the right dimensions for display
+	 * @param mat the original Mat object
+	 * @return a BufferedImage object
+	 */
 	public static BufferedImage createAwtImage(Mat mat) {
 
 		int type = 0;
@@ -35,6 +47,13 @@ public class Utils {
 		return image;
 	}
 	
+	/**
+	 * Resizes a Mat object to make it fit the GUI window and preserves the ratio
+	 * @param mat the Mat object to resize
+	 * @param maxWidth maximum width of the resized image
+	 * @param maxHeight maximum height of the resized image
+	 * @return a resized Mat object
+	 */
 	private static int[] resizeForWindow(Mat mat, int maxWidth, int maxHeight) {
 		int wantedWidth ;
 		int wantedHeight ;
@@ -51,8 +70,6 @@ public class Utils {
 		
 		return new int [] { wantedWidth, wantedHeight } ;
 	}
-	
-	private static final int defaultWidth = 720 ;
 	
 	/**
 	 * Displays an image using HighGui

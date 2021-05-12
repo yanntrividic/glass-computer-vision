@@ -6,10 +6,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
+ * Class to handle the various parameters for our image processing algorithm
  * from https://waytolearnx.com/2020/05/jslider-java-swing.html
  * 
- * @author yann
- *
+ * @author Yann Trividic
+ * @version 1.0
  */
 
 public class PanelParameter extends JPanel {
@@ -43,6 +44,10 @@ public class PanelParameter extends JPanel {
 
 	private Window parent;
 
+	/**
+	 * Constructor for the PanelParameter object
+	 * @param parent JFrame object of the main wnndow
+	 */
 	public PanelParameter(Window parent) {
 		this.parent = parent;
 		setLayout(new FlowLayout());
@@ -95,31 +100,55 @@ public class PanelParameter extends JPanel {
 		add(kernelVesselContour.getSlider());
 	}
 
+	/**
+	 * Getter for the median filter kernel size paramter
+	 * @return an odd integer between 1 and 11
+	 */
 	public int getMedianFilterKSize() {
 		int val = this.medianFilterKSizeSlider.getSlider().getValue();
 		return (val % 2 == 1 ? val : val + 1);
 	}
 
+	/**
+	 * Getter for the alpha channel parameter of the source image 
+	 * @return a percentage between 0 and 100
+	 */
 	public double getAlphaSrc() {
 		int val = this.alphaSrcSlider.getSlider().getValue();
 		return percentToDecimal(val);
 	}
 
+	/**
+	 * Getter for the alpha channel parameter of the mask image
+	 * @return a percentage between 0 and 100
+	 */
 	public double getAlphaMask() {
 		int val = this.alphaMaskSlider.getSlider().getValue();
 		return percentToDecimal(val);
 	}
 
+	/**
+	 * Getter for the intensity threshold parameter
+	 * @return a percentage between 0 and 100
+	 */
 	public double getIntensity() {
 		int val = this.intensityThresholdSlider.getSlider().getValue();
 		return perThousandToDecimal(val);
 	}
 
+	/**
+	 * Getter for the contour threshold parameter
+	 * @return a percentage between 0 and 100
+	 */
 	public double getContour() {
 		int val = this.contourThresholdSlider.getSlider().getValue();
 		return perThousandToDecimal(val);
 	}
 
+	/**
+	 * Getter for the minimum surface threshold parameter
+	 * @return a percentage between 0 and 100
+	 */
 	public double getMinimumSurface() {
 		int val = this.minimumSurfaceSlider.getSlider().getValue();
 		return percentToDecimal(val);
@@ -133,10 +162,18 @@ public class PanelParameter extends JPanel {
 		return (double) (percentage) / 1000;
 	}
 
+	/**
+	 * Getter for the vessel contour threshold parameter
+	 * @return a percentage between 0 and 100
+	 */
 	public int getThresholdVesselContour() {
 		return this.thresholdVesselContour.getSlider().getValue();
 	}
 
+	/**
+	 * Getter for the kernel size parameter for the vessel contour 
+	 * @return a percentage between 0 and 16
+	 */
 	public int getKernelVesselContour() {
 		return this.kernelVesselContour.getSlider().getValue();
 	}

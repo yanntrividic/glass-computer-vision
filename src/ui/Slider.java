@@ -2,11 +2,13 @@ package ui;
 import javax.swing.event.*; 
 import javax.swing.*; 
 
+/**
+ * Class that inherits from JFrame to make a custom Slider object
+ * @author Yann Trividic
+ * @version 1.0
+ */
 class Slider extends JFrame implements ChangeListener { 
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JSlider slider; 
 	private JLabel label;
@@ -21,8 +23,19 @@ class Slider extends JFrame implements ChangeListener {
 	private String paramName ;
 	private int paramType ;
 
+	/**
+	 * Constructor of a Slider object
+	 * @param win JFrame of the main window
+	 * @param beginValue minimum value of the slider
+	 * @param endValue maximum value of the slider
+	 * @param initValue default value of the slider
+	 * @param ticksSpacing spacing between two ticks
+	 * @param majorTicksSpacing spacing between bigger ticks
+	 * @param paramName parameter name (the one that will be displayed on the GUI)
+	 * @param paramType related to the stage of the function it is linked to (integer to specify when to stop the process)
+	 */
 	public Slider(Window win, int beginValue, int endValue, int initValue, int ticksSpacing, int majorTicksSpacing, String paramName, int paramType) {
-		// Créer une étiquette
+		// Create a label
 		this.win = win ;
 		this.label = new JLabel(); 
 		this.paramType = paramType;
@@ -34,43 +47,59 @@ class Slider extends JFrame implements ChangeListener {
 		this.ticksSpacing = ticksSpacing ;
 		this.majorTicksSpacing = majorTicksSpacing ;
 		
-		// Créer un slider 
+		// Create a new JSlider
 		this.slider = new JSlider(this.beginValue, this.endValue, this.ticks); 
-		// Peindre la piste(track) et l'étiquette
+		
 		this.slider.setPaintTrack(true); 
 		this.slider.setPaintTicks(true); 
 		this.slider.setPaintLabels(true); 
-		// Définir l'espacement
+
 		this.slider.setMajorTickSpacing(this.majorTicksSpacing); 
 		this.slider.setMinorTickSpacing(this.ticksSpacing); 
 
-		// Associer le Listener au slider
+		// Listener linked
 		this.slider.addChangeListener(this); 
-		// Ajouter le slider au panneau
-
-		// Ajouter le panneau au frame
-		// Définir le texte de l'étiquette
+		
+		// Value displayed
 		this.label.setText(this.paramName +" = " + this.slider.getValue()); 
 	} 
 
-	// Si la valeur du slider est modifiée
+	/**
+	 * Updates the slider value
+	 */
 	public void stateChanged(ChangeEvent e) { 
 		this.label.setText(this.paramName +" = " + this.slider.getValue()); 
 		this.win.computeImg(this.paramType);
 	}
 
+	/**
+	 * Getter for the slider
+	 * @return the slider, a JSlider object
+	 */
 	public JSlider getSlider() {
 		return slider;
 	}
 
+	/**
+	 * Getter for the label
+	 * @return the label, a JLlider object
+	 */
 	public JLabel getLabel() {
 		return label;
 	}
 
+	/**
+	 * Getter for the begin value
+	 * @return integer minimum value of the slider
+	 */
 	public int getBeginValue() {
 		return beginValue;
 	}
 
+	/**
+	 * Getter for the end value
+	 * @return integer maximum value of the slider
+	 */
 	public int getEndValue() {
 		return endValue;
 	} 
