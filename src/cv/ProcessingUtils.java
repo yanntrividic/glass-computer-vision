@@ -13,7 +13,7 @@ import org.opencv.imgproc.Imgproc;
  * @author Yann Trividic
  * @version 1.0
  */
-public class Utils {
+public class ProcessingUtils {
 	
 	/**
 	 * If a Point object isn't within the boundaries of the Mat object, the returned Point object has coordinates
@@ -21,6 +21,7 @@ public class Utils {
 	 * @param mat The reference image
 	 * @param p The point to clone and modify
 	 * @return A new Point object within the boundaries of the image
+	 * @author Yann Trividic
 	 */
 	public static Point getPointWithinBoundaries(Mat mat, Point p) {
 		Point vp = p.clone() ;
@@ -35,6 +36,12 @@ public class Utils {
 		return vp ;		
 	}
 	
+	/**
+	 * Returns a byte array from the original Mat object
+	 * @param m Mat to make into a byte array
+	 * @return the byte array that contains the Mat object data
+	 * @author Yann Trividic
+	 */
 	public static byte[] getMatAsByteArray(Mat m) {
 		byte[] temp = new byte[(int) m.total()]; // declaration of a byte array the size of the Mat
 		m.get(0, 0, temp) ; // the content of the image is put inside the temp variable
@@ -88,6 +95,7 @@ public class Utils {
 	 * @param transparencyMask double Transparency of the mask image
 	 * @param gamma double gamma factor
 	 * @return a new Mat object with the applied mask on it
+	 * @author Yann Trividic
 	 */
 	public static Mat applyMask(Mat src, double transparencySrc, Mat mask, double transparencyMask, double gamma) {
 		Mat dst = new Mat() ;
@@ -101,7 +109,13 @@ public class Utils {
 		return dst;
 	}
 	
-	//TODO: There's plenty of room to optimize this
+	/**
+	 * Method to get the boundaries of the rectangle in which the mask is enclosed
+	 * @param mask Mat object from which we want to get the boundaries
+	 * @return a list of four int coordinates : {top, right, bot, left}
+	 * @throws Exception if the Mat object doesn't have any non-zero values
+	 * @author Yann Trividic
+	 */
 	public static int[] getMaskBoundaries(Mat mask) throws Exception {
 		if(Core.countNonZero(mask) == 0) throw new Exception("The mask is all black") ;
 		
@@ -120,10 +134,18 @@ public class Utils {
 				}
 			}
 		}
-		//System.out.println(top +" "+right+" "+bot+" "+left) ;
 		return new int[] {top, right, bot, left} ;
 	}
 
+	/**
+	 * Gets the top left and bottom right points of a rectangle from its boundaries
+	 * @param src the source image
+	 * @param boundaries the boundaries as described in getMaskBoundaries(Mat)
+	 * @param offset adds an offset on the sides
+	 * @return a list of two Point objects : {topLeft, botRight}
+	 * @see getMaskBoundaries(Mat)
+	 * @author Yann Trividic
+	 */
 	public static Point[] getTwoCornersPlusBoundaries(Mat src, int[] boundaries, int[] offset) {
 		int top = (boundaries[0] - offset[0] < 0)?0:(boundaries[0] - offset[0]) ;
 		int right = (boundaries[1] + offset[1] > src.width()-1)?(src.width()-1):(boundaries[1] + offset[1]) ;
@@ -136,6 +158,15 @@ public class Utils {
 		return new Point [] {topLeft, botRight};
 	}
 	
+	/**
+	 * Draws a rectangle from its boundaries and potentially adds an offset to it
+	 * @param src the source image on which to draw the rectangle (Mat object
+	 * @param boundaries the boundaries as described in getMaskBoundaries(Mat)
+	 * @param offset adds an offset on the sides
+	 * @return the src Mat object with a white rectangle drawn on it
+	 * @see getMaskBoundaries(Mat)
+	 * @author Yann Trividic
+	 */
 	public static Mat drawRectFromBoudaries(Mat src, int[] boundaries, int[] offset) {
 		Point [] points = getTwoCornersPlusBoundaries(src, boundaries, offset) ;
 		
@@ -143,17 +174,23 @@ public class Utils {
 		return src ;
 	}
 	
+	/**
+	 * Crops a Mat object according to a top left and bottom right points 
+	 * @param src the Mat object to crop
+	 * @param topLeft Point with valid coordinates for src
+	 * @param botRight Point with valid coordinates for src
+	 * @param minimumSurface a lower threshold for when the surface to crop seems to small to hold a glass
+	 * @return a cropped image of the original Mat object
+	 * @author Yann Trividic
+	 */
 	public static Mat getCroppedImageFromTopLeftBotRight(Mat src, Point topLeft, Point botRight, double minimumSurface) {
 		Rect rectCrop = new Rect(topLeft, botRight) ;
-		//System.out.println(topLeft.x + "\n" + topLeft.y + "\n" + botRight.x + "\n" +botRight.y + "\n") ;
-		//System.out.println(src.width() + "\n" + src.height()) ;
 		double filledPercetage = (botRight.x-topLeft.x)*(botRight.y-topLeft.y)/(src.width()*src.height()) ;
-		//System.out.println(filledPercetage+"% filled.") ;
+		
 		if(filledPercetage < minimumSurface) {
 			return new Mat(src, rectCrop) ;
 		}
-		//System.out.println("The rectangle found occupies more than "+(minimumSurface*100)+"% of the image.\n"+
-		//	"It hasn't been cropped.");
+		
 		return src;
 	}
 }
