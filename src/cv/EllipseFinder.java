@@ -22,18 +22,20 @@ public class EllipseFinder {
 	 * @param mask the mask to isolate the glass from the rest of the image
 	 * @return
 	 */
-	public static Mat getEllipse(Mat img, Mat mask){  //ArrayList<Point> getEllipse(Mat img,Mat mask
+	public static ArrayList<Double> getEllipse(Mat img, Mat mask,Mat res,int resizewidth){  //ArrayList<Point> getEllipse(Mat img,Mat mask
 		//merge the mask and the image
 		//Core.multiply(img, mask, img);
 		//show(img,"avant");
 		//show(mask,"apres");
-		img=cv.PreProcessing.resizeSpecifiedWidth(img,400);
-		mask=cv.PreProcessing.resizeSpecifiedWidth(mask,400);
-		Mat imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,400);
+		double coeff=img.width()/resizewidth;
+		img=cv.PreProcessing.resizeSpecifiedWidth(img,resizewidth);
+		mask=cv.PreProcessing.resizeSpecifiedWidth(mask,resizewidth);
+		Mat imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,resizewidth);
 		img=fusionImgMask(img,mask);
 		//show(img,"apres fusion");
 		//show(img,"ca marche");
 		//cv.Segmentation.simpleBinarization(mask, 1, false);
+		
 		
 		
 		//merge the mask and the image
@@ -61,6 +63,11 @@ public class EllipseFinder {
 		//we create a first ellipse to be able to compare
 		bestEllipse=drawEllipse(startPos,getRightPixel(img,(int)startPos.x,(int)startPos.y),img,10);
 		
+		double xleftPointEllipse=startPos.x;
+		double yleftPointEllipse=startPos.y;
+		double xrightPointEllipse=getRightPixel(img,(int)startPos.x,(int)startPos.y).x;
+		double yrightPointEllipse=getRightPixel(img,(int)startPos.x,(int)startPos.y).y;
+		double heightEllipse=10;
 		////run through the image, increasing the height by 5pixels as you go
 		for(int i=(int)startPos.y+5;i<endPos.y;i+=5) {   //y parameter
 			//get the left and right pixels at height i
@@ -74,13 +81,25 @@ public class EllipseFinder {
 				//the current score is compared with the score of the ellipse 
 				if(getEllipseScore(imgComp, tempEllipse)>getEllipseScore(imgComp, bestEllipse)) {
 					bestEllipse=tempEllipse;
+					xleftPointEllipse=left.x;
+					yleftPointEllipse=left.y;
+					xrightPointEllipse=right.x;
+					yrightPointEllipse=right.y;
+					heightEllipse=z;
 				}
 			}
 			
 		}
 		//show the best Ellipse
 		//testDrawn(bestEllipse,img);
-		return(testDrawn(bestEllipse,img));
+		res=testDrawn(bestEllipse,img);
+		ArrayList<Double>resEll=new ArrayList<Double>();
+		resEll.add(xleftPointEllipse*coeff);
+		resEll.add(yleftPointEllipse*coeff);
+		resEll.add(xrightPointEllipse*coeff);
+		resEll.add(yrightPointEllipse*coeff);
+		resEll.add(heightEllipse*coeff);
+		return(resEll);
 		//return bestEllipse;
 	}
 	/**
@@ -311,36 +330,6 @@ public class EllipseFinder {
 		}
 		return img;
 	}
-//not use
-	
-	public static void main(String[]args) {
-		//drawEllipse();
-		//drawEllipse(new Point(0,0),new Point(0,0));
-		
-		//CONVERTIR L'IMAGE DES LE DEBUT
-		//System.exit(0);
-		Mat img=loadPicture("E:\\image\\image1.png");
-		
-		//Imgproc.resize( img, img, sz );
-		
-		Mat mask=loadPicture("E:\\image\\image2.png");
-		
-		//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
-		
-		getEllipse(img, mask);
-		
-		//System.out.println("point de dep"+ startPos);
-		
-		//System.out.println("point de droite"+ droite);
-		//drawEllipse(startPos,droite,img);
-		
-		
-		
-	
-		//drawEllipse(gauche,droite,path);
-		
-	
-	}
-	
+
 
 }
