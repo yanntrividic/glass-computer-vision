@@ -51,6 +51,6 @@ public class Extractor {
 			return vessel; //when we want to visualize the mask
 		}
 		
-		return GestionC4.getEllipse(croppedImg, vessel);
+		return EllipseFinder.getEllipse(croppedImg, vessel);
 	}
 }

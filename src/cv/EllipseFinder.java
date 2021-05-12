@@ -22,7 +22,7 @@ public class EllipseFinder {
 	 * @param mask the mask to isolate the glass from the rest of the image
 	 * @return
 	 */
-	public static Mat getEllipse(Mat img,Mat mask){  //ArrayList<Point> getEllipse(Mat img,Mat mask
+	public static Mat getEllipse(Mat img, Mat mask){  //ArrayList<Point> getEllipse(Mat img,Mat mask
 		//merge the mask and the image
 		//Core.multiply(img, mask, img);
 		//show(img,"avant");
