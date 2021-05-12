@@ -1,3 +1,9 @@
+/**
+ * Class for the computation of the JSON obtained from the Reader class
+ * @author Erwan Lacoudre
+ * @version 1.0
+ */
+
 package io;
 
 import java.io.FileReader;
@@ -30,9 +36,11 @@ public class JSONLabelProcessing {
 		
 		for(int i = 2; i < form.size(); i++) {
 			//Distance between current point and the first point
-			dist0 = euclideanDistance(farthestPoints[0], Reader.convertToPoint(form.get(i).toString()));
+			dist0 = euclideanDistance(farthestPoints[0], 
+					Reader.convertToPoint(form.get(i).toString()));
 			//Distance between current point and the second point
-			dist1 = euclideanDistance(Reader.convertToPoint(form.get(i).toString()), farthestPoints[1]);
+			dist1 = euclideanDistance(Reader.convertToPoint(form.get(i).toString()), 
+					farthestPoints[1]);
 			
 			//If true, then these are the two farthest points so far
 			//(First element of farthestPoints and the current point)
@@ -86,7 +94,8 @@ public class JSONLabelProcessing {
 	public static double horizontalAngle(Point ellipseCenter, Point ellipseLowest) {
 		/*
 		 * The point is placed on the horizontal line passing through ellipseLowest
-		 * and at the vertical of the center of the ellipse such as we obtain a right triangle 
+		 * and at the vertical of the center of the ellipse such as we obtain 
+		 * a right triangle 
 		 */
 		Point projection = new Point(ellipseCenter.x, ellipseLowest.y);
 		
@@ -103,15 +112,18 @@ public class JSONLabelProcessing {
 	
 	
 	/**
-	 * Creates a Mat containing the line at the center of the ellipse with the correct angle
+	 * Creates a Mat containing the line at the center of the ellipse with the 
+	 * correct angle
 	 * @param start one point of the line
 	 * @param angle the angle (in degrees) compared to the horizontal
-	 * @param addAngle boolean if we should add the angle or not compared to the vertical 
+	 * @param addAngle boolean if we should add the angle or not compared to 
+	 * the vertical 
 	 * @param height the height of the original picture
 	 * @param width the width of the original picture
 	 * @return
 	 */
-	public static Mat drawLineAngle(Point start, double angle, boolean addAngle, int height, int width) {
+	public static Mat drawLineAngle(Point start, double angle, boolean addAngle, 
+									int height, int width) {
 		Mat mat = new Mat(height, width, CvType.CV_8UC3);
 		Point pTop = new Point(), pBottom = new Point();
 		if(addAngle) {
@@ -129,12 +141,15 @@ public class JSONLabelProcessing {
 		}
 		
 		//System.out.println("Points : " + pTop + "\t" + pBottom);
-		Imgproc.line(mat, new Point(0, start.y), new Point(width, start.y), new Scalar(255, 0, 0), 2);
-		Imgproc.line(mat, new Point(start.x, 0), new Point(start.x, height), new Scalar(255,0,0), 2);
+		Imgproc.line(mat, new Point(0, start.y), new Point(width, start.y), 
+				new Scalar(255, 0, 0), 2);
+		Imgproc.line(mat, new Point(start.x, 0), new Point(start.x, height), 
+				new Scalar(255,0,0), 2);
 		Imgproc.line(mat, start, pTop, new Scalar(0,0,255), 2);
 		Imgproc.line(mat, start, pBottom, new Scalar(0,0,255), 2);
 		
-		HighGui.imshow("DrawLine", cv.PreProcessing.resizeSpecifiedWidth(mat, (int) (mat.cols() * 0.3)));
+		HighGui.imshow("DrawLine", cv.PreProcessing.resizeSpecifiedWidth(mat, 
+				(int) (mat.cols() * 0.3)));
 		HighGui.waitKey();
 		
 		return mat;
@@ -147,7 +162,8 @@ public class JSONLabelProcessing {
 	 */
 	public static double liquidLevel(String pathToJSON) {
 		Mat mat = Reader.extractLabelsFromJSON(pathToJSON);
-		HighGui.imshow("Labels from JSON", cv.PreProcessing.resizeSpecifiedWidth(mat, (int) (mat.cols() * 0.3)));
+		HighGui.imshow("Labels from JSON", cv.PreProcessing.resizeSpecifiedWidth(mat, 
+				(int) (mat.cols() * 0.3)));
 		HighGui.waitKey();
 		try {
 			JSONParser parser = new JSONParser();
@@ -167,7 +183,8 @@ public class JSONLabelProcessing {
 				//if ellipse then do the following
 				if(jsonObject.get("label").equals("ellipse")) {
 					Point[] farthests = farthestPoints(points);
-					System.out.println("Resultat : (" + farthests[0] + ',' + farthests[1] + ')');
+					System.out.println("Resultat : (" + farthests[0] + ',' + 
+										farthests[1] + ')');
 					//Point lowest = (farthests[0].y < farthests[1].y)? farthests[0]: farthests[1];
 					
 					Point lowest = new Point();
@@ -188,7 +205,8 @@ public class JSONLabelProcessing {
 					System.out.println("Angle value : " + angle);
 					
 					//System.out.println("\n mat.size().height : " + mat.size().height);
-					Mat lineDrawn = drawLineAngle(middle, angle, addAngle, (int)mat.size().height, (int)mat.size().width);
+					Mat lineDrawn = drawLineAngle(middle, angle, addAngle, 
+									(int)mat.size().height, (int)mat.size().width);
 					
 					//System.out.println("mat size : " + mat.size() + "// line size : " + lineDrawn.size());
 					Mat mult = mat.mul(lineDrawn);
@@ -236,7 +254,8 @@ public class JSONLabelProcessing {
 					System.out.println("Filling level : " + (heightLiquid/heightGlass)*100);
 					
 					
-					HighGui.imshow("Points used", cv.PreProcessing.resizeSpecifiedWidth(mult, (int) (mult.cols() * 0.3)));
+					HighGui.imshow("Points used", cv.PreProcessing.resizeSpecifiedWidth(mult, 
+							(int) (mult.cols() * 0.3)));
 					HighGui.waitKey();
 					
 					return (heightLiquid/heightGlass)*100;

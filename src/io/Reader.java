@@ -58,6 +58,7 @@ public class Reader {
 	/**
 	 * Extracts JSON data 
 	 * @param path Path towards the JSON file
+	 * @author Erwan Lacoudre
 	 */
 	public static Mat extractLabelsFromJSON(String path) {
 		//System.out.println("Here : " + path );
@@ -104,6 +105,12 @@ public class Reader {
 		return null;
 	}
 	
+	/**
+	 * This methods converts to Point type from a String 
+	 * @param s String containing the coordinates
+	 * @return the coordinates in a Point
+	 * @author Erwan Lacoudre
+	 */
 	public static Point convertToPoint(String s) {
 		Point p = new Point();
 		
@@ -114,7 +121,6 @@ public class Reader {
 		};
 		
 		p.set(point);
-		
 		return p;
 	}
 	
