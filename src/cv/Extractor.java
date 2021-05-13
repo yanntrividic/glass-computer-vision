@@ -54,8 +54,8 @@ public class Extractor {
 		}
 		
 	
-		ArrayList<Double> ell= EllipseFinder.getEllipse(croppedImg, vessel,400);
-		return vessel;
+		ArrayList<Double> ell= EllipseFinder.getEllipse(croppedImg, vessel,400,10,80);
+		return EllipseFinder.drawEllipse(new Point(ell.get(0),ell.get(1)), new Point(ell.get(2),ell.get(3)), croppedImg, ell.get(4));
 		
 	}
 }

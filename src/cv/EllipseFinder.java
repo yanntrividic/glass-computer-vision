@@ -21,17 +21,31 @@ public class EllipseFinder {
 	 * The function that finds the ellipse with the best score. This function calls the methods drawEllipse, getFirstPixel,getLeftPixel,getRightPixel
 	 * @param img a picture with a glass on it
 	 * @param mask the mask to isolate the glass from the rest of the image
-	 * @return
+	 * @param resizewidth the the width of the image resize, must take a value between 550 (above no interest) and 200 (below too small)
+	 * @param heightBegin the starting height of the ellipse, if the angle of the photo is low start at 10 otherwise at 80
+	 * @param heightEnd the ending height of the ellipse, if the angle of the photo is low end at 80 otherwise at 160
+	 * @return an double list containing the left and right points and the height of the ellipse
 	 */
-	public static ArrayList<Double> getEllipse(Mat img, Mat mask,int resizewidth){  //ArrayList<Point> getEllipse(Mat img,Mat mask
+	public static ArrayList<Double> getEllipse(Mat img, Mat mask,int resizewidth,int heightBegin,int heightEnd){  //ArrayList<Point> getEllipse(Mat img,Mat mask
 		//merge the mask and the image
 		//Core.multiply(img, mask, img);
 		//show(img,"avant");
 		//show(mask,"apres");
-		double coeff=img.width()/resizewidth;
-		img=cv.PreProcessing.resizeSpecifiedWidth(img,resizewidth);
-		mask=cv.PreProcessing.resizeSpecifiedWidth(mask,resizewidth);
-		Mat imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,resizewidth);
+		double coeffy=0;
+		double coeffx=0;
+		Mat imgComp=img.clone();
+		if(img.width()>resizewidth) {
+			coeffx=img.width()-resizewidth;
+			int temp=img.height();
+			img=cv.PreProcessing.resizeSpecifiedWidth(img,resizewidth);
+			mask=cv.PreProcessing.resizeSpecifiedWidth(mask,resizewidth);
+			coeffy=temp-img.height();
+			System.out.println("coeff x"+coeffx+" coeff y"+coeffy);
+			imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,resizewidth);
+		}
+	
+			
+		
 		img=fusionImgMask(img,mask);
 			
 		
@@ -59,7 +73,7 @@ public class EllipseFinder {
 		//the list of points of the ellipse with the best score 
 		ArrayList<Point> bestEllipse=new ArrayList<Point>();
 		//we create a first ellipse to be able to compare
-		bestEllipse=drawEllipse(startPos,getRightPixel(img,(int)startPos.x,(int)startPos.y),img,10);
+		bestEllipse=createEllipse(startPos,getRightPixel(img,(int)startPos.x,(int)startPos.y),img,10);
 		
 		double xleftPointEllipse=startPos.x;
 		double yleftPointEllipse=startPos.y;
@@ -75,7 +89,7 @@ public class EllipseFinder {
 			////we create all possible ellipses at this height, z corresponds to its height, it starts at 10 and increases from 10 to 80
 			for(int z=10;z<80;z+=5) { //z parameter
 				
-				ArrayList<Point> tempEllipse=drawEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
+				ArrayList<Point> tempEllipse=createEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
 				//the current score is compared with the score of the ellipse 
 				if(getEllipseScore(imgComp, tempEllipse)>getEllipseScore(imgComp, bestEllipse)) {
 					bestEllipse=tempEllipse;
@@ -92,11 +106,11 @@ public class EllipseFinder {
 		//testDrawn(bestEllipse,img);
 		
 		ArrayList<Double>resEll=new ArrayList<Double>();
-		resEll.add(xleftPointEllipse*coeff);
-		resEll.add(yleftPointEllipse*coeff);
-		resEll.add(xrightPointEllipse*coeff);
-		resEll.add(yrightPointEllipse*coeff);
-		resEll.add(heightEllipse*coeff);
+		resEll.add(xleftPointEllipse+coeffx);
+		resEll.add(yleftPointEllipse+coeffy);
+		resEll.add(xrightPointEllipse+coeffx);
+		resEll.add(yrightPointEllipse+coeffy);
+		resEll.add(heightEllipse+coeffy);
 		return(resEll);
 		//return bestEllipse;
 	}
@@ -181,7 +195,7 @@ public class EllipseFinder {
 	 * @param height the height of the ellipse in the glass
 	 * @return a list of points corresponds to the plotted ellipse
 	 */
-	public static ArrayList<Point> drawEllipse(Point left,Point right,Mat src,int height) {
+	public static ArrayList<Point> createEllipse(Point left,Point right,Mat src,int height) {
 		
 	      //Reading the source image in to a Mat object
 	      
@@ -210,6 +224,22 @@ public class EllipseFinder {
 	      
 	   }
 	
+	public static Mat drawEllipse(Point left,Point right,Mat src,double height) {
+		Mat res=new Mat();
+		res= src.clone();
+	      Size sz=new Size(right.x-left.x,height);  //the size of the future box
+	     
+	      Point center=new Point((left.x+right.x)/2,left.y);//the centre of the ellipse 
+	      
+	      RotatedRect box = new RotatedRect(center,sz,0);
+	      Scalar color = new Scalar(255, 255, 255); 
+	      int thickness = 3;
+	      Imgproc.ellipse (res, box, color, thickness);  
+	
+	      
+	   return res;
+	      
+	   }
 	public static Mat testDrawn(ArrayList<Point>list,Mat img)
 	{
 		double[] col= {212.0, 43.0, 48.0};
@@ -328,6 +358,8 @@ public class EllipseFinder {
 		}
 		return img;
 	}
+	
+	//not use
 public static Mat fusion(Mat img,Mat mask) {
 	//cv.Segmentation.simpleBinarization(mask, 1, false);
 	
@@ -345,7 +377,7 @@ public static void main(String[]args) {
 	Mat mask=loadPicture("E:\\image\\18masque.png");
 	//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
 	
-	getEllipse(img,mask,400);
+	//getEllipse(img,mask,400);
 }
 
 }
