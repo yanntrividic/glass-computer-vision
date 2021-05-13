@@ -278,7 +278,7 @@ public class JSONLabelProcessing {
 	 */
 	public static void main(String[] args) {
 		nu.pattern.OpenCV.loadLocally(); // loads opencv for this run
-		liquidLevel("/Users/erwan/Documents/Licence/L3/S6/image/glass-computer-vision/src/resources/img/train/30.json");
+		liquidLevel("C:\\Users\\thoma\\git\\glass-computer-vision2\\src\\resources\\img\\train\\30.json");
 		
 		
 		

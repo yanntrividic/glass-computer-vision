@@ -1,5 +1,7 @@
 package cv;
 
+import java.util.ArrayList;
+
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -51,8 +53,9 @@ public class Extractor {
 			return vessel; //when we want to visualize the mask
 		}
 		
-		Mat imgEllipse=new Mat();
-		EllipseFinder.getEllipse(croppedImg, vessel,imgEllipse,400);
-		return imgEllipse;
+	
+		ArrayList<Double> ell= EllipseFinder.getEllipse(croppedImg, vessel,400);
+		return EllipseFinder.fusion(croppedImg, mask);
+		
 	}
 }

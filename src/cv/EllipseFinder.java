@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
@@ -22,7 +23,7 @@ public class EllipseFinder {
 	 * @param mask the mask to isolate the glass from the rest of the image
 	 * @return
 	 */
-	public static ArrayList<Double> getEllipse(Mat img, Mat mask,Mat res,int resizewidth){  //ArrayList<Point> getEllipse(Mat img,Mat mask
+	public static ArrayList<Double> getEllipse(Mat img, Mat mask,int resizewidth){  //ArrayList<Point> getEllipse(Mat img,Mat mask
 		//merge the mask and the image
 		//Core.multiply(img, mask, img);
 		//show(img,"avant");
@@ -32,10 +33,7 @@ public class EllipseFinder {
 		mask=cv.PreProcessing.resizeSpecifiedWidth(mask,resizewidth);
 		Mat imgComp=cv.PreProcessing.resizeSpecifiedWidth(img,resizewidth);
 		img=fusionImgMask(img,mask);
-		//show(img,"apres fusion");
-		//show(img,"ca marche");
-		//cv.Segmentation.simpleBinarization(mask, 1, false);
-		
+			
 		
 		
 		//merge the mask and the image
@@ -92,7 +90,7 @@ public class EllipseFinder {
 		}
 		//show the best Ellipse
 		//testDrawn(bestEllipse,img);
-		res=testDrawn(bestEllipse,img);
+		
 		ArrayList<Double>resEll=new ArrayList<Double>();
 		resEll.add(xleftPointEllipse*coeff);
 		resEll.add(yleftPointEllipse*coeff);
@@ -330,6 +328,24 @@ public class EllipseFinder {
 		}
 		return img;
 	}
+public static Mat fusion(Mat img,Mat mask) {
+	//cv.Segmentation.simpleBinarization(mask, 1, false);
+	
+	System.out.println("mask type"+mask.type());
+	System.out.println("img type"+img.type());
+	Mat n=new Mat();
+	Core.multiply(img, mask, n);
 
+	return img;
+	
+}
+public static void main(String[]args) {
+	Mat img=loadPicture("E:\\image\\18img.png");
+	
+	Mat mask=loadPicture("E:\\image\\18masque.png");
+	//Imgproc.cvtColor(img2, img2, Imgproc.COLOR_BGR2GRAY);
+	
+	getEllipse(img,mask,400);
+}
 
 }
