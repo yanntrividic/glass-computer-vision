@@ -55,7 +55,7 @@ public class Extractor {
 		
 	
 		ArrayList<Double> ell= EllipseFinder.getEllipse(croppedImg, vessel,400);
-		return EllipseFinder.fusion(croppedImg, mask);
+		return vessel;
 		
 	}
 }
