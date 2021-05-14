@@ -30,7 +30,7 @@ public class Extractor {
 		// "intensityThreshold="+intensityThreshold+"\n"+
 		// "contourThreshold="+contourThreshold+"\n"+
 		// "minimumSurface="+minimumSurface+"\n") ;
-
+		
 		Mat mask = Imgcodecs.imread(Reader.getResourcesDir() + "gaussian_distribution.jpg");
 		mask = PreProcessing.rgbToGrayScale(mask);
 
@@ -58,9 +58,11 @@ public class Extractor {
 
 		double startingX = rectCorners[0].x ;
 		double startingY = rectCorners[0].y ;
+		
 		return EllipseFinder.drawEllipse(new Point(ell.get(0) + startingX, ell.get(1) + startingY),
 										 new Point(ell.get(2) + startingX, ell.get(3) + startingY),
-										 drawContourMaskOnOriginalImage(resizedMat, rectCorners[0], vessel), ell.get(4));
+										 drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
+												 						rectCorners[0], vessel), ell.get(4));
 		
 	}
 	

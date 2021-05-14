@@ -229,7 +229,7 @@ public class EllipseFinder {
 	      Point center=new Point((left.x+right.x)/2,left.y);//the centre of the ellipse 
 	      
 	      RotatedRect box = new RotatedRect(center,sz,0);
-	      Scalar color = new Scalar(255, 255, 255); 
+	      Scalar color = new Scalar(0, 0, 255); 
 	      int thickness = 2;
 	      Imgproc.ellipse (res, box, color, thickness);  
 	
