@@ -17,6 +17,9 @@ import org.opencv.imgcodecs.Imgcodecs;
 public class PanelImage extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final int maxDisplayHeight = 720;
+	private static final int maxDisplayWidth = 1000;
 
 	private Mat currentImg;
 	private Mat computedImg;
@@ -80,7 +83,8 @@ public class PanelImage extends JPanel {
 					this.panelParameter.getAlphaSrc(), this.panelParameter.getAlphaMask(),
 					this.panelParameter.getIntensity(), this.panelParameter.getContour(),
 					this.panelParameter.getMinimumSurface(), this.panelParameter.getThresholdVesselContour(),
-					this.panelParameter.getKernelVesselContour());
+					this.panelParameter.getKernelVesselContour(),
+					this.panelParameter.getResizeWidthEllipse(), this.panelParameter.getAngle());
 		}
 
 		this.imageLabel = getLabelFromMat(this.computedImg == null ? this.currentImg : this.computedImg);
@@ -101,7 +105,7 @@ public class PanelImage extends JPanel {
 	}
 
 	private JLabel getLabelFromMat(Mat img) {
-		return new JLabel(new ImageIcon(Utils.createAwtImage(img)));
+		return new JLabel(new ImageIcon(Utils.createAwtImage(img, maxDisplayWidth, maxDisplayHeight)));
 	}
 
 	/**

@@ -21,9 +21,11 @@ public class Utils {
 	/**
 	 * Converts a Mat object into a BufferedImage with the right dimensions for display
 	 * @param mat the original Mat object
+	 * @param width the maximum width the image can reach within the window
+	 * @param height the maximum height the image can reach within the window
 	 * @return a BufferedImage object
 	 */
-	public static BufferedImage createAwtImage(Mat mat) {
+	public static BufferedImage createAwtImage(Mat mat, int width, int height) {
 
 		int type = 0;
 		if (mat.channels() == 1) {
@@ -34,7 +36,7 @@ public class Utils {
 			return null;
 		}
 
-		int [] dims = resizeForWindow(mat, 1000, 600) ;
+		int [] dims = resizeForWindow(mat, width, height) ;
 		Mat resized = new Mat() ;
 		Imgproc.resize(mat, resized, new Size(dims[0], dims[1]));
 		

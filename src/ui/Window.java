@@ -37,6 +37,7 @@ public class Window extends JFrame {
 	
 	public final static int CROPPING_STAGE = 1;
 	public final static int MASKING_STAGE = 2;
+	public final static int NO_STAGE = 0;
 
 	/**
 	 * Constructor of the Window class
@@ -44,7 +45,7 @@ public class Window extends JFrame {
 	public Window() {
 		super("Glass CV" );
 		this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-		this.setSize(1280, 720);
+		this.setSize(1280, 800);
 		this.setLocationRelativeTo(null);
 
 		this.imgIndex = 0 ;
@@ -92,7 +93,7 @@ public class Window extends JFrame {
 	 * @see panelImage.update(boolean, int)
 	 */
 	public void computeImg(int stage) {
-		this.panelImage.update(true, stage) ;
+		if (stage != Window.NO_STAGE) this.panelImage.update(true, stage) ;
 	}
 	
 	/**

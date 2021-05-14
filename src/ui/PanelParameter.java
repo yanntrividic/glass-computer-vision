@@ -23,9 +23,12 @@ public class PanelParameter extends JPanel {
 	public static final int DEFAULT_MINIMUM_SURFACE = 80;
 	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 15;
 	public static final int DEFAULT_KERNEL_VESSEL_CONTOUR = 5;
+	public static final int DEFAULT_RESIZE_WIDTH_ELLIPSE = 200;
+	public static final int DEFAULT_INCLI = 1;
 
 	public static final String CROPPING_LABEL_STR = "CROPPING PARAMETERS";
 	public static final String MASKING_LABEL_STR = "MASKING PARAMETERS";
+	public static final String ELLIPSE_LABEL_STR = "ELLIPSE PARAMETERS";
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +44,10 @@ public class PanelParameter extends JPanel {
 	private JLabel maskingParamsLabel;
 	private Slider thresholdVesselContour;
 	private Slider kernelVesselContour;
+	
+	private JLabel findingEllipseParamsLabel;
+	private Slider resizeWidth;
+	private Slider angle;
 
 	private Window parent;
 
@@ -52,6 +59,7 @@ public class PanelParameter extends JPanel {
 		this.parent = parent;
 		setLayout(new FlowLayout());
 
+		// CROPPING IMAGE PARAMETERS
 		this.croppingParamsLabel = new JLabel();
 		this.croppingParamsLabel.setText(CROPPING_LABEL_STR);
 		add(this.croppingParamsLabel);
@@ -85,6 +93,9 @@ public class PanelParameter extends JPanel {
 		add(minimumSurfaceSlider.getLabel());
 		add(minimumSurfaceSlider.getSlider());
 
+		
+		// FINDING MASK PARAMETERS
+		
 		this.maskingParamsLabel = new JLabel();
 		this.maskingParamsLabel.setText(MASKING_LABEL_STR);
 		add(this.maskingParamsLabel);
@@ -98,6 +109,23 @@ public class PanelParameter extends JPanel {
 				Window.MASKING_STAGE);
 		add(kernelVesselContour.getLabel());
 		add(kernelVesselContour.getSlider());
+		
+		
+		// FINDING ELLIPSE PARAMETERS
+		
+		this.findingEllipseParamsLabel = new JLabel();
+		this.findingEllipseParamsLabel.setText(ELLIPSE_LABEL_STR);
+		add(this.findingEllipseParamsLabel);
+		
+		this.resizeWidth = new Slider(parent, 200, 550, DEFAULT_RESIZE_WIDTH_ELLIPSE, 25, 100, "resizeWidth",
+				Window.NO_STAGE);
+		add(resizeWidth.getLabel());
+		add(resizeWidth.getSlider());
+		
+		this.angle = new Slider(parent, 1, 3, DEFAULT_INCLI, 1, 1, "glassInclination",
+				Window.NO_STAGE);
+		add(angle.getLabel());
+		add(angle.getSlider()); 
 	}
 
 	/**
@@ -176,5 +204,21 @@ public class PanelParameter extends JPanel {
 	 */
 	public int getKernelVesselContour() {
 		return this.kernelVesselContour.getSlider().getValue();
+	}
+	
+	/**
+	 * Getter for the getResizeWidthEllipse 
+	 * @return an int between 200 and 550
+	 */
+	public int getResizeWidthEllipse() {
+		return this.resizeWidth.getSlider().getValue();
+	}
+	
+	/**
+	 * Getter for the getAngle
+	 * @return an int between 1 and 3
+	 */
+	public int getAngle() {
+		return this.angle.getSlider().getValue();
 	}
 }

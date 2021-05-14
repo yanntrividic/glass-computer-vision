@@ -175,6 +175,19 @@ public class ProcessingUtils {
 	}
 	
 	/**
+	 * Draws a rectangle from its corners
+	 * @param src the source image on which to draw the rectangle (Mat object
+	 * @param corners topleft and bottomright corners of the rectangle
+	 * @return the src Mat object with a white rectangle drawn on it
+	 * @see getMaskBoundaries(Mat)
+	 * @author Yann Trividic
+	 */
+	public static Mat drawRectFromCorners(Mat src, Point[] corners) {
+		Imgproc.rectangle(src, corners[0], corners[1], new Scalar(255, 0, 0), 2);
+		return src ;
+	}
+	
+	/**
 	 * Crops a Mat object according to a top left and bottom right points 
 	 * @param src the Mat object to crop
 	 * @param topLeft Point with valid coordinates for src
@@ -192,5 +205,12 @@ public class ProcessingUtils {
 		}
 		
 		return src;
+	}
+	
+
+	public static Mat putMaskInMatOriginalSize(Size size, Point topLeft, Mat mask) {
+		Mat dst = Mat.zeros(size, mask.type());
+		mask.copyTo(dst.submat(new Rect(topLeft, new Size(mask.cols(), mask.rows()))));
+		return dst ;
 	}
 }
