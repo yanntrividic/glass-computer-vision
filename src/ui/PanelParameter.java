@@ -23,7 +23,7 @@ public class PanelParameter extends JPanel {
 	public static final int DEFAULT_MINIMUM_SURFACE = 80;
 	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 15;
 	public static final int DEFAULT_KERNEL_VESSEL_CONTOUR = 5;
-	public static final int DEFAULT_RESIZE_WIDTH_ELLIPSE = 200;
+	public static final int DEFAULT_RESIZE_WIDTH_ELLIPSE = 400;
 	public static final int DEFAULT_INCLI = 1;
 
 	public static final String CROPPING_LABEL_STR = "CROPPING PARAMETERS";
@@ -117,7 +117,7 @@ public class PanelParameter extends JPanel {
 		this.findingEllipseParamsLabel.setText(ELLIPSE_LABEL_STR);
 		add(this.findingEllipseParamsLabel);
 		
-		this.resizeWidth = new Slider(parent, 200, 550, DEFAULT_RESIZE_WIDTH_ELLIPSE, 25, 100, "resizeWidth",
+		this.resizeWidth = new Slider(parent, 350, 600, DEFAULT_RESIZE_WIDTH_ELLIPSE, 50, 50, "resizeWidth",
 				Window.NO_STAGE);
 		add(resizeWidth.getLabel());
 		add(resizeWidth.getSlider());

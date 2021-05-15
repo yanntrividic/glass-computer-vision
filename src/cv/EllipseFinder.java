@@ -14,7 +14,11 @@ import org.opencv.core.Size;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
+/**
+ * 
+ * @author Thomas Jouen
+ *
+ */
 public class EllipseFinder {
 	
 	/**
@@ -25,7 +29,7 @@ public class EllipseFinder {
 	 * @param incli, 3 possible values: 1 if the glass is from the front or the photo taken at a slight angle; 2 if the glass is moderately inclined; 3 if the is very inclined or seen from above. The start and end values of the ellipse height depend on this.
 	 * @return an double list containing the left and right points and the height of the ellipse
 	 */
-	public static ArrayList<Double> getEllipse(Mat img, Mat mask, int resizeWidth, int incli){  //ArrayList<Point> getEllipse(Mat img,Mat mask
+	public static ArrayList<Double> getEllipse(Mat img, Mat mask, double resizeWidth, int incli){  //ArrayList<Point> getEllipse(Mat img,Mat mask
 		//merge the mask and the image
 		//Core.multiply(img, mask, img);
 		//show(img,"avant");
@@ -35,25 +39,16 @@ public class EllipseFinder {
 		if(img.width()>resizeWidth) {
 			coeffx=img.width()-resizeWidth;
 			int temp=img.height();
-			img=cv.PreProcessing.resizeSpecifiedWidth(img,resizeWidth);
-			mask=cv.PreProcessing.resizeSpecifiedWidth(mask,resizeWidth);
+			img=cv.PreProcessing.resizeSpecifiedWidth(img,(int)resizeWidth);
+			mask=cv.PreProcessing.resizeSpecifiedWidth(mask,(int)resizeWidth);
 			coeffy=temp-img.height();
-			System.out.println("coeff x"+coeffx+" coeff y"+coeffy);
 		}
 		Mat imgComp=img.clone();
 		
-		int ellHeightStart=10*(600/resizeWidth);             //*(resizeWidth/600)
-		int ellHeightEnd=90*(600/resizeWidth);;         //car opti � 80 pour resize de 600
-		if(incli==2) {
-			ellHeightStart=90*(600/resizeWidth);;
-			ellHeightEnd=160*(600/resizeWidth);;
-		}
-		else if(incli==3) {
-			ellHeightStart=160*(600/resizeWidth);;
-			ellHeightEnd=240*(600/resizeWidth);;
-		}
-		int step=resizeWidth/80;   //400->5    600->
 		
+		int step=(int)resizeWidth/80;   //400->5    600->
+	
+
 		
 		img=fusionImgMask(img,mask);
 					
@@ -63,8 +58,21 @@ public class EllipseFinder {
 		
 		//the limit height of the glass surface on the image
 		int heightLimit=getHeightLimit(img,startPos);
+		
+		double ellHeightStart=10;             //*(resizeWidth/600)
+		double ellHeightEnd=(heightLimit-startPos.y)/3;         //car opti � 80 pour resize de 600
+		if(incli==2) {
+			ellHeightStart=(heightLimit-startPos.y)/3;
+			ellHeightEnd=((heightLimit-startPos.y)/3)*2;
+		}
+		else if(incli==3) {
+			ellHeightStart=((heightLimit-startPos.y)/3)*2;
+			ellHeightEnd=(heightLimit-startPos.y);
+		}
+		
 		heightLimit=heightLimit-((heightLimit/100)*10);//it is very rare that the glass is filled to only 10%, moreover the lower part often contains large differences between its pixels which truncates the result
 		
+	
 		//the list of points of the ellipse with the best score 
 		ArrayList<Point> bestEllipse=new ArrayList<Point>();
 		//we create a first ellipse to be able to compare
@@ -82,8 +90,7 @@ public class EllipseFinder {
 			Point right=getRightPixel(img,(int)left.x,(int)left.y);
 			
 			////we create all possible ellipses at this height, z corresponds to its height, it starts at 10 and increases from 10 to 80
-			for(int z=ellHeightStart;z<ellHeightEnd;z+=step) { //z parameter
-				
+			for(int z=(int)ellHeightStart;z<ellHeightEnd;z+=step) { //z parameter
 				ArrayList<Point> tempEllipse=createEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
 				//the current score is compared with the score of the ellipse 
 				if(getEllipseScore(imgComp, tempEllipse)>getEllipseScore(imgComp, bestEllipse)) {
