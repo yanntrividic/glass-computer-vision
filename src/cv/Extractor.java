@@ -54,7 +54,7 @@ public class Extractor {
 			return drawContourMaskOnOriginalImage(resizedMat, rectCorners[0], vessel) ;
 		}
 		
-		ArrayList<Double> ell = EllipseFinder.getEllipse(croppedImg, vessel, 400, angle);
+		ArrayList<Double> ell = EllipseFinder.getEllipse(croppedImg, vessel, resizeWidth, angle);
 
 		double startingX = rectCorners[0].x ;
 		double startingY = rectCorners[0].y ;
