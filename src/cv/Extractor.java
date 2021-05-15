@@ -54,18 +54,21 @@ public class Extractor {
 			return drawContourMaskOnOriginalImage(resizedMat, rectCorners[0], vessel) ;
 		}
 		
-		ArrayList<Double> ell = EllipseFinder.getEllipse(croppedImg, vessel, resizeWidth, angle);
+		ArrayList<Double> ell = EllipseFinder.getEllipse(croppedImg, vessel, 400, angle);
 
 		double startingX = rectCorners[0].x ;
 		double startingY = rectCorners[0].y ;
-		
+		System.out.println("x1 "+ell.get(0)+" y1 "+ell.get(1)+" x2 "+ell.get(2)+" x3 "+ell.get(3)+" h "+ell.get(4));
 		return EllipseFinder.drawEllipse(new Point(ell.get(0) + startingX, ell.get(1) + startingY),
-										 new Point(ell.get(2) + startingX, ell.get(3) + startingY),
-										 drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
-												 						rectCorners[0], vessel), ell.get(4));
+				 new Point(ell.get(2) + startingX, ell.get(3) + startingY),
+				 drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
+						 						rectCorners[0], vessel), ell.get(4));
 		
 	}
-	
+	/*new Point(ell.get(0) + startingX, ell.get(1) + startingY),
+	 new Point(ell.get(2) + startingX, ell.get(3) + startingY),
+	 drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
+			 						rectCorners[0], vessel), ell.get(4));*/
 	private static Mat drawContourMaskOnOriginalImage(Mat resizedMat, Point topLeftCorner, Mat mask) {
 		Mat maskOriginalDimsBinary = ProcessingUtils.putMaskInMatOriginalSize(resizedMat.size(), topLeftCorner, mask); //when we want to visualize the mask
 		

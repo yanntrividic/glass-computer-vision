@@ -42,15 +42,15 @@ public class EllipseFinder {
 		}
 		Mat imgComp=img.clone();
 		
-		int ellHeightStart=10*(resizeWidth/600); 
-		int ellHeightEnd=90*(resizeWidth/600);         //car opti � 80 pour resize de 600
+		int ellHeightStart=10*(600/resizeWidth);             //*(resizeWidth/600)
+		int ellHeightEnd=90*(600/resizeWidth);;         //car opti � 80 pour resize de 600
 		if(incli==2) {
-			ellHeightStart=90*(resizeWidth/600);
-			ellHeightEnd=160*(resizeWidth/600);
+			ellHeightStart=90*(600/resizeWidth);;
+			ellHeightEnd=160*(600/resizeWidth);;
 		}
 		else if(incli==3) {
-			ellHeightStart=160*(resizeWidth/600);
-			ellHeightEnd=240*(resizeWidth/600);
+			ellHeightStart=160*(600/resizeWidth);;
+			ellHeightEnd=240*(600/resizeWidth);;
 		}
 		int step=resizeWidth/80;   //400->5    600->
 		
