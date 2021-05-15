@@ -84,13 +84,13 @@ public class EllipseFinder {
 		double yrightPointEllipse=getRightPixel(img,(int)startPos.x,(int)startPos.y).y;
 		double heightEllipse=10;
 		////run through the image, increasing the height by 5pixels as you go
-		for(int i=(int)startPos.y+step;i<heightLimit;i+=(step*2)) {   //y parameter
+		for(int i=(int)startPos.y+step;i<heightLimit-((5*heightLimit)/100)&&(img.height()>i+ellHeightEnd/2);i+=(step*2)) {   //y parameter
 			//get the left and right pixels at height i
 			Point left=getLeftPixel(img,i);
 			Point right=getRightPixel(img,(int)left.x,(int)left.y);
 			
 			////we create all possible ellipses at this height, z corresponds to its height, it starts at 10 and increases from 10 to 80
-			for(int z=(int)ellHeightStart;z<ellHeightEnd;z+=step) { //z parameter
+			for(int z=(int)ellHeightStart;z<ellHeightEnd&&z<heightLimit;z+=step) { //z parameter
 				ArrayList<Point> tempEllipse=createEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
 				//the current score is compared with the score of the ellipse 
 				if(getEllipseScore(imgComp, tempEllipse)>getEllipseScore(imgComp, bestEllipse)) {
