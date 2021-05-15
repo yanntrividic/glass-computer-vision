@@ -248,6 +248,7 @@ public class JSONLabelProcessing {
 					//double heightLiquid = euclideanDistance(middle, bottomGlass);
 					double heightLiquid = euclideanDistance(bottomEllipse, bottomGlass);
 					double heightGlass = euclideanDistance(bottomGlass, topGlass);
+					heightGlass = (heightGlass == 0)? 1: heightGlass;
 					
 					//System.out.println("glass : " + heightGlass + "\t liquid : " + heightLiquid);
 					
@@ -273,12 +274,22 @@ public class JSONLabelProcessing {
 	}
 	
 	/**
+	 * 
+	 * @return
+	 */
+	public static double getFillingLevel() {
+		double fillingLevel = 0.0;
+		
+		return fillingLevel;
+	}
+	
+	/**
 	 * Only for the tests, for now in main but it will be integrated later
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		nu.pattern.OpenCV.loadLocally(); // loads opencv for this run
-		liquidLevel("C:\\Users\\thoma\\git\\glass-computer-vision2\\src\\resources\\img\\train\\30.json");
+		liquidLevel("/Users/erwan/Documents/Licence/L3/S6/image/glass-computer-vision/src/resources/img/train/30.json");
 		
 		
 		

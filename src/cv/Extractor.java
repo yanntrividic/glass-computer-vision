@@ -10,6 +10,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 //import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
+import io.JSONLabelProcessing;
 import io.Reader;
 import ui.Window;
 
@@ -55,7 +56,36 @@ public class Extractor {
 		}
 		
 		ArrayList<Double> ell = EllipseFinder.getEllipse(croppedImg, vessel, resizeWidth, angle);
-
+		
+		Point leftEllipse = new Point(ell.get(0), ell.get(1));
+		Point rightEllipse = new Point(ell.get(2), ell.get(3));
+		double ellHeight = ell.get(4);
+		
+		Point middleEllipse = new Point((leftEllipse.x + rightEllipse.x)/2, (leftEllipse.y + rightEllipse.y)/2);
+		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + ellHeight/2);
+		
+		//Get the two points of the glass (top and bottom)
+		//Mat line = JSONLabelProcessing.drawLineAngle(middleEllipse, angle, false, 
+		//		(int)croppedImg.size().height, (int)croppedImg.size().width).mul(croppedImg);
+		
+		int[] boundaries;
+		try {
+			boundaries = ProcessingUtils.getMaskBoundaries(vessel);
+			//Ratio between dist(bottomEllipse, bottomGlass) and dist(topGlass, bottomGlass)
+			double glass = Math.abs(boundaries[0] - boundaries[2]);
+			glass = (glass==0)? 1:glass;
+			double fillingLevel = JSONLabelProcessing.euclideanDistance(bottomEllipse, 
+					new Point(bottomEllipse.x, boundaries[2]));
+			
+			//TODO : add the path to the corresponding JSON file
+			double fillingLevelJSON = JSONLabelProcessing.liquidLevel("pathToJson");
+			
+			System.out.println("Filling level found : " + (fillingLevel/glass)*100 );
+			System.out.println("Filling level via JSON file : " + fillingLevelJSON);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+				
 		double startingX = rectCorners[0].x ;
 		double startingY = rectCorners[0].y ;
 		System.out.println("x1 "+ell.get(0)+" y1 "+ell.get(1)+" x2 "+ell.get(2)+" x3 "+ell.get(3)+" h "+ell.get(4));
