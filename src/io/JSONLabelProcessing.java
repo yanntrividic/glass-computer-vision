@@ -17,7 +17,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
-import org.opencv.highgui.HighGui;
+//import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
 public class JSONLabelProcessing {
@@ -99,10 +99,10 @@ public class JSONLabelProcessing {
 		 */
 		Point projection = new Point(ellipseCenter.x, ellipseLowest.y);
 		
-		double tetha = euclideanDistance(projection, ellipseLowest) 
-				/ euclideanDistance(ellipseCenter, ellipseLowest); 
+		//double tetha = euclideanDistance(projection, ellipseLowest) 
+		//		/ euclideanDistance(ellipseCenter, ellipseLowest); 
 		
-		System.out.println("cosine  = " + tetha);
+		//System.out.println("cosine  = " + tetha);
 		return Math.acos(
 						euclideanDistance(projection, ellipseLowest) 
 						/ euclideanDistance(ellipseCenter, ellipseLowest)
@@ -148,9 +148,9 @@ public class JSONLabelProcessing {
 		Imgproc.line(mat, start, pTop, new Scalar(0,0,255), 2);
 		Imgproc.line(mat, start, pBottom, new Scalar(0,0,255), 2);
 		
-		HighGui.imshow("DrawLine", cv.PreProcessing.resizeSpecifiedWidth(mat, 
-				(int) (mat.cols() * 0.3)));
-		HighGui.waitKey();
+		//HighGui.imshow("DrawLine", cv.PreProcessing.resizeSpecifiedWidth(mat, 
+		//		(int) (mat.cols() * 0.3)));
+		//HighGui.waitKey();
 		
 		return mat;
 	}
@@ -162,9 +162,9 @@ public class JSONLabelProcessing {
 	 */
 	public static double liquidLevel(String pathToJSON) {
 		Mat mat = Reader.extractLabelsFromJSON(pathToJSON);
-		HighGui.imshow("Labels from JSON", cv.PreProcessing.resizeSpecifiedWidth(mat, 
-				(int) (mat.cols() * 0.3)));
-		HighGui.waitKey();
+		//HighGui.imshow("Labels from JSON", cv.PreProcessing.resizeSpecifiedWidth(mat, 
+		//		(int) (mat.cols() * 0.3)));
+		//HighGui.waitKey();
 		try {
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(new FileReader(pathToJSON));
@@ -242,7 +242,7 @@ public class JSONLabelProcessing {
 							}
 						}
 					}
-					System.out.println("NumberPointsFound : " + numberPointsFound);
+					//System.out.println("NumberPointsFound : " + numberPointsFound);
 					//System.out.println(topGlass + "\t" + bottomGlass + "\t" + middle);
 
 					//double heightLiquid = euclideanDistance(middle, bottomGlass);
@@ -252,12 +252,12 @@ public class JSONLabelProcessing {
 					
 					//System.out.println("glass : " + heightGlass + "\t liquid : " + heightLiquid);
 					
-					System.out.println("Filling level : " + (heightLiquid/heightGlass)*100);
+					//System.out.println("Filling level : " + (heightLiquid/heightGlass)*100);
 					
 					
-					HighGui.imshow("Points used", cv.PreProcessing.resizeSpecifiedWidth(mult, 
-							(int) (mult.cols() * 0.3)));
-					HighGui.waitKey();
+					//HighGui.imshow("Points used", cv.PreProcessing.resizeSpecifiedWidth(mult, 
+					//		(int) (mult.cols() * 0.3)));
+					//HighGui.waitKey();
 					
 					return (heightLiquid/heightGlass)*100;
 				}
@@ -271,27 +271,5 @@ public class JSONLabelProcessing {
 			System.out.println("Parse Exception");
 		}
 		return 0;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public static double getFillingLevel() {
-		double fillingLevel = 0.0;
-		
-		return fillingLevel;
-	}
-	
-	/**
-	 * Only for the tests, for now in main but it will be integrated later
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		nu.pattern.OpenCV.loadLocally(); // loads opencv for this run
-		liquidLevel("/Users/erwan/Documents/Licence/L3/S6/image/glass-computer-vision/src/resources/img/train/30.json");
-		
-		
-		
 	}
 }
