@@ -3,7 +3,7 @@ A Java 12 Maven project using OpenCV to measure the relative quantity of a fluid
 
 **Version:** 1.0  
 **Authors:** Cyril Dubos, Thomas Jouen, Erwan Lacoudre and Yann Trividic  
-**Context:** This program was developed for the Image Processing course of the Université de Paris. The teacher for the course was Pr. Nicole Vincent.
+**Context:** This program was developed for the Image Processing course of the Université de Paris. The teacher for the course was Pr. Nicole Vincent.  
 **License:** MIT License
 
 ![Main window of the app](https://raw.githubusercontent.com/yanntrividic/glass-computer-vision/main/good_evaluation.png)
