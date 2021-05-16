@@ -113,10 +113,15 @@ public class Extractor {
 			
 			//TODO : add the path to the corresponding JSON file
 			System.out.println(win.getCurrentImageLabelPath()) ;
-			double fillingLevelJSON = JSONLabelProcessing.liquidLevel(win.getCurrentImageLabelPath());
+			double fillingPercentageJSON = JSONLabelProcessing.liquidLevel(win.getCurrentImageLabelPath());
+			double fillingPercentage = (fillingLevel/glass)*100;
+			double errorPercentage = (Math.abs(fillingPercentage - fillingPercentageJSON)
+										/fillingPercentageJSON)*100;
 			
-			System.out.println("Filling level found : " + (fillingLevel/glass)*100 );
-			System.out.println("Filling level via JSON file : " + fillingLevelJSON);
+			//TODO : @yann add those numbers to the view
+			System.out.println("Filling percentage found : " +  fillingPercentage);
+			System.out.println("Filling percentage via JSON file : " + fillingPercentageJSON);
+			System.out.println("Error percentage : " + errorPercentage);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
