@@ -252,13 +252,13 @@ public class EllipseFinder {
 	 allows to obtain the ellipse drawn previously
 	 * @param img picture where the ellipse is
 	 * @param col the color of the ellipse
-	 * @param height the height of the start on the image
+	 * @param height the height of the left and right point of the ellipse(it's central height)
 	 * @param heightEll the height of the ellipse
 	  * @return the list of points that make up the ellipse
 	 */
 	public static ArrayList<Point> getEllipseDraw(Mat img,Color col,int height,int heightEll) {//maybe a greyscale problem
 		ArrayList<Point> ellipse=new ArrayList<Point>();
-		for(int i=height-(heightEll)/2;i<img.height()-(heightEll)/2;i++) {
+		for(int i=height;i<img.height()-(heightEll)/2;i++) {
 			for(int j=0;j<img.width();j++) {
 				//System.out.println(""+i+" "+j);
 				double[]temp=img.get(i, j);
