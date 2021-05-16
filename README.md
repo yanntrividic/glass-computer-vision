@@ -19,7 +19,7 @@ The `img` folder was built for the occasion of this project by the students who 
 
 All the images of the set were labeled. In order to do so, we used [labelme](https://github.com/wkentaro/labelme), an opensource annotation tool. Two labels were chosen: the ellipse (`ellipse`) of the water level and the outline of the glass (`glass`). The labels were saved as JSON files with the same name as their corresponding image, in the same folders. 
 
-![Label example](https://raw.githubusercontent.com/yanntrividic/glass-computer-vision/main/labeled_image.png =300x)
+<img src="https://raw.githubusercontent.com/yanntrividic/glass-computer-vision/main/labeled_image.png" width="300">
 
 
 ## Minimum configuration required
