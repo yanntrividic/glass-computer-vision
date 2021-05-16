@@ -34,22 +34,22 @@ public class Window extends JFrame {
 	private PanelButtons panelButtons;
 	private PanelParameter panelParameters; 
 	private JPanel contentPane;
-	
+
+	public final static int NO_STAGE = 0;
 	public final static int CROPPING_STAGE = 1;
 	public final static int MASKING_STAGE = 2;
-	public final static int NO_STAGE = 0;
 
 	/**
 	 * Constructor of the Window class
 	 */
-	public Window() {
+	public Window(String folder) {
 		super("Glass CV" );
 		this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		this.setSize(1280, 800);
 		this.setLocationRelativeTo(null);
 
-		this.imgIndex = 0 ;
-		this.imgPath = Reader.getImgDir("train") ;
+		this.imgIndex = 0 ; // 
+		this.imgPath = Reader.getImgDir(folder) ;
 		this.imgs = Reader.getAllImgInFolder(imgPath) ;
 
 		ArrayList<String> labels = Reader.getAllLabelsInFolder(imgPath) ;
@@ -118,5 +118,13 @@ public class Window extends JFrame {
 	 */
 	public ArrayList<String> getImgs() {
 		return this.imgs;
+	}
+	
+	/**
+	 * Getter for the imgs object
+	 * @return an ArrayList of String that contains the path to all images
+	 */
+	public int getImgIndex() {
+		return this.imgIndex;
 	}
 }

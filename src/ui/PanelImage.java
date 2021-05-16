@@ -79,12 +79,17 @@ public class PanelImage extends JPanel {
 			this.currentImg = Imgcodecs.imread(parent.getImgPath() + parent.getImgs().get(this.currentIndex));
 			this.computedImg = null;
 		} else {
-			this.computedImg = cv.Extractor.computeImage(stage, this.currentImg, this.panelParameter.getMedianFilterKSize(),
-					this.panelParameter.getAlphaSrc(), this.panelParameter.getAlphaMask(),
-					this.panelParameter.getIntensity(), this.panelParameter.getContour(),
-					this.panelParameter.getMinimumSurface(), this.panelParameter.getThresholdVesselContour(),
+			this.computedImg = cv.Extractor.computeImage(stage, this.currentImg, this.parent,
+					this.panelParameter.getMedianFilterKSize(),	
+					this.panelParameter.getAlphaSrc(), 
+					this.panelParameter.getAlphaMask(),	
+					this.panelParameter.getIntensity(), 
+					this.panelParameter.getContour(), 
+					this.panelParameter.getMinimumSurface(), 
+					this.panelParameter.getThresholdVesselContour(),
 					this.panelParameter.getKernelVesselContour(),
-					this.panelParameter.getResizeWidthEllipse(), this.panelParameter.getAngle());
+					this.panelParameter.getResizeWidthEllipse(), 
+					this.panelParameter.getAngle());
 		}
 
 		this.imageLabel = getLabelFromMat(this.computedImg == null ? this.currentImg : this.computedImg);

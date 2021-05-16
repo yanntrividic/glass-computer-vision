@@ -21,9 +21,42 @@ import ui.Window;
  * @version 1.0
  */
 public class Extractor {
-	public static Mat computeImage(int stage, Mat mat, int medianFilterKSize, double alphaSrc, double alphaMask,
-			double intensityThreshold, double contourThreshold, double minimumSurface, int thresholdVesselContour,
-			int kernelVesselContour, int resizeWidth, int angle) {
+
+	/**
+	 * Main method of the glass processing algorithm. Depending on value of stage, can return various Mat objects that
+	 * correspond to certain stages of the processing.
+	 * 
+	 * @param stage two values possible : 
+	 * Window.CROPPING_STAGE for when we want to stop the processing after the cropping stage
+	 * Window.MASKING_STAGE for stopping after extracting the mask contours
+	 * Every other value will result in the full processing of the image.
+	 * @param mat The original Mat object. Typically, it's a RGB image that contains a glass with water in it.
+	 * @param win Window object (controller of the program) that holds the labels info for computing the final evalutation
+	 * @param medianFilterKSize Parameter for the CROPPING_STAGE (see SpecularReflexion)
+	 * @param alphaSrc Parameter for the CROPPING_STAGE (see SpecularReflexion)
+	 * @param alphaMask Parameter for the CROPPING_STAGE (see SpecularReflexion)
+	 * @param intensityThreshold Parameter for the CROPPING_STAGE (see SpecularReflexion)
+	 * @param contourThreshold Parameter for the CROPPING_STAGE (see SpecularReflexion)
+	 * @param minimumSurface Parameter for the MASKING_STAGE (see VesselContour)
+	 * @param thresholdVesselContour Parameter for the MASKING_STAGE (see VesselContour)
+	 * @param kernelVesselContour Parameter for the MASKING_STAGE (see VesselContour)
+	 * @param resizeWidth Parameter for finding the ellipse (see EllipseFinder)
+	 * @param angle Parameter for finding the ellipse (see EllipseFinder)
+	 * 
+	 * @return Depending on the value of the stage parameter, the method will return the original Mat with various
+	 * indicators of the processing's result : a blue rectangle for the area where it's most probable there is a glass,
+	 * a white outline for the glass contours, and a red ellipse for where the water level is believed to be.
+	 * 
+	 * @see Window
+	 * @see SpecularReflexion
+	 * @see VesselContour
+	 * @see EllipseFinder
+	 */
+	public static Mat computeImage(int stage, Mat mat, Window win,
+			int medianFilterKSize, double alphaSrc, double alphaMask, double intensityThreshold, 
+			double contourThreshold, double minimumSurface, 
+			int thresholdVesselContour,	int kernelVesselContour, 
+			int resizeWidth, int angle) {
 
 		// System.out.println("medianFilterKSize="+medianFilterKSize+"\n"+
 		// "alphaSrc="+alphaSrc+"\n"+
@@ -52,7 +85,8 @@ public class Extractor {
 		Mat vessel = VesselContour.findVesselContour(croppedImg, thresholdVesselContour, kernelVesselContour);
 		
 		if (stage == Window.MASKING_STAGE) {
-			return drawContourMaskOnOriginalImage(resizedMat, rectCorners[0], vessel) ;
+			Mat contourMaskOnOriginalImage = drawContourMaskOnOriginalImage(resizedMat, rectCorners[0], vessel) ;
+			return ProcessingUtils.drawRectFromCorners(contourMaskOnOriginalImage, rectCorners);
 		}
 		
 		ArrayList<Double> ell = EllipseFinder.getEllipse(croppedImg, vessel, resizeWidth, angle);
