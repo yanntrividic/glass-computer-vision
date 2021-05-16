@@ -112,7 +112,8 @@ public class Extractor {
 					new Point(bottomEllipse.x, boundaries[2]));
 			
 			//TODO : add the path to the corresponding JSON file
-			double fillingLevelJSON = JSONLabelProcessing.liquidLevel("pathToJson");
+			System.out.println(win.getCurrentImageLabelPath()) ;
+			double fillingLevelJSON = JSONLabelProcessing.liquidLevel(win.getCurrentImageLabelPath());
 			
 			System.out.println("Filling level found : " + (fillingLevel/glass)*100 );
 			System.out.println("Filling level via JSON file : " + fillingLevelJSON);

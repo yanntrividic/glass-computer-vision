@@ -25,6 +25,7 @@ public class Window extends JFrame {
 	public int imgIndex ;
 	public String imgPath ;
 	public ArrayList<String> imgs ;
+	public ArrayList<String> labels ;
 	public ImageIcon displayedImage ;
 
 	public JPanel imagePane ;
@@ -52,7 +53,7 @@ public class Window extends JFrame {
 		this.imgPath = Reader.getImgDir(folder) ;
 		this.imgs = Reader.getAllImgInFolder(imgPath) ;
 
-		ArrayList<String> labels = Reader.getAllLabelsInFolder(imgPath) ;
+		this.labels = Reader.getAllLabelsInFolder(imgPath) ;
 		//Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
 		//mask = PreProcessing.rgbToGrayScale(mask) ;
 
@@ -126,5 +127,17 @@ public class Window extends JFrame {
 	 */
 	public int getImgIndex() {
 		return this.imgIndex;
+	}
+	
+	/**
+	 * Getter for the imgs object
+	 * @return an ArrayList of String that contains the path to all images
+	 */
+	public ArrayList<String> getLabels() {
+		return this.labels;
+	}
+	
+	public String getCurrentImageLabelPath() {
+		return this.imgPath + this.labels.get(this.imgIndex) ;
 	}
 }
