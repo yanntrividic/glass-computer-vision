@@ -40,7 +40,7 @@ The program's window is divided in four parts:
 
 Changing the value of the sliders about the `ELLIPSE PARAMETERS` labels will result into the display of the intermediary process related to this parameter. For example, if the changes the value of one of the masking parameters' sliders, the new mask will be displayed directly. It implies that if the user wants to see the full result (ellipse and evalution) one of the `Compute image` buttons must be clicked.
 
-The evaluation (...) [@Erwan]
+The evaluation of the filling level uses the euclidean distance. To calculate the glass height it calculates the distance between the top and the bottom of the glass. To get the filling level, it finds the ellipse of the liquid inside the glass. It then calculates the distance between the bottom of the glass and the bottom of the ellipse. We then calculate the filling percentage. 
 
 
 ## References
