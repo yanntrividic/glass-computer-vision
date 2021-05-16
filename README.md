@@ -15,9 +15,11 @@ This repository contains three folders:
 * `resources`, three image sets (training, validation, test),
 * `doc`, the Javadoc of the project, compiled into a set of HTML files.
 
+
 ## Minimum configuration required
 
 For this project to run on your machine, you'll need to have installed Java SE 12.
+
 
 ## Run the program
 
@@ -26,6 +28,7 @@ Once the JAR file is downloaded from the `tags` section of this page, open a te
 For example, if you want to see the unbiased results of our program, please use this command `java -jar FILENAME.jar test` and see how we did for yourself.
 
 TODO: explain that the image sets must be downloaded
+
 
 ## User instructions
 
@@ -38,6 +41,7 @@ The program's window is divided in four parts:
 Changing the value of the sliders about the `ELLIPSE PARAMETERS` labels will result into the display of the intermediary process related to this parameter. For example, if the changes the value of one of the masking parameters' sliders, the new mask will be displayed directly. It implies that if the user wants to see the full result (ellipse and evalution) one of the `Compute image` buttons must be clicked.
 
 The evaluation (...) [@Erwan]
+
 
 ## References
 
