@@ -265,7 +265,7 @@ public class EllipseFinder {
 				//for(int k=0;k<temp.length;k++) {
 				//System.out.println(temp[0]+" "+temp[1]+" "+temp[2]);
 					if(temp[0]==255) {//&&temp[1]==255&&temp[2]==255)
-						ellipse.add(new Point(i,j));
+						ellipse.add(new Point(j,i));
 				}
 			}
 		}
@@ -290,13 +290,13 @@ public class EllipseFinder {
 		//Imgproc.cvtColor(img, temp, Imgproc.COLOR_RGB2GRAY);
 		
 		for(int i=0;i<ellipse.size();i++) {
-			sommU+=img.get((int)ellipse.get(i).x-1, (int)ellipse.get(i).y)[0];    //image en noir et blanc 
-			if(img.get((int)ellipse.get(i).x-1, (int)ellipse.get(i).y)[0]>maxU)
-				maxU=img.get((int)ellipse.get(i).x-1,(int) ellipse.get(i).y)[0];
+			sommU+=img.get((int)ellipse.get(i).y-1, (int)ellipse.get(i).x)[0];    //image en noir et blanc 
+			if(img.get((int)ellipse.get(i).y-1, (int)ellipse.get(i).x)[0]>maxU)
+				maxU=img.get((int)ellipse.get(i).y-1,(int) ellipse.get(i).x)[0];
 			//System.out.println("test"+img.get((int)ellipse.get(i).x+1,(int) ellipse.get(i).y)[0]);
-			sommD+=img.get((int)ellipse.get(i).x+1,(int) ellipse.get(i).y)[0];
-			if(img.get((int)ellipse.get(i).x-1,(int) ellipse.get(i).y)[0]>maxU)
-				maxD=img.get((int)ellipse.get(i).x+1,(int)ellipse.get(i).y)[0];
+			sommD+=img.get((int)ellipse.get(i).y+1,(int) ellipse.get(i).x)[0];
+			if(img.get((int)ellipse.get(i).y-1,(int) ellipse.get(i).x)[0]>maxU)
+				maxD=img.get((int)ellipse.get(i).y+1,(int)ellipse.get(i).x)[0];
 		}
 		double meanU=sommU/ellipse.size();
 		double meanD=sommD/ellipse.size();
@@ -328,19 +328,6 @@ public static Mat fusionImgMask(Mat img,Mat mask) {
 	}
 	
 	//not use
-/*
-public static Mat fusion(Mat img,Mat mask) {
-	//cv.Segmentation.simpleBinarization(mask, 1, false);
-	
-	System.out.println("mask type"+mask.type());
-	System.out.println("img type"+img.type());
-	Mat n=new Mat();
-	Core.multiply(img, mask, n);
-
-	return img;
-	
-}
-*/
 
 
 }
