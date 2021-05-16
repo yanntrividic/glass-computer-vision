@@ -65,7 +65,7 @@ public class Extractor {
 		// "contourThreshold="+contourThreshold+"\n"+
 		// "minimumSurface="+minimumSurface+"\n") ;
 		
-		Mat mask = Imgcodecs.imread(Reader.getResourcesDir() + "gaussian_distribution.jpg");
+		Mat mask = Imgcodecs.imread(Reader.getGaussianMaskPath());
 		mask = PreProcessing.rgbToGrayScale(mask);
 
 		Mat resizedMat = PreProcessing.resizeSpecifiedWidth(mat, 500);

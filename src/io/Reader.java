@@ -36,12 +36,22 @@ public class Reader {
 	
 	/**
 	 * Method that fecthes the resources directory as a path
-	 * @return the resources directory of the project as a String
+	 * @return the img directory of the project as a String
 	 * @author Yann Trividic
 	 */
 	public static String getResourcesDir() {
 		return System.getProperty("user.dir")
-				+fp+"resources"+fp ;		
+				+fp+"img"+fp ;		
+	}
+	
+	/**
+	 * Method that fecthes the path of the gaussian mask
+	 * @return the path of the gaussian mask
+	 * @author Yann Trividic
+	 */
+	public static String getGaussianMaskPath() {
+		return System.getProperty("user.dir")
+				+fp+"src"+fp+"cv"+fp+"gaussian_distribution.jpg" ;		
 	}
 	
 	/**
