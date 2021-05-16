@@ -6,7 +6,7 @@ A Java 12 Maven project using OpenCV to measure the relative quantity of a fluid
 **Context:** This program was developed for the Image Processing course of the Université de Paris. The teacher for the course was Pr. Nicole Vincent.
 **License:** MIT License
 
-ADD IMAGE
+![Main window of the app](https://raw.githubusercontent.com/yanntrividic/glass-computer-vision/main/good_evaluation.png)
 
 ## Contents
 
@@ -24,6 +24,8 @@ For this project to run on your machine, you'll need to have installed Java SE 1
 Once the JAR file is downloaded from the `tags` section of this page, open a terminal and change your directory to the folder where the file is. To run the file, execute the following command : `java -jar FILENAME.jar`. By doing so, the program starts and loads the training dataset. You can change the image set by adding a parameter at the end of the command. Three possibilities are available : `train` for the training set, `validation` for the validation set, `test` for the testing set.
 
 For example, if you want to see the unbiased results of our program, please use this command `java -jar FILENAME.jar test` and see how we did for yourself.
+
+TODO: explain that the image sets must be downloaded
 
 ## User instructions
 
