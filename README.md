@@ -16,7 +16,7 @@ This repository contains three folders:
 * `doc`, the Javadoc of the project, compiled into a set of HTML files.
 
 
-## Minimum configuration required
+## Minimum configuration required
 
 For this project to run on your machine, you'll need to have installed Java SE 12.
 
@@ -30,7 +30,7 @@ For example, if you want to see the unbiased results of our program, please use 
 TODO: explain that the image sets must be downloaded
 
 
-## User instructions
+## User instructions
 
 The program's window is divided in four parts:
 * The **top** of the window is where will be displayed textual information about the image currently selected,
