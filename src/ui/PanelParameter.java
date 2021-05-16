@@ -128,6 +128,22 @@ public class PanelParameter extends JPanel {
 		add(angle.getSlider()); 
 	}
 
+	public void resetParameters() {
+		medianFilterKSizeSlider.reset();
+		alphaSrcSlider.reset();
+		alphaMaskSlider.reset();
+
+		intensityThresholdSlider.reset();
+		contourThresholdSlider.reset();
+		minimumSurfaceSlider.reset();
+
+		thresholdVesselContour.reset();
+		kernelVesselContour.reset();
+
+		resizeWidth.reset();
+		angle.reset();
+	}
+	
 	/**
 	 * Getter for the median filter kernel size paramter
 	 * @return an odd integer between 1 and 11

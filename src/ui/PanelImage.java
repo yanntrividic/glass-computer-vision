@@ -24,10 +24,7 @@ public class PanelImage extends JPanel {
 	private Mat currentImg;
 	private Mat computedImg;
 
-	private JLabel textLabel;
 	private JLabel imageLabel;
-
-	private int currentIndex;
 
 	private Window parent;
 	private PanelParameter panelParameter;
@@ -40,18 +37,13 @@ public class PanelImage extends JPanel {
 	public PanelImage(Window parent, PanelParameter panelParameter) {
 		this.parent = parent;
 		this.panelParameter = panelParameter;
-		this.currentIndex = 0;
 
 		setLayout(new BorderLayout());
-		this.currentImg = Imgcodecs.imread(parent.getImgPath() + parent.getImgs().get(currentIndex));
+		this.currentImg = Imgcodecs.imread(parent.getImgPath() + parent.getImgs().get(parent.getImgIndex()));
 		this.computedImg = null;
 
-		this.textLabel = new JLabel();
-		this.textLabel.setText(parent.getImgs().get(currentIndex));
-		add(this.textLabel, "North");
-
 		this.imageLabel = getLabelFromMat(currentImg);
-		add(imageLabel, "South");
+		add(imageLabel, "Center");
 	}
 
 	/**
@@ -68,15 +60,10 @@ public class PanelImage extends JPanel {
 	 * @param stage integer, the stage at which the process will be stopped
 	 */
 	public void update(boolean compute, int stage) {
-		remove(this.textLabel);
 		remove(this.imageLabel);
-
-		this.textLabel = new JLabel();
-		this.textLabel.setText((compute ? "Computed " : "") + parent.getImgs().get(currentIndex));
-		add(this.textLabel, "North");
-
+				
 		if (!compute) {
-			this.currentImg = Imgcodecs.imread(parent.getImgPath() + parent.getImgs().get(this.currentIndex));
+			this.currentImg = Imgcodecs.imread(parent.getImgPath() + parent.getImgs().get(parent.getImgIndex()));
 			this.computedImg = null;
 		} else {
 			this.computedImg = cv.Extractor.computeImage(stage, this.currentImg, this.parent,
@@ -102,10 +89,11 @@ public class PanelImage extends JPanel {
 	 * @param next if true : next image, else : previous image
 	 */
 	public void updateAfterButton(boolean next) {
-		if (next && this.currentIndex < parent.getImgs().size() - 1)
-			this.currentIndex++;
-		if (!next && this.currentIndex > 0)
-			this.currentIndex--;
+		if (next && parent.getImgIndex() < parent.getImgs().size() - 1)
+			parent.incrementIndex();
+		if (!next && parent.getImgIndex() > 0)
+			parent.decrementIndex();
+		parent.updateText();
 		update(false);
 	}
 

@@ -98,47 +98,20 @@ public class Extractor {
 		Point middleEllipse = new Point((leftEllipse.x + rightEllipse.x)/2, (leftEllipse.y + rightEllipse.y)/2);
 		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + ellHeight/2);
 		
-		//Get the two points of the glass (top and bottom)
-		//Mat line = JSONLabelProcessing.drawLineAngle(middleEllipse, angle, false, 
-		//		(int)croppedImg.size().height, (int)croppedImg.size().width).mul(croppedImg);
-		
-		int[] boundaries;
-		try {
-			boundaries = ProcessingUtils.getMaskBoundaries(vessel);
-			//Ratio between dist(bottomEllipse, bottomGlass) and dist(topGlass, bottomGlass)
-			double glass = Math.abs(boundaries[0] - boundaries[2]);
-			glass = (glass==0)? 1:glass;
-			double fillingLevel = JSONLabelProcessing.euclideanDistance(bottomEllipse, 
-					new Point(bottomEllipse.x, boundaries[2]));
-			
-			//TODO : add the path to the corresponding JSON file
-			System.out.println(win.getCurrentImageLabelPath()) ;
-			double fillingPercentageJSON = JSONLabelProcessing.liquidLevel(win.getCurrentImageLabelPath());
-			double fillingPercentage = (fillingLevel/glass)*100;
-			double errorPercentage = (Math.abs(fillingPercentage - fillingPercentageJSON)
-										/fillingPercentageJSON)*100;
-			
-			//TODO : @yann add those numbers to the view
-			System.out.println("Filling percentage found : " +  fillingPercentage);
-			System.out.println("Filling percentage via JSON file : " + fillingPercentageJSON);
-			System.out.println("Error percentage : " + errorPercentage);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-				
+		evaluate(win, vessel, bottomEllipse);
+	
 		double startingX = rectCorners[0].x ;
 		double startingY = rectCorners[0].y ;
+		
 		System.out.println("x1 "+ell.get(0)+" y1 "+ell.get(1)+" x2 "+ell.get(2)+" x3 "+ell.get(3)+" h "+ell.get(4));
+		
 		return EllipseFinder.drawEllipse(new Point(ell.get(0) + startingX, ell.get(1) + startingY),
 				 new Point(ell.get(2) + startingX, ell.get(3) + startingY),
 				 drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
 						 						rectCorners[0], vessel), ell.get(4));
 		
 	}
-	/*new Point(ell.get(0) + startingX, ell.get(1) + startingY),
-	 new Point(ell.get(2) + startingX, ell.get(3) + startingY),
-	 drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
-			 						rectCorners[0], vessel), ell.get(4));*/
+
 	private static Mat drawContourMaskOnOriginalImage(Mat resizedMat, Point topLeftCorner, Mat mask) {
 		Mat maskOriginalDimsBinary = ProcessingUtils.putMaskInMatOriginalSize(resizedMat.size(), topLeftCorner, mask); //when we want to visualize the mask
 		
@@ -149,5 +122,36 @@ public class Extractor {
 		Mat maskOriginalDimsRGB = new Mat() ;
 		Imgproc.cvtColor(maskContours, maskOriginalDimsRGB, Imgproc.COLOR_GRAY2RGB);
 		return ProcessingUtils.applyMask(resizedMat, 1, maskOriginalDimsRGB, 0.5, 0.0) ;		
+	}
+	
+	private static void evaluate(Window win, Mat vessel, Point bottomEllipse) {
+		int [] boundaries = null ;
+	
+		try {
+			boundaries = ProcessingUtils.getMaskBoundaries(vessel);
+		}catch (Exception e) {
+			System.out.println(e.getMessage()); //when the mat is all black (no vessel found)
+			return ;
+		}
+		
+		//Ratio between dist(bottomEllipse, bottomGlass) and dist(topGlass, bottomGlass)
+		double glass = Math.abs(boundaries[0] - boundaries[2]);
+		glass = (glass==0)? 1:glass;
+		double fillingLevel = JSONLabelProcessing.euclideanDistance(bottomEllipse, 
+				new Point(bottomEllipse.x, boundaries[2]));
+		
+		System.out.println(win.getCurrentImageLabelPath()) ;
+		double fillingPercentageJSON = JSONLabelProcessing.liquidLevel(win.getCurrentImageLabelPath());
+		double fillingPercentage = (fillingLevel/glass)*100;
+		double errorPercentage = (Math.abs(fillingPercentage - fillingPercentageJSON)
+									/fillingPercentageJSON)*100;
+		
+		String filPer = "Filling percentage found: " +  String.format("%,.2f", fillingPercentage) +"%";
+		String filPerLabel = "Filling percentage via JSON file: " + String.format("%,.2f", fillingPercentageJSON) +"%";
+		String errPer = "Error percentage: " + String.format("%,.2f", errorPercentage) +"%";
+		
+		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n");
+		win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
+				": "+ filPer+", "+filPerLabel+", "+errPer);
 	}
 }

@@ -31,6 +31,7 @@ public class Window extends JFrame {
 	public JPanel imagePane ;
 	public JLabel imageLabel ;
 
+	private JLabel textLabel;
 	private PanelImage panelImage;
 	private PanelButtons panelButtons;
 	private PanelParameter panelParameters; 
@@ -46,7 +47,7 @@ public class Window extends JFrame {
 	public Window(String folder) {
 		super("Glass CV" );
 		this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-		this.setSize(1280, 800);
+		this.setSize(1280, 820);
 		this.setLocationRelativeTo(null);
 
 		this.imgIndex = 0 ; // 
@@ -54,13 +55,15 @@ public class Window extends JFrame {
 		this.imgs = Reader.getAllImgInFolder(imgPath) ;
 
 		this.labels = Reader.getAllLabelsInFolder(imgPath) ;
-		//Mat mask = Imgcodecs.imread(Reader.getResourcesDir()+"gaussian_distribution.jpg") ;
-		//mask = PreProcessing.rgbToGrayScale(mask) ;
 
 		if(imgs.size() != labels.size()) System.err.println("We couldn't find the same amount of images and labels.") ;
 
 		this.contentPane = (JPanel) this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
+		
+		this.textLabel = new JLabel();
+		this.textLabel.setText(getImgs().get(getImgIndex()));
+		this.contentPane.add(this.textLabel, "North");
 		
 		this.panelParameters = new PanelParameter(this) ;
 		this.contentPane.add(this.panelParameters,"East") ;
@@ -139,5 +142,31 @@ public class Window extends JFrame {
 	
 	public String getCurrentImageLabelPath() {
 		return this.imgPath + this.labels.get(this.imgIndex) ;
+	}
+	
+	public void incrementIndex() {
+		this.imgIndex++;
+	}
+	
+	public void decrementIndex() {
+		this.imgIndex--;
+	}
+	
+	public void resetParameters() {
+		this.panelParameters.resetParameters() ;
+	}
+	
+	public void updateText() {
+		remove(this.textLabel);
+		this.textLabel = new JLabel();
+		this.textLabel.setText(this.getImgs().get(this.getImgIndex()));
+		add(this.textLabel, "North");
+	}	
+	
+	public void updateText(String s) {
+		remove(this.textLabel);
+		this.textLabel = new JLabel();
+		this.textLabel.setText(s);
+		add(this.textLabel, "North");
 	}
 }

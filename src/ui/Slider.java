@@ -16,7 +16,7 @@ class Slider extends JFrame implements ChangeListener {
 	
 	private int beginValue ;
 	private int endValue ;
-	private int ticks ;
+	private int initValue ;
 	private int ticksSpacing ;
 	private int majorTicksSpacing ;
 	
@@ -42,13 +42,13 @@ class Slider extends JFrame implements ChangeListener {
 
 		this.beginValue = beginValue ;
 		this.endValue = endValue ;
-		this.ticks = initValue ;
+		this.initValue = initValue ;
 		this.paramName = paramName ;
 		this.ticksSpacing = ticksSpacing ;
 		this.majorTicksSpacing = majorTicksSpacing ;
 		
 		// Create a new JSlider
-		this.slider = new JSlider(this.beginValue, this.endValue, this.ticks); 
+		this.slider = new JSlider(this.beginValue, this.endValue, this.initValue); 
 		
 		this.slider.setPaintTrack(true); 
 		this.slider.setPaintTicks(true); 
@@ -78,6 +78,13 @@ class Slider extends JFrame implements ChangeListener {
 	 */
 	public JSlider getSlider() {
 		return slider;
+	}
+	
+	/**
+	 * Setter for the slider value
+	 */
+	public void reset() {
+		this.slider.setValue(this.initValue);
 	}
 
 	/**

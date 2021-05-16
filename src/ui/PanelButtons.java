@@ -24,6 +24,7 @@ public class PanelButtons extends JPanel {
 	JButton btnCompute ;
 	JButton btnComputeNext ;
 	JButton btnComputePrev ;
+	JButton btnReset ;
 	
 	Window parent ;
 	
@@ -35,17 +36,17 @@ public class PanelButtons extends JPanel {
 		setLayout(new FlowLayout()) ;
 		this.parent = parent ;
 		
-		this.btnPrev = new JButton("<- Previous image");
+		this.btnPrev = new JButton("<- Previous");
 		btnPrev.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) { parent.imgIndex--; parent.updateAfterButton(false);
+			public void actionPerformed(ActionEvent e) { parent.updateAfterButton(false);
 			}});
 		add(btnPrev);
 	
-		this.btnComputePrev = new JButton("<- Compute previous image");
+		this.btnComputePrev = new JButton("<- Compute previous");
 		btnComputePrev.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) { parent.imgIndex--; parent.updateAfterButton(false); 
+			public void actionPerformed(ActionEvent e) { parent.updateAfterButton(false); 
 			parent.computeImg(); }});
 		add(btnComputePrev);
 		
@@ -67,23 +68,28 @@ public class PanelButtons extends JPanel {
 			public void actionPerformed(ActionEvent e) { parent.computeImg(Window.MASKING_STAGE); }});
 		add(btnMask);
 		
-		this.btnCompute = new JButton("Compute image");
+		this.btnCompute = new JButton("Compute");
 		btnCompute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) { parent.computeImg(); }});
 		add(btnCompute);		
 
-		this.btnComputeNext = new JButton( "Compute next image ->" );
+		this.btnComputeNext = new JButton( "Compute next ->" );
 		btnComputeNext.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) { parent.imgIndex++; parent.updateAfterButton(true); parent.computeImg();}});
+			public void actionPerformed(ActionEvent e) { parent.updateAfterButton(true); parent.computeImg();}});
 		add(btnComputeNext);
 		
-		this.btnNext = new JButton( "Next image ->" );
+		this.btnNext = new JButton( "Next ->" );
 		btnNext.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) { parent.imgIndex++; parent.updateAfterButton(true); }});
+			public void actionPerformed(ActionEvent e) { parent.updateAfterButton(true); }});
 		add(btnNext);
 
+		this.btnReset = new JButton( "Reset parameters" );
+		btnReset.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { parent.resetParameters(); }});
+		add(btnReset);
 	}
 }

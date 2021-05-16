@@ -1,5 +1,5 @@
 # glass-computer-vision
-A Java 12 Maven project using OpenCV to measure the relative quantity of a fluid contained in a glass.  
+A Java 12 Maven project with a Swing GUI using OpenCV to measure the relative quantity of a fluid contained in a glass.  
 
 **Version:** 1.0  
 **Authors:** Cyril Dubos, Thomas Jouen, Erwan Lacoudre and Yann Trividic  
