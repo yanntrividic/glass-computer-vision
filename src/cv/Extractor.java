@@ -32,16 +32,16 @@ public class Extractor {
 	 * Every other value will result in the full processing of the image.
 	 * @param mat The original Mat object. Typically, it's a RGB image that contains a glass with water in it.
 	 * @param win Window object (controller of the program) that holds the labels info for computing the final evalutation
-	 * @param medianFilterKSize Parameter for the CROPPING_STAGE (see SpecularReflexion)
-	 * @param alphaSrc Parameter for the CROPPING_STAGE (see SpecularReflexion)
-	 * @param alphaMask Parameter for the CROPPING_STAGE (see SpecularReflexion)
-	 * @param intensityThreshold Parameter for the CROPPING_STAGE (see SpecularReflexion)
-	 * @param contourThreshold Parameter for the CROPPING_STAGE (see SpecularReflexion)
-	 * @param minimumSurface Parameter for the MASKING_STAGE (see VesselContour)
-	 * @param thresholdVesselContour Parameter for the MASKING_STAGE (see VesselContour)
-	 * @param kernelVesselContour Parameter for the MASKING_STAGE (see VesselContour)
-	 * @param resizeWidth Parameter for finding the ellipse (see EllipseFinder)
-	 * @param angle Parameter for finding the ellipse (see EllipseFinder)
+	 * @param medianFilterKSize Parameter relative to the CROPPING_STAGE (see SpecularReflexion)
+	 * @param alphaSrc Parameter relative to the CROPPING_STAGE (see SpecularReflexion)
+	 * @param alphaMask Parameter relative to the CROPPING_STAGE (see SpecularReflexion)
+	 * @param intensityThreshold Parameter relative to the CROPPING_STAGE (see SpecularReflexion)
+	 * @param contourThreshold Parameter relative to the CROPPING_STAGE (see SpecularReflexion)
+	 * @param minimumSurface Parameter relative to the MASKING_STAGE (see VesselContour)
+	 * @param thresholdVesselContour Parameter relative to the MASKING_STAGE (see VesselContour)
+	 * @param kernelVesselContour Parameter relative to the MASKING_STAGE (see VesselContour)
+	 * @param resizeWidth Parameter relative to finding the ellipse (see EllipseFinder)
+	 * @param angle Parameter relative to finding the ellipse (see EllipseFinder)
 	 * 
 	 * @return Depending on the value of the stage parameter, the method will return the original Mat with various
 	 * indicators of the processing's result : a blue rectangle for the area where it's most probable there is a glass,

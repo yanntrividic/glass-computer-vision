@@ -31,7 +31,7 @@ public class Reader {
 	 * @author Yann Trividic
 	 */
 	public static String getImgDir(String type) {
-		return getResourcesDir()+"img"+fp+type+fp ;
+		return getResourcesDir()+type+fp ;
 	}
 	
 	/**
@@ -41,7 +41,6 @@ public class Reader {
 	 */
 	public static String getResourcesDir() {
 		return System.getProperty("user.dir")
-				+fp+"src"
 				+fp+"resources"+fp ;		
 	}
 	
