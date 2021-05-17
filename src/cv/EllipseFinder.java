@@ -95,6 +95,7 @@ public class EllipseFinder {
 			for(int z=(int)ellHeightStart;z<ellHeightEnd&&z<heightLimit;z+=step) { //z parameter
 				ArrayList<Point> tempEllipse=createEllipse(left,right,img,z);   //drawEllipse(new Point(i,yS),new Point(i,yE),path);
 				//the current score is compared with the score of the ellipse 
+				scoreList.add(getEllipseScore(imgComp, tempEllipse));
 				if(getEllipseScore(imgComp, tempEllipse)>getEllipseScore(imgComp, bestEllipse)) {
 					bestEllipse=tempEllipse;
 					xleftPointEllipse=left.x;
@@ -102,13 +103,9 @@ public class EllipseFinder {
 					xrightPointEllipse=right.x;
 					yrightPointEllipse=right.y;
 					heightEllipse=z;
-					scoreList.add(getEllipseScore(imgComp, tempEllipse));
 					//System.out.println((+getEllipseScore(imgComp, tempEllipse)*1000000000)%10);
 				}
-				else {
-					scoreList.add(getEllipseScore(imgComp, bestEllipse));
-					//System.out.println((+getEllipseScore(imgComp, bestEllipse)*1000000000)%10);
-				}
+				
 			}
 			
 		}
@@ -352,15 +349,13 @@ public class EllipseFinder {
 	public static double confiance(ArrayList<Double> scoreList){
 		Collections.sort(scoreList);                       //we sort the list
 		//System.out.println("hh"+(scoreList.get(scoreList.size()-1)-(scoreList.get(0))));
-		double scoreLim=0.99;   //scores above this value are very similar to the max score
+		double scoreLim=0.85;   //scores above this value are very similar to the max score
 		                     //((scoreList.get(scoreList.size()-1)-(scoreList.get(0)))/(scoreList.get(scoreList.size()-1)-(scoreList.get(0))))
 		ArrayList<Double> simiScore=new ArrayList<Double>();
 		for(int i=0;i<scoreList.size();i++) {
-			double temp=(scoreList.get(i)-(scoreList.get(0)))/(scoreList.get(scoreList.size()-1)-(scoreList.get(0)));
-			if(temp>scoreLim) {
+			double temp=(double)(scoreList.get(i)-(scoreList.get(0)))/(scoreList.get(scoreList.size()-1)-(scoreList.get(0)));
+			if(temp>=scoreLim) {
 				simiScore.add(temp);
-				//System.out.println("temp"+temp);
-				
 			}
 		}
 		return(((double)1/simiScore.size())*100);
