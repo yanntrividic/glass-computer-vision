@@ -211,7 +211,8 @@ public class JSONLabelProcessing {
 					//System.out.println("mat size : " + mat.size() + "// line size : " + lineDrawn.size());
 					Mat mult = mat.mul(lineDrawn);
 					
-					Point topGlass = new Point(), bottomGlass = new Point(), bottomEllipse = new Point();
+					Point topGlass = new Point(), bottomGlass = new Point(), bottomEllipse = new Point(),
+							topEllipse = new Point();
 					int numberPointsFound = 0;
 					for(int i = 0; i < mult.size().height; i++) {
 						for(int j = 0; j < mult.size().width; j++) {
@@ -225,6 +226,10 @@ public class JSONLabelProcessing {
 									topGlass.y = i;
 								}
 								//Second and third points : the ellipse of the liquid
+								else if (numberPointsFound == 2) {
+									topEllipse.x = j;
+									topEllipse.y = i;
+								}
 								else if(numberPointsFound == 3 ) {
 									bottomEllipse.x = j;
 									bottomEllipse.y = i;
@@ -245,6 +250,12 @@ public class JSONLabelProcessing {
 					//System.out.println("NumberPointsFound : " + numberPointsFound);
 					//System.out.println(topGlass + "\t" + bottomGlass + "\t" + middle);
 
+					//In this case the ellipse is flat
+					if(numberPointsFound == 3) {
+						bottomGlass = bottomEllipse;
+						bottomEllipse = topEllipse;
+						
+					}
 					//double heightLiquid = euclideanDistance(middle, bottomGlass);
 					double heightLiquid = euclideanDistance(bottomEllipse, bottomGlass);
 					double heightGlass = euclideanDistance(bottomGlass, topGlass);
@@ -272,4 +283,5 @@ public class JSONLabelProcessing {
 		}
 		return 0;
 	}
+	
 }

@@ -98,6 +98,7 @@ public class Extractor {
 		Point middleEllipse = new Point((leftEllipse.x + rightEllipse.x)/2, (leftEllipse.y + rightEllipse.y)/2);
 		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + ellHeight/2);
 		
+		
 		evaluate(win, vessel, bottomEllipse);
 	
 		double startingX = rectCorners[0].x ;
@@ -124,6 +125,7 @@ public class Extractor {
 		return ProcessingUtils.applyMask(resizedMat, 1, maskOriginalDimsRGB, 0.5, 0.0) ;		
 	}
 	
+	
 	private static void evaluate(Window win, Mat vessel, Point bottomEllipse) {
 		int [] boundaries = null ;
 	
@@ -146,9 +148,14 @@ public class Extractor {
 		double errorPercentage = (Math.abs(fillingPercentage - fillingPercentageJSON)
 									/fillingPercentageJSON)*100;
 		
+		//if we've correclty found an empty glass
+		if(fillingPercentageJSON == 0 && fillingPercentage == 0)
+			errorPercentage = 0;
+		
+		
 		String filPer = "Filling percentage found: " +  String.format("%,.2f", fillingPercentage) +"%";
 		String filPerLabel = "Filling percentage via JSON file: " + String.format("%,.2f", fillingPercentageJSON) +"%";
-		String errPer = "Error percentage: " + String.format("%,.2f", errorPercentage) +"%";
+		String errPer = "Percent error: " + String.format("%,.2f", errorPercentage) +"%";
 		
 		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n");
 		win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
