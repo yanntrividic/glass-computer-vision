@@ -77,6 +77,7 @@ public class Utils {
 	 * Displays an image using HighGui
 	 * @param mat Mat object to visualize
 	 * @param title title of the window
+	 * @return a Mat object to the right dimensions
 	 */
 	public static Mat displayImage(Mat mat, String title) {
 		return displayImage(mat, title, defaultWidth) ;
@@ -86,6 +87,8 @@ public class Utils {
 	 * Displays an image using HighGui
 	 * @param mat Mat object to visualize
 	 * @param title title of the window
+	 * @param displayWidth the wanted width for the Mat 
+	 * @return a Mat object to the right dimensions
 	 */
 	public static Mat displayImage(Mat mat, String title, int displayWidth) {
 		Mat resized = cv.PreProcessing.resizeSpecifiedWidth(mat, displayWidth) ;

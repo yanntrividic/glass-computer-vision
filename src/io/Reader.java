@@ -70,6 +70,7 @@ public class Reader {
 	 * Extracts JSON data 
 	 * @param path Path towards the JSON file
 	 * @author Erwan Lacoudre
+	 * @return a Mat object that contains the extracted labels
 	 */
 	public static Mat extractLabelsFromJSON(String path) {
 		//System.out.println("Here : " + path );

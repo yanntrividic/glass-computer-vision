@@ -59,6 +59,7 @@ public class ContourUtils {
 	 * 
 	 * @param source    the source image
 	 * @param threshold the threshold value used for Canny and Sobel edges
+	 * @param kernel the kernel size
 	 * @return the binary image of Canny-Sobel edge
 	 * @author Cyril Dubos
 	 */

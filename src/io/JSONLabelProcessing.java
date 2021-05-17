@@ -120,7 +120,7 @@ public class JSONLabelProcessing {
 	 * the vertical 
 	 * @param height the height of the original picture
 	 * @param width the width of the original picture
-	 * @return
+	 * @return a Mat object with a drawn line over it
 	 */
 	public static Mat drawLineAngle(Point start, double angle, boolean addAngle, 
 									int height, int width) {

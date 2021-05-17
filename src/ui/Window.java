@@ -41,6 +41,7 @@ public class Window extends JFrame {
 
 	/**
 	 * Constructor of the Window class
+	 * @param folder the folder to open by the program (can be test, train or validation)
 	 */
 	public Window(String folder) {
 		super("Glass CV" );
@@ -92,7 +93,6 @@ public class Window extends JFrame {
 	/**
 	 * Updates the displayed image with the image obtained after the specified stage
 	 * @param stage stage of the processing
-	 * @see panelImage.update(boolean, int)
 	 */
 	public void computeImg(int stage) {
 		if (stage != Window.NO_STAGE) this.panelImage.update(true, stage) ;
@@ -101,7 +101,6 @@ public class Window extends JFrame {
 	/**
 	 * Updates the displayed image after the next or previous button is updated
 	 * @param next the button pressed
-	 * @see panelImage.update(boolean, int)
 	 */
 	public void updateAfterButton(boolean next) {
 		this.panelImage.updateAfterButton(next);

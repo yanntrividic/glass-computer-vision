@@ -1,16 +1,3 @@
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.swing.UIManager;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.imgcodecs.Imgcodecs;
-
-import cv.Extractor;
-import cv.PreProcessing;
-import io.*;
 import ui.Window;
 
 /**

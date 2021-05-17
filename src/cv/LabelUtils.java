@@ -13,7 +13,6 @@ public class LabelUtils {
      * @param labels the labels matrix
      * @param index  the index of the label that will be "draw"
      * @return the label image
-     * @return the label image
      * @author Cyril Dubos
      */
     public static Mat getLabelImage(Mat labels, int index) {
