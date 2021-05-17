@@ -58,63 +58,66 @@ public class Extractor {
 			int thresholdVesselContour,	int kernelVesselContour, 
 			int resizeWidth, int angle) {
 
-		// System.out.println("medianFilterKSize="+medianFilterKSize+"\n"+
-		// "alphaSrc="+alphaSrc+"\n"+
-		// "alphaMask="+alphaMask+"\n"+
-		// "intensityThreshold="+intensityThreshold+"\n"+
-		// "contourThreshold="+contourThreshold+"\n"+
-		// "minimumSurface="+minimumSurface+"\n") ;
-		
+		/* CROPPING STAGE */
+		// The mask used for cropping the image is read from its file
 		Mat mask = Imgcodecs.imread(Reader.getGaussianMaskPath());
 		mask = PreProcessing.rgbToGrayScale(mask);
 
+		// We then resize the mat to make the dimensions consistent over the dataset and speed up the process
 		Mat resizedMat = PreProcessing.resizeSpecifiedWidth(mat, 500);
 		Mat grayScale = PreProcessing.rgbToGrayScale(resizedMat);
 		grayScale = PreProcessing.medianFilter(grayScale, medianFilterKSize);
 
+		// The mask is applied to the image to process, it supposes that the glass is approximately in the center of the img
 		Mat resizedMatWithMask = ProcessingUtils.applyMask(grayScale, alphaSrc, mask, alphaMask, 0.0);
 
+		// We extract the area of interest, i.e. the one where a glass is believed to be in the image
 		Point[] rectCorners = SpecularReflexion.findSpecularReflexion(resizedMatWithMask, intensityThreshold, contourThreshold);
 
+		// The image is cropped to fit the area of interest found
 		Mat croppedImg = ProcessingUtils.getCroppedImageFromTopLeftBotRight(grayScale, rectCorners[0], rectCorners[1], minimumSurface);
 		
 		if(stage == Window.CROPPING_STAGE) { 
 			return ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners); // when we only want to see the cropped image
 		}
-		
+
+		/* MASKING STAGE */
+		// We get the vessel
 		Mat vessel = VesselContour.findVesselContour(croppedImg, thresholdVesselContour, kernelVesselContour);
+		// And then uncrop the mask to make it fit on the original image
+		Mat uncroppedVessel = ProcessingUtils.putMaskInMatOriginalSize(resizedMat.size(), rectCorners[0], vessel);
 		
+		// If stage is MASKING_STAGE, then we exit the method here
 		if (stage == Window.MASKING_STAGE) {
-			Mat contourMaskOnOriginalImage = drawContourMaskOnOriginalImage(resizedMat, rectCorners[0], vessel) ;
+			Mat contourMaskOnOriginalImage = drawContourMaskOnOriginalImage(resizedMat, uncroppedVessel) ;
 			return ProcessingUtils.drawRectFromCorners(contourMaskOnOriginalImage, rectCorners);
 		}
 		
+		/* FINAL STAGE */
+		// Otherwise, we compute the ellipse out of the croppedImg and the cropped vessel
 		ArrayList<Double> ell = EllipseFinder.getEllipse(croppedImg, vessel, resizeWidth, angle);
+		// And then uncrop the ellipse to make it fit on the original image
+		double [] uncroppedEll = uncropEllipse(ell, rectCorners[0]) ;
 		
-		Point leftEllipse = new Point(ell.get(0), ell.get(1));
-		Point rightEllipse = new Point(ell.get(2), ell.get(3));
-		double ellHeight = ell.get(4);
+		// At this point, we can evaluate our result. It will be displayed both in the terminal and in the GUI
+		evaluate(win, uncroppedVessel, uncroppedEll, ell.get(4));
 		
-		Point middleEllipse = new Point((leftEllipse.x + rightEllipse.x)/2, (leftEllipse.y + rightEllipse.y)/2);
-		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + ellHeight/2);
-		
-		evaluate(win, vessel, bottomEllipse);
-	
-		double startingX = rectCorners[0].x ;
-		double startingY = rectCorners[0].y ;
-		
-		System.out.println("x1 "+ell.get(0)+" y1 "+ell.get(1)+" x2 "+ell.get(2)+" x3 "+ell.get(3)+" h "+ell.get(4));
-		
-		return EllipseFinder.drawEllipse(new Point(ell.get(0) + startingX, ell.get(1) + startingY),
-				 new Point(ell.get(2) + startingX, ell.get(3) + startingY),
-				 drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
-						 						rectCorners[0], vessel), ell.get(4));
-		
+		// We can then return the final image
+		return EllipseFinder.drawEllipse(
+				new Point(uncroppedEll[0], uncroppedEll[1]),
+				new Point(uncroppedEll[2], uncroppedEll[3]),
+				drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
+											   uncroppedVessel), ell.get(4));
 	}
 
-	private static Mat drawContourMaskOnOriginalImage(Mat resizedMat, Point topLeftCorner, Mat mask) {
-		Mat maskOriginalDimsBinary = ProcessingUtils.putMaskInMatOriginalSize(resizedMat.size(), topLeftCorner, mask); //when we want to visualize the mask
-		
+	private static double[] uncropEllipse(ArrayList<Double> ell, Point topLeft) {
+		return new double[] { ell.get(0) + topLeft.x, 
+							  ell.get(1) + topLeft.y,
+							  ell.get(2) + topLeft.x,
+							  ell.get(3) + topLeft.y };
+	}
+	
+	private static Mat drawContourMaskOnOriginalImage(Mat resizedMat, Mat maskOriginalDimsBinary) {
 		Mat maskContours = new Mat();
 		Imgproc.Laplacian(maskOriginalDimsBinary, maskContours, maskContours.type(), 3, 1, 0, Core.BORDER_DEFAULT );
 		//Mat maskContours = ContourUtils.sobelFilter(maskOriginalDimsBinary) ;
@@ -124,13 +127,31 @@ public class Extractor {
 		return ProcessingUtils.applyMask(resizedMat, 1, maskOriginalDimsRGB, 0.5, 0.0) ;		
 	}
 	
-	private static void evaluate(Window win, Mat vessel, Point bottomEllipse) {
+	private static void evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
+		Point leftEllipse = new Point(ell[0], ell[1]);
+		Point rightEllipse = new Point(ell[2], ell[3]);
+		
+		Point middleEllipse = new Point((leftEllipse.x + rightEllipse.x)/2, (leftEllipse.y + rightEllipse.y)/2);
+		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + ellipseHeight/2);
+		
+		
+		// TODO: @Erwan - here is the Mat for the ellipse. It's the same dims as the vessel's image.
+		Mat ellipseMat = EllipseFinder.drawEllipse(new Point(ell[0], ell[1]), 
+															new Point(ell[2], ell[3]), 
+															Mat.zeros(vessel.size(), vessel.type()),
+															ellipseHeight);
+		
+		System.out.println("vessel="+vessel.size());
+		System.out.println("vessel="+ellipseMat.size());
+		// TODO: the ratio is the same as the original image. You can resize the label using the size of one of these Mat
+		
+		
 		int [] boundaries = null ;
 	
 		try {
 			boundaries = ProcessingUtils.getMaskBoundaries(vessel);
-		}catch (Exception e) {
-			System.out.println(e.getMessage()); //when the mat is all black (no vessel found)
+		} catch (Exception e) {
+			System.out.println(e.getMessage()); // when the mat is all black (no vessel found)
 			return ;
 		}
 		
