@@ -7,8 +7,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import io.Reader;
 
@@ -62,12 +60,13 @@ public class Window extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		
 		this.textLabel = new JLabel();
-		this.textLabel.setText(getImgs().get(getImgIndex()));
-		this.contentPane.add(this.textLabel, "North");
+		this.updateText();
+		this.textLabel.setPreferredSize(new Dimension(200, 600));
+		this.contentPane.add(this.textLabel, "West");
 		
 		this.panelParameters = new PanelParameter(this) ;
 		this.contentPane.add(this.panelParameters,"East") ;
-		this.panelParameters.setPreferredSize(new Dimension(250, 600));
+		this.panelParameters.setPreferredSize(new Dimension(200, 600));
 		
 		this.panelImage = new PanelImage(this, this.panelParameters) ;
 		this.contentPane.add(this.panelImage,"Center") ;
@@ -157,16 +156,19 @@ public class Window extends JFrame {
 	}
 	
 	public void updateText() {
-		remove(this.textLabel);
-		this.textLabel = new JLabel();
-		this.textLabel.setText(this.getImgs().get(this.getImgIndex()));
-		add(this.textLabel, "North");
+		updateText(getImgs().get(getImgIndex()));
+	}
+	
+	public void updateText(String [] list) {
+		String s = "<html><body>";
+		for(String str : list) s += str + "<br>" ;
+		updateText(s+ "</body></html>");
 	}	
 	
 	public void updateText(String s) {
 		remove(this.textLabel);
 		this.textLabel = new JLabel();
 		this.textLabel.setText(s);
-		add(this.textLabel, "North");
+		add(this.textLabel, "West");
 	}
 }

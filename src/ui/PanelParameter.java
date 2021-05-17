@@ -49,14 +49,11 @@ public class PanelParameter extends JPanel {
 	private Slider resizeWidth;
 	private Slider angle;
 
-	private Window parent;
-
 	/**
 	 * Constructor for the PanelParameter object
 	 * @param parent JFrame object of the main wnndow
 	 */
 	public PanelParameter(Window parent) {
-		this.parent = parent;
 		setLayout(new FlowLayout());
 
 		// CROPPING IMAGE PARAMETERS

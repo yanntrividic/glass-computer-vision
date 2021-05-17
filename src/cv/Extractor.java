@@ -3,10 +3,8 @@ package cv;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
-import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 //import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
@@ -136,21 +134,18 @@ public class Extractor {
 	 * @return
 	 */
 	private static void evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
+		/* PREPROCESSING WHAT WE NEED TO EVALUATE */
 		Point leftEllipse = new Point(ell[0], ell[1]);
 		Point rightEllipse = new Point(ell[2], ell[3]);
 		
 		Point middleEllipse = new Point((leftEllipse.x + rightEllipse.x)/2, (leftEllipse.y + rightEllipse.y)/2);
 		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + ellipseHeight/2);
 		
-		
-		// TODO: @Erwan - here is the Mat for the ellipse. It's the same dims as the vessel's image.
+		//here is the Mat for the ellipse. It's the same dims as the vessel's image.
 		System.out.println(leftEllipse+ " "+ " "+rightEllipse + " "+ellipseHeight) ;
 		
 		Mat ellipseMat = EllipseFinder.drawFilledEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), 0), ellipseHeight);
-		
-		System.out.println("vessel="+vessel.size());
-		System.out.println("vessel="+ellipseMat.size());
-		// TODO: the ratio is the same as the original image. You can resize the label using the size of one of these Mat
+		//the ratio is the same as the original image. We can resize the label using the size of one of these Mat
 		
 		int [] boundaries = null ;
 	
@@ -161,6 +156,7 @@ public class Extractor {
 			return;
 		}
 		
+		/* FILLING PERCENTAGE COMPARISON */
 		//Ratio between dist(bottomEllipse, bottomGlass) and dist(topGlass, bottomGlass)
 		double glass = Math.abs(boundaries[0] - boundaries[2]);
 		glass = (glass==0)? 1:glass;
@@ -177,10 +173,10 @@ public class Extractor {
 		if(fillingPercentageJSON == 0 && fillingPercentage == 0)
 			errorPercentage = 0;
 		
-		
+		// text for the filling percentage evaluation
 		String filPer = "Filling percentage found: " +  String.format("%,.2f", fillingPercentage) +"%";
 		String filPerLabel = "Filling percentage via JSON file: " + String.format("%,.2f", fillingPercentageJSON) +"%";
-		String errPer = "Percent error: " + String.format("%,.2f", errorPercentage) +"%";
+		String errPer = "Filling % error: " + String.format("%,.2f", errorPercentage) +"%";
 		
 		Mat[] filledLabels = io.Reader.getFilledLabels(win.getCurrentImageLabelPath());
 		Mat ellipseLabel = filledLabels[0];
@@ -188,25 +184,36 @@ public class Extractor {
 		ellipseLabel = PreProcessing.resizeSpecifiedWidth(ellipseLabel, (int) vessel.size().width);
 		glassLabel = PreProcessing.resizeSpecifiedWidth(glassLabel, (int) vessel.size().width);
 		
+		/* COMPUTING INTERSECTION OVER UNION FOR THE GLASS AND THE ELLIPSE RELATIVE TO THE LABELS */
 		//IoU for the glass
 		Mat intersectionGlass = glassLabel.mul(vessel);
 		Mat unionGlass = new Mat();
 		Core.add(glassLabel, vessel, unionGlass);
+		
 		//IoU for the ellipse
 		Mat intersectionEllipse =  ellipseLabel.mul(ellipseMat);
 		Mat unionEllipse = new Mat();
 		Core.add(ellipseLabel, ellipseMat, unionEllipse);
 		
-		double iouGlass = (double)Core.countNonZero(intersectionGlass)/Core.countNonZero(unionGlass);
-		double iouEllipse = (double)Core.countNonZero(intersectionEllipse)/Core.countNonZero(unionEllipse);
+		//Compute the final IoU values
+		double iouGlassValue = (double) Core.countNonZero(intersectionGlass)/Core.countNonZero(unionGlass)*100;
+		double iouEllipseValue = (double) Core.countNonZero(intersectionEllipse)/Core.countNonZero(unionEllipse)*100;
 		
-		String IoUGlass = "Glass's IoU: " + String.format("%,.2f", iouGlass);
-		String IoUEllipse = "Ellipse's IoU: " + String.format("%,.2f", iouEllipse);
+		// text for the IoU 
+		String IoUGlass = "Glass IoU: " + String.format("%,.2f", iouGlassValue)+"%";
+		String IoUEllipse = "Ellipse IoU: " + String.format("%,.2f", iouEllipseValue)+"%";
 		
+		/* MEAN ERROR */
+		double meanError = (errorPercentage + (100 - iouGlassValue) + (100 - iouEllipseValue))/3 ;
+		String meanErrorS = "Mean error: " + String.format("%,.2f", meanError)+"%";
+		
+		
+		/* RESULT DISPLAY */
 		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n"+IoUGlass+"\n"+IoUEllipse);
-		win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
-				": "+ filPer+", "+filPerLabel+", "+ " ," + errPer+", "
-				 + IoUGlass + ", " + IoUEllipse);
+		//win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
+		//		": "+ errPer+", " + IoUGlass + ", " + IoUEllipse + ", " + meanErrorS);
+		win.updateText(new String [] {"Computed " + win.getImgs().get(win.getImgIndex()) +
+				":", "", filPer, errPer, "", IoUGlass, IoUEllipse, "", meanErrorS });
 		
 	}
 }
