@@ -142,7 +142,7 @@ public class Extractor {
 		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + resEll.get(4)/2);
 		
 		//here is the Mat for the ellipse. It's the same dims as the vessel's image.
-		System.out.println(leftEllipse+ " "+ " "+rightEllipse + " "+resEll.get(4)) ;
+		System.out.println("\n"+leftEllipse+ " "+ " "+rightEllipse + " "+resEll.get(4)) ;
 		
 		Mat ellipseMat = EllipseFinder.drawFilledEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), 0), resEll.get(4));
 		//the ratio is the same as the original image. We can resize the label using the size of one of these Mat
@@ -212,7 +212,7 @@ public class Extractor {
 		
 		
 		/* RESULT DISPLAY */
-		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n"+resEllS+"\n"+IoUGlass+"\n"+IoUEllipse);
+		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n"+resEllS+"\n"+IoUGlass+"\n"+IoUEllipse+"\n"+meanErrorS);
 		//win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
 		//		": "+ errPer+", " + IoUGlass + ", " + IoUEllipse + ", " + meanErrorS);
 		win.updateText(new String [] {"Computed " + win.getImgs().get(win.getImgIndex()) +

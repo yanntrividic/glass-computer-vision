@@ -21,8 +21,8 @@ public class PanelParameter extends JPanel {
 	public static final int DEFAULT_INTENSITY_THRESHOLD = 15;
 	public static final int DEFAULT_CONTOUR_THRESHOLD = 11;
 	public static final int DEFAULT_MINIMUM_SURFACE = 80;
-	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 15;
-	public static final int DEFAULT_KERNEL_VESSEL_CONTOUR = 5;
+	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 15; // was 15
+	public static final int DEFAULT_KERNEL_VESSEL_CONTOUR = 5; // was 5
 	public static final int DEFAULT_RESIZE_WIDTH_ELLIPSE = 400;
 	public static final int DEFAULT_INCLI = 1;
 
