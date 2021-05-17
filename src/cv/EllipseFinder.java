@@ -45,7 +45,6 @@ public class EllipseFinder {
 		}
 		Mat imgComp=img.clone();
 		
-		
 		int step=(int)resizeWidth/80;   //400->5    600->
 	
 
@@ -241,10 +240,31 @@ public class EllipseFinder {
 	      Imgproc.ellipse (res, box, color, thickness);  
 	
 	      
-	   return res;
-	      
+	   return res;     
 	   }
 	
+	/**
+	 * Same method as the previous one but draws a filled ellipse
+	 * @param left The left point, the starting point of the ellipse
+	 * @param right The right point, the end point of the ellipse
+	 * @param src The image where the ellipse must be made
+	 * @param height the height of the ellipse in the glass
+	 * @return the image with the ellipse
+	 */
+	public static Mat drawFilledEllipse(Point left,Point right,Mat src,double height) {
+		Mat res=new Mat(src.size(), CvType.CV_8UC1, new Scalar(0, 0, 0));
+		res= src.clone();
+	      Size sz=new Size(right.x-left.x,height);  //the size of the future box
+	     
+	      Point center=new Point((left.x+right.x)/2,left.y);//the centre of the ellipse 
+	      
+	      RotatedRect box = new RotatedRect(center,sz,0);
+	      Scalar color = new Scalar(255, 255, 255); 
+	      int thickness = -1;
+	      Imgproc.ellipse (res, box, color, thickness);  
+	      
+	   return res;     
+	   }
 	
 	
 	/**

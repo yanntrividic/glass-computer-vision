@@ -101,15 +101,14 @@ public class Extractor {
 		double [] uncroppedEll = uncropEllipse(ell, rectCorners[0]) ;
 		
 		// At this point, we can evaluate our result. It will be displayed both in the terminal and in the GUI
-		return evaluate(win, uncroppedVessel, uncroppedEll, ell.get(4));
-		/*
+		evaluate(win, uncroppedVessel, uncroppedEll, ell.get(4));
+		
 		// We can then return the final image
 		return EllipseFinder.drawEllipse(
 				new Point(uncroppedEll[0], uncroppedEll[1]),
 				new Point(uncroppedEll[2], uncroppedEll[3]),
 				drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), uncroppedVessel),
 				ell.get(4));
-				*/
 	}
 
 	private static double[] uncropEllipse(ArrayList<Double> ell, Point topLeft) {
@@ -136,7 +135,7 @@ public class Extractor {
 	 * @param ellipseHeight
 	 * @return
 	 */
-	private static Mat evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
+	private static void evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
 		Point leftEllipse = new Point(ell[0], ell[1]);
 		Point rightEllipse = new Point(ell[2], ell[3]);
 		
@@ -147,7 +146,7 @@ public class Extractor {
 		// TODO: @Erwan - here is the Mat for the ellipse. It's the same dims as the vessel's image.
 		System.out.println(leftEllipse+ " "+ " "+rightEllipse + " "+ellipseHeight) ;
 		
-		Mat ellipseMat = EllipseFinder.drawEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), 16), ellipseHeight);
+		Mat ellipseMat = EllipseFinder.drawFilledEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), 0), ellipseHeight);
 		
 		System.out.println("vessel="+vessel.size());
 		System.out.println("vessel="+ellipseMat.size());
@@ -159,7 +158,7 @@ public class Extractor {
 			boundaries = ProcessingUtils.getMaskBoundaries(vessel);
 		} catch (Exception e) {
 			System.out.println(e.getMessage()); // when the mat is all black (no vessel found)
-			return new Mat();
+			return;
 		}
 		
 		//Ratio between dist(bottomEllipse, bottomGlass) and dist(topGlass, bottomGlass)
@@ -183,27 +182,31 @@ public class Extractor {
 		String filPerLabel = "Filling percentage via JSON file: " + String.format("%,.2f", fillingPercentageJSON) +"%";
 		String errPer = "Percent error: " + String.format("%,.2f", errorPercentage) +"%";
 		
-		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n");
-		win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
-				": "+ filPer+", "+filPerLabel+", "+errPer);
-		
-		//TODO : resize the Mat and compute the UoI
 		Mat[] filledLabels = io.Reader.getFilledLabels(win.getCurrentImageLabelPath());
 		Mat ellipseLabel = filledLabels[0];
 		Mat glassLabel = filledLabels[1];
 		ellipseLabel = PreProcessing.resizeSpecifiedWidth(ellipseLabel, (int) vessel.size().width);
 		glassLabel = PreProcessing.resizeSpecifiedWidth(glassLabel, (int) vessel.size().width);
 		
-		//UoI for the glass
+		//IoU for the glass
 		Mat intersectionGlass = glassLabel.mul(vessel);
 		Mat unionGlass = new Mat();
 		Core.add(glassLabel, vessel, unionGlass);
-		//UoI for the ellipse
+		//IoU for the ellipse
 		Mat intersectionEllipse =  ellipseLabel.mul(ellipseMat);
 		Mat unionEllipse = new Mat();
 		Core.add(ellipseLabel, ellipseMat, unionEllipse);
-		return ellipseMat;
 		
+		double iouGlass = (double)Core.countNonZero(intersectionGlass)/Core.countNonZero(unionGlass);
+		double iouEllipse = (double)Core.countNonZero(intersectionEllipse)/Core.countNonZero(unionEllipse);
+		
+		String IoUGlass = "Glass's IoU: " + String.format("%,.2f", iouGlass);
+		String IoUEllipse = "Ellipse's IoU: " + String.format("%,.2f", iouEllipse);
+		
+		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n"+IoUGlass+"\n"+IoUEllipse);
+		win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
+				": "+ filPer+", "+filPerLabel+", "+ " ," + errPer+", "
+				 + IoUGlass + ", " + IoUEllipse);
 		
 	}
 }
