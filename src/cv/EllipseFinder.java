@@ -113,7 +113,7 @@ public class EllipseFinder {
 		//testDrawn(bestEllipse,img);
 		double confidenceScore=100;
 		if(scoreList.size()>0) {
-			confidenceScore=confiance(scoreList);
+			confidenceScore=confidence(scoreList);
 		}
 		ArrayList<Double>resEll=new ArrayList<Double>();
 		resEll.add(xleftPointEllipse+coeffx);
@@ -346,7 +346,7 @@ public class EllipseFinder {
 	 * @param scoreList the score List
 	 * @return the confidence value
 	 */
-	public static double confiance(ArrayList<Double> scoreList){
+	public static double confidence(ArrayList<Double> scoreList){
 		Collections.sort(scoreList);                       //we sort the list
 		//System.out.println("hh"+(scoreList.get(scoreList.size()-1)-(scoreList.get(0))));
 		double scoreLim=0.85;   //scores above this value are very similar to the max score

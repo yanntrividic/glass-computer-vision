@@ -99,7 +99,7 @@ public class Extractor {
 		double [] uncroppedEll = uncropEllipse(ell, rectCorners[0]) ;
 		
 		// At this point, we can evaluate our result. It will be displayed both in the terminal and in the GUI
-		evaluate(win, uncroppedVessel, uncroppedEll, ell.get(4));
+		evaluate(win, uncroppedVessel, uncroppedEll, ell);
 		
 		// We can then return the final image
 		return EllipseFinder.drawEllipse(
@@ -133,18 +133,18 @@ public class Extractor {
 	 * @param ellipseHeight
 	 * @return
 	 */
-	private static void evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
+	private static void evaluate(Window win, Mat vessel, double [] ell, ArrayList<Double> resEll) {
 		/* PREPROCESSING WHAT WE NEED TO EVALUATE */
 		Point leftEllipse = new Point(ell[0], ell[1]);
 		Point rightEllipse = new Point(ell[2], ell[3]);
 		
 		Point middleEllipse = new Point((leftEllipse.x + rightEllipse.x)/2, (leftEllipse.y + rightEllipse.y)/2);
-		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + ellipseHeight/2);
+		Point bottomEllipse = new Point(middleEllipse.x, middleEllipse.y + resEll.get(4)/2);
 		
 		//here is the Mat for the ellipse. It's the same dims as the vessel's image.
-		System.out.println(leftEllipse+ " "+ " "+rightEllipse + " "+ellipseHeight) ;
+		System.out.println(leftEllipse+ " "+ " "+rightEllipse + " "+resEll.get(4)) ;
 		
-		Mat ellipseMat = EllipseFinder.drawFilledEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), 0), ellipseHeight);
+		Mat ellipseMat = EllipseFinder.drawFilledEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), 0), resEll.get(4));
 		//the ratio is the same as the original image. We can resize the label using the size of one of these Mat
 		
 		int [] boundaries = null ;
@@ -155,6 +155,9 @@ public class Extractor {
 			System.out.println(e.getMessage()); // when the mat is all black (no vessel found)
 			return;
 		}
+		
+		// We can also format the text for the ellipse confidence criterion
+		String resEllS = "Ellipse confidence: "+String.format("%,.2f",resEll.get(5))+"%";
 		
 		/* FILLING PERCENTAGE COMPARISON */
 		//Ratio between dist(bottomEllipse, bottomGlass) and dist(topGlass, bottomGlass)
@@ -174,8 +177,8 @@ public class Extractor {
 			errorPercentage = 0;
 		
 		// text for the filling percentage evaluation
-		String filPer = "Filling percentage found: " +  String.format("%,.2f", fillingPercentage) +"%";
-		String filPerLabel = "Filling percentage via JSON file: " + String.format("%,.2f", fillingPercentageJSON) +"%";
+		String filPer = "Filling % found: " +  String.format("%,.2f", fillingPercentage) +"%";
+		String filPerLabel = "Filling % via JSON file: " + String.format("%,.2f", fillingPercentageJSON) +"%";
 		String errPer = "Filling % error: " + String.format("%,.2f", errorPercentage) +"%";
 		
 		Mat[] filledLabels = io.Reader.getFilledLabels(win.getCurrentImageLabelPath());
@@ -209,11 +212,11 @@ public class Extractor {
 		
 		
 		/* RESULT DISPLAY */
-		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n"+IoUGlass+"\n"+IoUEllipse);
+		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n"+resEllS+"\n"+IoUGlass+"\n"+IoUEllipse);
 		//win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
 		//		": "+ errPer+", " + IoUGlass + ", " + IoUEllipse + ", " + meanErrorS);
 		win.updateText(new String [] {"Computed " + win.getImgs().get(win.getImgIndex()) +
-				":", "", filPer, errPer, "", IoUGlass, IoUEllipse, "", meanErrorS });
+				":", "", filPer, errPer, "", resEllS, "", IoUGlass, IoUEllipse, "", meanErrorS });
 		
 	}
 }

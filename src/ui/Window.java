@@ -61,7 +61,7 @@ public class Window extends JFrame {
 		
 		this.textLabel = new JLabel();
 		this.updateText();
-		this.textLabel.setPreferredSize(new Dimension(200, 600));
+		this.textLabel.setPreferredSize(new Dimension(190, 600));
 		this.contentPane.add(this.textLabel, "West");
 		
 		this.panelParameters = new PanelParameter(this) ;
