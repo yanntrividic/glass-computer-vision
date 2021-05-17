@@ -52,8 +52,7 @@ public class Reader {
 	 * @author Yann Trividic
 	 */
 	public static String getGaussianMaskPath() {
-		return System.getProperty("user.dir")
-				+fp+"src"+fp+"cv"+fp+"gaussian_distribution.jpg" ;		
+		return getResourcesDir()+fp+"gaussian_distribution.jpg" ;		
 	}
 	
 	/**
