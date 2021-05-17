@@ -160,5 +160,12 @@ public class Extractor {
 		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n");
 		win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
 				": "+ filPer+", "+filPerLabel+", "+errPer);
+		
+		//TODO : resize the Mat and compute the UoI
+		Mat[] filledLabels = io.Reader.getFilledLabels(win.getCurrentImageLabelPath());
+		Mat ellipseLabel = filledLabels[0];
+		Mat glassLabel = filledLabels[1];
+		
+		
 	}
 }
