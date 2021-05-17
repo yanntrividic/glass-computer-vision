@@ -86,7 +86,7 @@ public class EllipseFinder {
 		double heightEllipse=10;
 		ArrayList<Double> scoreList=new ArrayList<Double>();//only use for confidence score
 		////run through the image, increasing the height by 5pixels as you go
-		for(int i=(int)startPos.y+step;i<heightLimit-((5*heightLimit)/100)&&(img.height()>i+ellHeightEnd/2);i+=(step*2)) {   //y parameter
+		for(int i=(int)startPos.y+step+((8*heightLimit)/100);i<heightLimit-((8*heightLimit)/100)&&(img.height()>i+ellHeightEnd/2);i+=(step*2)) {   //y parameter
 			//get the left and right pixels at height i
 			Point left=getLeftPixel(img,i);
 			Point right=getRightPixel(img,(int)left.x,(int)left.y);
