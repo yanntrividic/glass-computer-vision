@@ -16,10 +16,10 @@ import javax.swing.JPanel;
 public class PanelParameter extends JPanel {
 
 	public static final int DEFAULT_MEDIAN_FILTER = 3;
-	public static final int DEFAULT_ALPHA_SRC = 90;
-	public static final int DEFAULT_ALPHA_MASK = 60;
+	public static final int DEFAULT_ALPHA_SRC = 71;
+	public static final int DEFAULT_ALPHA_MASK = 75;
 	public static final int DEFAULT_INTENSITY_THRESHOLD = 15;
-	public static final int DEFAULT_CONTOUR_THRESHOLD = 9;
+	public static final int DEFAULT_CONTOUR_THRESHOLD = 11;
 	public static final int DEFAULT_MINIMUM_SURFACE = 80;
 	public static final int DEFAULT_THRESHOLD_VESSEL_CONTOUR = 15;
 	public static final int DEFAULT_KERNEL_VESSEL_CONTOUR = 5;

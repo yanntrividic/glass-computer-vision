@@ -37,7 +37,7 @@ public class Main {
 			myWindow = new Window(DEFAULT_FOLDER) ;
 			break;
 		case 1:
-			if(args[0].equals("train") || args[0].equals("test") || args[0].equals("train")) {
+			if(args[0].equals("train") || args[0].equals("test") || args[0].equals("validation")) {
 				System.out.println("Folder: "+args[0]) ;
 				myWindow = new Window(args[0]);
 			} else {
