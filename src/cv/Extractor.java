@@ -106,8 +106,8 @@ public class Extractor {
 		return EllipseFinder.drawEllipse(
 				new Point(uncroppedEll[0], uncroppedEll[1]),
 				new Point(uncroppedEll[2], uncroppedEll[3]),
-				drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), 
-											   uncroppedVessel), ell.get(4));
+				drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), uncroppedVessel),
+				ell.get(4));
 	}
 
 	private static double[] uncropEllipse(ArrayList<Double> ell, Point topLeft) {
@@ -145,7 +145,6 @@ public class Extractor {
 		System.out.println("vessel="+ellipseMat.size());
 		// TODO: the ratio is the same as the original image. You can resize the label using the size of one of these Mat
 		
-		
 		int [] boundaries = null ;
 	
 		try {
@@ -167,12 +166,24 @@ public class Extractor {
 		double errorPercentage = (Math.abs(fillingPercentage - fillingPercentageJSON)
 									/fillingPercentageJSON)*100;
 		
+		//if we've correclty found an empty glass
+		if(fillingPercentageJSON == 0 && fillingPercentage == 0)
+			errorPercentage = 0;
+		
+		
 		String filPer = "Filling percentage found: " +  String.format("%,.2f", fillingPercentage) +"%";
 		String filPerLabel = "Filling percentage via JSON file: " + String.format("%,.2f", fillingPercentageJSON) +"%";
-		String errPer = "Error percentage: " + String.format("%,.2f", errorPercentage) +"%";
+		String errPer = "Percent error: " + String.format("%,.2f", errorPercentage) +"%";
 		
 		System.out.println(filPer+"\n"+filPerLabel+"\n"+errPer+"\n");
 		win.updateText("Computed " + win.getImgs().get(win.getImgIndex()) + 
 				": "+ filPer+", "+filPerLabel+", "+errPer);
+		
+		//TODO : resize the Mat and compute the UoI
+		Mat[] filledLabels = io.Reader.getFilledLabels(win.getCurrentImageLabelPath());
+		Mat ellipseLabel = filledLabels[0];
+		Mat glassLabel = filledLabels[1];
+		
+		
 	}
 }
