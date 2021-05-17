@@ -136,10 +136,7 @@ public class Extractor {
 		
 		
 		// TODO: @Erwan - here is the Mat for the ellipse. It's the same dims as the vessel's image.
-		Mat ellipseMat = EllipseFinder.drawEllipse(new Point(ell[0], ell[1]), 
-															new Point(ell[2], ell[3]), 
-															Mat.zeros(vessel.size(), vessel.type()),
-															ellipseHeight);
+		Mat ellipseMat = EllipseFinder.drawEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), vessel.type()), ellipseHeight);
 		
 		System.out.println("vessel="+vessel.size());
 		System.out.println("vessel="+ellipseMat.size());
