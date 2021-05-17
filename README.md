@@ -51,7 +51,7 @@ The user can find, in this order, a series of quality indicators of the output:
 * **Filling percentage error:**  the filling percentage found is computed and compared to the one extracted from the labels.
 * **Ellipse confidence:** in order to find the right ellipse, differents trials are initiated. The best results can be close to one another. When those results are two close, the confidence drops, as only the very best one is kept.
 * **Glass intersection over union:** the IoU (or Jaccard index) of the found glass over the ground truth glass. 
-* **Ellipse intersection over union:** he IoU of the found ellipse over the ground truth ellipse. 
+* **Ellipse intersection over union:** the IoU of the found ellipse over the ground truth ellipse. 
 * **Mean error:** mean error of the filling percentage, the glass IoU and the ellipse IoU.
 
 ## References
