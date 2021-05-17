@@ -55,4 +55,6 @@ The user can find, in this order, a series of quality indicators of the output:
 * **Mean error:** mean error of the filling percentage, the glass IoU and the ellipse IoU.
 
 ## References
-ADD BIBLIO
+* Osadchy, Margarita, David Jacobs, and Ravi Ramamoorthi. 2004. “Using Specularities for Recognition” 2 (February). [link](https://doi.org/10.1109/ICCV.2003.1238669).  
+* Eppel, Sagi, and Tal Kachman. 2014. “Computer Vision-Based Recognition of Liquid Surfaces and Phase Boundaries in Transparent Vessels, with Emphasis on Chemistry Applications.” ArXiv:1404.7174 (Cs) November. [link](http://arxiv.org/abs/1404.7174).  
+* Eppel, Sagi. 2014. “Create a Curvature Factor Map for (Axisymmetric) Vessels Based on Their Outline in the Image.” n.d. Accessed May 17, 2021. [link](https://fr.mathworks.com/matlabcentral/fileexchange/51028-create-a-curvature-factor-map-for-axisymmetric-vessels-based-on-their-outline-in-the-image).
