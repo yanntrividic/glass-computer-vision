@@ -28,9 +28,9 @@ For this project to run on your machine, you'll need to have installed Java SE 1
 ## Run the program
 Once the JAR file is downloaded from the `tags` section of this page, open a terminal and change your directory to the folder where the file is. In this folder, you must have a `img` folder with the same architecture as described in the Contents section. You can of course use ours, but don't hesitate using your own pics with your own labels.
 
-To run the file, execute the following command : `java -jar FILENAME.jar`. By doing so, the program starts and loads the training dataset. You can change the image set by adding a parameter at the end of the command. Three possibilities are available : `train` for the training set, `validation` for the validation set, `test` for the testing set.
+To run the file, execute the following command : `java -jar glasscv-1.0.jar`. By doing so, the program starts and loads the training dataset. You can change the image set by adding a parameter at the end of the command. Three possibilities are available : `train` for the training set, `validation` for the validation set, `test` for the testing set.
 
-For example, if you want to see the unbiased results of our program, please use this command `java -jar FILENAME.jar test` and see how we did for yourself.
+For example, if you want to see the unbiased results of our program, please use this command `java -jar glasscv-1.0.jar test` and see how we did for yourself.
 
 ## User instructions
 
