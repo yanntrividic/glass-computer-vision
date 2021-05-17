@@ -33,16 +33,26 @@ To run the file, execute the following command : `java -jar FILENAME.jar`. By do
 For example, if you want to see the unbiased results of our program, please use this command `java -jar FILENAME.jar test` and see how we did for yourself.
 
 ## User instructions
+
+### GUI
 The program's window is divided in four parts:
-* The **top** of the window is where will be displayed textual information about the image currently selected,
+* The **left** side of the window is where will be displayed textual information about the image currently selected and the extracted results,
 * The **center** part holds the selected image and displays the resulting image after processing,
-* The **right** part contains sliders that are parameters for our algorithms. Please refer to the code documentation to understand them fully.
+* The **right** side contains sliders that are parameters for our algorithms. Please refer to the code documentation to understand them fully.
 * The **bottom** of the window contains the buttons that the user can click to compute the image or to change the selected image.
 
 Changing the value of the sliders about the `ELLIPSE PARAMETERS` labels will result into the display of the intermediary process related to this parameter. For example, if the changes the value of one of the masking parameters' sliders, the new mask will be displayed directly. It implies that if the user wants to see the full result (ellipse and evalution) one of the `Compute image` buttons must be clicked.
 
-The evaluation of the water level uses the euclidean distance. In order to calculate the glass height, it first extracts the distance between the top and the bottom of the glass. To get the filling level, our algorithm finds the ellipse of the liquid inside the glass and its contours. It then calculates the distance between the bottom of the glass and the bottom of the ellipse. The filling percentage is then computed and compared to the one extracted from the labels.
+### Results
+After processing, the results are displayed in the top left corner of the window.
 
+The user can find, in this order, a series of quality indicators of the output:
+* **Filling percentage found:** the evaluation of the water level uses the euclidean distance. In order to calculate the glass height, it first extracts the distance between the top and the bottom of the glass. To get the filling level, our algorithm finds the ellipse of the liquid inside the glass and its contours. It then calculates the distance between the bottom of the glass and the bottom of the ellipse.
+* **Filling percentage error:**  the filling percentage found is computed and compared to the one extracted from the labels.
+* **Ellipse confidence:** in order to find the right ellipse, differents trials are initiated. The best results can be close to one another. When those results are two close, the confidence drops, as only the very best one is kept.
+* **Glass intersection over union:** the IoU (or Jaccard index) of the found glass over the ground truth glass. 
+* **Ellipse intersection over union:** he IoU of the found ellipse over the ground truth ellipse. 
+* **Mean error:** mean error of the filling percentage, the glass IoU and the ellipse IoU.
 
 ## References
 ADD BIBLIO
