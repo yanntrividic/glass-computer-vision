@@ -18,8 +18,8 @@ public class PanelImage extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final int maxDisplayHeight = 720;
-	private static final int maxDisplayWidth = 1000;
+	private static final int maxDisplayHeight = 700;
+	private static final int maxDisplayWidth = 900;
 
 	private Mat currentImg;
 	private Mat computedImg;
@@ -60,7 +60,7 @@ public class PanelImage extends JPanel {
 	 * @param stage integer, the stage at which the process will be stopped
 	 */
 	public void update(boolean compute, int stage) {
-		remove(this.imageLabel);
+		this.imageLabel.setIcon(null);
 				
 		if (!compute) {
 			this.currentImg = Imgcodecs.imread(parent.getImgPath() + parent.getImgs().get(parent.getImgIndex()));

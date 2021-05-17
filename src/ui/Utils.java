@@ -64,7 +64,7 @@ public class Utils {
 		double wantedRatio = (double) maxWidth / maxHeight ;
 		if(matRatio > wantedRatio) { // we match the width on maxWidth
 			wantedWidth = maxWidth ;
-			wantedHeight = (int) (wantedWidth * matRatio) ;
+			wantedHeight = (int) (wantedWidth / matRatio) ;
 		} else { // we match the height
 			wantedHeight = maxHeight ;
 			wantedWidth = (int) (wantedHeight * matRatio) ;

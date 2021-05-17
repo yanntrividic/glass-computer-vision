@@ -61,7 +61,6 @@ public class Window extends JFrame {
 		
 		this.textLabel = new JLabel();
 		this.updateText();
-		this.textLabel.setPreferredSize(new Dimension(190, 600));
 		this.contentPane.add(this.textLabel, "West");
 		
 		this.panelParameters = new PanelParameter(this) ;
@@ -168,6 +167,8 @@ public class Window extends JFrame {
 	public void updateText(String s) {
 		remove(this.textLabel);
 		this.textLabel = new JLabel();
+		this.textLabel.setVerticalAlignment(JLabel.TOP);
+		this.textLabel.setPreferredSize(new Dimension(190, 600));
 		this.textLabel.setText(s);
 		add(this.textLabel, "West");
 	}
