@@ -129,6 +129,13 @@ public class Extractor {
 		return ProcessingUtils.applyMask(resizedMat, 1, maskOriginalDimsRGB, 0.5, 0.0) ;		
 	}
 	
+	/**
+	 * @param win
+	 * @param vessel
+	 * @param ell
+	 * @param ellipseHeight
+	 * @return
+	 */
 	private static Mat evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
 		Point leftEllipse = new Point(ell[0], ell[1]);
 		Point rightEllipse = new Point(ell[2], ell[3]);
@@ -138,7 +145,9 @@ public class Extractor {
 		
 		
 		// TODO: @Erwan - here is the Mat for the ellipse. It's the same dims as the vessel's image.
-		Mat ellipseMat = EllipseFinder.drawEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), vessel.type()), ellipseHeight);
+		System.out.println(leftEllipse+ " "+ " "+rightEllipse + " "+ellipseHeight) ;
+		
+		Mat ellipseMat = EllipseFinder.drawEllipse(leftEllipse, rightEllipse, Mat.zeros(vessel.size(), 16), ellipseHeight);
 		
 		System.out.println("vessel="+vessel.size());
 		System.out.println("vessel="+ellipseMat.size());
