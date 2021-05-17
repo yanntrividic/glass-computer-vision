@@ -200,7 +200,7 @@ public class Reader {
 				JSONObject jsonObject = (JSONObject) o;
 				JSONArray points = (JSONArray) jsonObject.get("points");
 				
-				Mat img = new Mat(taille, CvType.CV_8UC3, new Scalar(0, 0, 0));
+				Mat img = new Mat(taille, CvType.CV_8UC1, new Scalar(0, 0, 0));
 				ArrayList<Point> pts = new ArrayList<Point>();
 				for(int i = 0; i < points.size(); i++) {
 					pts.add(convertToPoint(points.get(i).toString()));
@@ -214,7 +214,7 @@ public class Reader {
 	
 		        Imgproc.fillPoly(img,
 		                ppt,
-		                new Scalar(0,0,255));
+		                new Scalar(255,255,255));
 		        if(jsonObject.get("label").toString().equals("ellipse"))
 		        	labels[0] = img;
 		        else 

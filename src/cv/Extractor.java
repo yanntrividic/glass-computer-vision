@@ -6,6 +6,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 //import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
@@ -100,14 +101,15 @@ public class Extractor {
 		double [] uncroppedEll = uncropEllipse(ell, rectCorners[0]) ;
 		
 		// At this point, we can evaluate our result. It will be displayed both in the terminal and in the GUI
-		evaluate(win, uncroppedVessel, uncroppedEll, ell.get(4));
-		
+		return evaluate(win, uncroppedVessel, uncroppedEll, ell.get(4));
+		/*
 		// We can then return the final image
 		return EllipseFinder.drawEllipse(
 				new Point(uncroppedEll[0], uncroppedEll[1]),
 				new Point(uncroppedEll[2], uncroppedEll[3]),
 				drawContourMaskOnOriginalImage(ProcessingUtils.drawRectFromCorners(resizedMat, rectCorners), uncroppedVessel),
 				ell.get(4));
+				*/
 	}
 
 	private static double[] uncropEllipse(ArrayList<Double> ell, Point topLeft) {
@@ -127,7 +129,7 @@ public class Extractor {
 		return ProcessingUtils.applyMask(resizedMat, 1, maskOriginalDimsRGB, 0.5, 0.0) ;		
 	}
 	
-	private static void evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
+	private static Mat evaluate(Window win, Mat vessel, double [] ell, double ellipseHeight) {
 		Point leftEllipse = new Point(ell[0], ell[1]);
 		Point rightEllipse = new Point(ell[2], ell[3]);
 		
@@ -148,7 +150,7 @@ public class Extractor {
 			boundaries = ProcessingUtils.getMaskBoundaries(vessel);
 		} catch (Exception e) {
 			System.out.println(e.getMessage()); // when the mat is all black (no vessel found)
-			return ;
+			return new Mat();
 		}
 		
 		//Ratio between dist(bottomEllipse, bottomGlass) and dist(topGlass, bottomGlass)
@@ -180,6 +182,18 @@ public class Extractor {
 		Mat[] filledLabels = io.Reader.getFilledLabels(win.getCurrentImageLabelPath());
 		Mat ellipseLabel = filledLabels[0];
 		Mat glassLabel = filledLabels[1];
+		ellipseLabel = PreProcessing.resizeSpecifiedWidth(ellipseLabel, (int) vessel.size().width);
+		glassLabel = PreProcessing.resizeSpecifiedWidth(glassLabel, (int) vessel.size().width);
+		
+		//UoI for the glass
+		Mat intersectionGlass = glassLabel.mul(vessel);
+		Mat unionGlass = new Mat();
+		Core.add(glassLabel, vessel, unionGlass);
+		//UoI for the ellipse
+		Mat intersectionEllipse =  ellipseLabel.mul(ellipseMat);
+		Mat unionEllipse = new Mat();
+		Core.add(ellipseLabel, ellipseMat, unionEllipse);
+		return ellipseMat;
 		
 		
 	}
