@@ -208,6 +208,12 @@ public class JSONLabelProcessing {
 					Mat lineDrawn = drawLineAngle(middle, angle, addAngle, 
 									(int)mat.size().height, (int)mat.size().width);
 					
+					/*Mat sum = new Mat();
+					Core.add(mat, lineDrawn, sum);
+					HighGui.imshow("line", cv.PreProcessing.resizeSpecifiedWidth(sum, 
+									(int) (mat.cols() * 0.3)));
+					HighGui.waitKey();
+					*/
 					//System.out.println("mat size : " + mat.size() + "// line size : " + lineDrawn.size());
 					Mat mult = mat.mul(lineDrawn);
 					
