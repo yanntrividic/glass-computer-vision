@@ -3,6 +3,7 @@ package cv;
 import java.awt.Color;
 //import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -45,6 +46,7 @@ public class EllipseFinder {
 		}
 		Mat imgComp=img.clone();
 		
+		
 		int step=(int)resizeWidth/80;   //400->5    600->
 	
 
@@ -82,6 +84,7 @@ public class EllipseFinder {
 		double xrightPointEllipse=getRightPixel(img,(int)startPos.x,(int)startPos.y).x;
 		double yrightPointEllipse=getRightPixel(img,(int)startPos.x,(int)startPos.y).y;
 		double heightEllipse=10;
+		ArrayList<Double> scoreList=new ArrayList<Double>();//only use for confidence score
 		////run through the image, increasing the height by 5pixels as you go
 		for(int i=(int)startPos.y+step;i<heightLimit-((5*heightLimit)/100)&&(img.height()>i+ellHeightEnd/2);i+=(step*2)) {   //y parameter
 			//get the left and right pixels at height i
@@ -99,19 +102,30 @@ public class EllipseFinder {
 					xrightPointEllipse=right.x;
 					yrightPointEllipse=right.y;
 					heightEllipse=z;
+					scoreList.add(getEllipseScore(imgComp, tempEllipse));
+					//System.out.println((+getEllipseScore(imgComp, tempEllipse)*1000000000)%10);
+				}
+				else {
+					scoreList.add(getEllipseScore(imgComp, bestEllipse));
+					//System.out.println((+getEllipseScore(imgComp, bestEllipse)*1000000000)%10);
 				}
 			}
 			
 		}
 		//show the best Ellipse
 		//testDrawn(bestEllipse,img);
-		
+		double confidenceScore=100;
+		if(scoreList.size()>0) {
+			confidenceScore=confiance(scoreList);
+		}
 		ArrayList<Double>resEll=new ArrayList<Double>();
 		resEll.add(xleftPointEllipse+coeffx);
 		resEll.add(yleftPointEllipse+coeffy);
 		resEll.add(xrightPointEllipse+coeffx);
 		resEll.add(yrightPointEllipse+coeffy);
 		resEll.add(heightEllipse+coeffy);
+		resEll.add(confidenceScore);
+		System.out.println("confscore: "+confidenceScore+"%");
 		return(resEll);
 		//return bestEllipse;
 	}
@@ -240,8 +254,10 @@ public class EllipseFinder {
 	      Imgproc.ellipse (res, box, color, thickness);  
 	
 	      
-	   return res;     
+	   return res;
+	      
 	   }
+	
 	
 	/**
 	 * Same method as the previous one but draws a filled ellipse
@@ -265,7 +281,6 @@ public class EllipseFinder {
 	      
 	   return res;     
 	   }
-	
 	
 	/**
 	 * 
@@ -329,6 +344,29 @@ public class EllipseFinder {
 		
 	}
 
+	/**
+	 * returns a confidence score 
+	 * @param scoreList the score List
+	 * @return the confidence value
+	 */
+	public static double confiance(ArrayList<Double> scoreList){
+		Collections.sort(scoreList);                       //we sort the list
+		//System.out.println("hh"+(scoreList.get(scoreList.size()-1)-(scoreList.get(0))));
+		double scoreLim=0.99;   //scores above this value are very similar to the max score
+		                     //((scoreList.get(scoreList.size()-1)-(scoreList.get(0)))/(scoreList.get(scoreList.size()-1)-(scoreList.get(0))))
+		ArrayList<Double> simiScore=new ArrayList<Double>();
+		for(int i=0;i<scoreList.size();i++) {
+			double temp=(scoreList.get(i)-(scoreList.get(0)))/(scoreList.get(scoreList.size()-1)-(scoreList.get(0)));
+			if(temp>scoreLim) {
+				simiScore.add(temp);
+				//System.out.println("temp"+temp);
+				
+			}
+		}
+		return(((double)1/simiScore.size())*100);
+	}
+	
+	
 /**
  * merges an image with a black and white mask
  * @param img the image
@@ -347,7 +385,7 @@ public static Mat fusionImgMask(Mat img,Mat mask) {
 		return img;
 	}
 	
-	//not use
+	
 
 
 }
