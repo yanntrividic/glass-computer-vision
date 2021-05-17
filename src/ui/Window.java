@@ -45,7 +45,7 @@ public class Window extends JFrame {
 	public Window(String folder) {
 		super("Glass CV" );
 		this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-		this.setSize(1280, 820);
+		this.setSize(1280, 800);
 		this.setLocationRelativeTo(null);
 
 		this.imgIndex = 0 ; // 
@@ -65,7 +65,7 @@ public class Window extends JFrame {
 		
 		this.panelParameters = new PanelParameter(this) ;
 		this.contentPane.add(this.panelParameters,"East") ;
-		this.panelParameters.setPreferredSize(new Dimension(200, 600));
+		this.panelParameters.setPreferredSize(new Dimension(210, 600));
 		
 		this.panelImage = new PanelImage(this, this.panelParameters) ;
 		this.contentPane.add(this.panelImage,"Center") ;

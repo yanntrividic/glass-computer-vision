@@ -18,8 +18,8 @@ public class PanelImage extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final int maxDisplayHeight = 750;
-	private static final int maxDisplayWidth = 900;
+	private static final int maxDisplayHeight = 720;
+	private static final int maxDisplayWidth = 850;
 
 	private Mat currentImg;
 	private Mat computedImg;
@@ -43,7 +43,7 @@ public class PanelImage extends JPanel {
 		this.computedImg = null;
 
 		this.imageLabel = getLabelFromMat(currentImg);
-		add(imageLabel, "North");
+		add(imageLabel, "Center");
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class PanelImage extends JPanel {
 		}
 
 		this.imageLabel = getLabelFromMat(this.computedImg == null ? this.currentImg : this.computedImg);
-		add(this.imageLabel, "North");
+		add(this.imageLabel, "Center");
 		revalidate();
 	}
 
