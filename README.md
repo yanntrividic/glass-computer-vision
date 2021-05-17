@@ -14,7 +14,8 @@ This repository contains three folders:
 * `img`, three image sets (training, validation, test),
 * `doc`, the Javadoc of the project, compiled into a set of HTML files.
 
-The `img` folder was built for the occasion of this project by the students who attended the course. We decided to use this image set in its entirety. Out of the 73 original PNG or JPEG images, 53 glass images were used to build the `train` dataset, 10 were put both in the `validation` and in the `test` dataset. Those images all contain at least a glass. Some of them are blurry, other aren't filled with water, the lighting is uneven as well as the orientation. The glasses are of various shapes and made of different materials and colors. The background is almost never the same. Most pictures were taken in a kitchen setting.
+The `img` folder was built for the occasion of this project by the students who attended the course. We decided to use this image set in its entirety. Out of the 73 original PNG or JPEG images, 53 glass images were used to build the `train` dataset, 10 were put both in the `validation` and in the `test` dataset. Those images all contain at least a glass. Some of them are blurry, other aren't filled with water, the lighting is uneven as well as the orientation. The glasses are of various shapes and made of different materials and colors. The background is almost never the same. Most pictures were taken in a kitchen setting.  
+**Important:** This folder also contains the `gaussian_distribution.png` file, which is critical for the program to work. Please keep it inside.
 
 All the images of the set were labeled. In order to do so, we used [labelme](https://github.com/wkentaro/labelme), an opensource annotation tool. Two labels were chosen: the ellipse (`ellipse`) of the water level and the outline of the glass (`glass`). The labels were saved as JSON files with the same name as their corresponding image, in the same folders. 
 
@@ -55,4 +56,6 @@ The user can find, in this order, a series of quality indicators of the output:
 * **Mean error:** mean error of the filling percentage, the glass IoU and the ellipse IoU.
 
 ## References
-ADD BIBLIO
+* Osadchy, Margarita, David Jacobs, and Ravi Ramamoorthi. 2004. “Using Specularities for Recognition” 2 (February). [link](https://doi.org/10.1109/ICCV.2003.1238669).  
+* Eppel, Sagi, and Tal Kachman. 2014. “Computer Vision-Based Recognition of Liquid Surfaces and Phase Boundaries in Transparent Vessels, with Emphasis on Chemistry Applications.” ArXiv:1404.7174 (Cs) November. [link](http://arxiv.org/abs/1404.7174).  
+* Eppel, Sagi. 2014. “Create a Curvature Factor Map for (Axisymmetric) Vessels Based on Their Outline in the Image.” n.d. Accessed May 17, 2021. [link](https://fr.mathworks.com/matlabcentral/fileexchange/51028-create-a-curvature-factor-map-for-axisymmetric-vessels-based-on-their-outline-in-the-image).
