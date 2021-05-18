@@ -1,6 +1,5 @@
 package cv;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
