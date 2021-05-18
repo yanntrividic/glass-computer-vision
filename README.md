@@ -54,6 +54,7 @@ The user can find, in this order, a series of quality indicators of the output:
 * **Glass intersection over union:** the IoU (or Jaccard index) of the found glass over the ground truth glass. 
 * **Ellipse intersection over union:** the IoU of the found ellipse over the ground truth ellipse. 
 * **Mean error:** mean error of the filling percentage, the glass IoU and the ellipse IoU.
+You will find in the file "Resultat Image" the results of the test set.
 
 ## References
 * Osadchy, Margarita, David Jacobs, and Ravi Ramamoorthi. 2004. “Using Specularities for Recognition” 2 (February). [link](https://doi.org/10.1109/ICCV.2003.1238669).  
